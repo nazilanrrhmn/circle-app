@@ -22,6 +22,7 @@ export default function RouterApp() {
         <Route path="/search" element={<Search />} />
         <Route path="/follows" element={<Follows />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/profile" element={<Profile />} />
       </Routes>
     </BrowserRouter>
   );

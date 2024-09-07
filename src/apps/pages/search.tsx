@@ -1,10 +1,15 @@
-import { Box } from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
 import AppLayout from "../../components/layouts/app-layout";
+import SearchBar from "../../features/search/components/search-bar";
+import StartSearch from "../../features/search/components/search-start";
 
 export default function Search() {
   return (
     <AppLayout>
-      <Box color={"white"}>Search</Box>
+      <Flex direction={"column"} mt={4} height={"100vh"}>
+        <SearchBar />
+        <StartSearch />
+      </Flex>
     </AppLayout>
   );
 }
