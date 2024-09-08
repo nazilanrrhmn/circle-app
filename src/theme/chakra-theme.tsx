@@ -5,11 +5,12 @@ const themeConfig: ThemeOverride = {
     brand: {
       green: "#04A51E",
       "green-dark": "#005E0E",
-      greenDark: "#005E0E",
+      "white-dark": "#909090",
       backgroundCircle: "#1D1D1D",
       backgroundBox: "#262626",
       fontSecondary: "#909090",
       borderAbu: "#545454",
+      searchBar: "#3F3F3F",
     },
   },
   fonts: {

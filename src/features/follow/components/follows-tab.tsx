@@ -1,57 +1,15 @@
-import { Tabs, TabList, TabPanels, Tab, TabPanel } from "@chakra-ui/react";
-import OthersAccountItem from "../../../src/components/ui/others-account-item";
+import { Tabs, TabList, TabPanels, TabPanel } from "@chakra-ui/react";
+import OthersAccountItem from "../../../components/ui/others-account-item";
+import { TabIndicatorCircle, TabItem } from "../../../components/ui/circle-tab";
 
 export default function FollowsTabs() {
   return (
     <Tabs isFitted variant={"unstyled"}>
       <TabList borderBottom="1px solid" borderColor="brand.borderAbu">
-        <Tab
-          w={"100%"}
-          paddingY={3}
-          color={"white"}
-          fontWeight={500}
-          fontSize={"16px"}
-          lineHeight={"20px"}
-          _selected={{
-            position: "relative",
-            _after: {
-              content: '""',
-              position: "absolute",
-              width: "90%",
-              height: "4px",
-              bg: "brand.green",
-              borderRadius: "full", // Rounded ends for the line
-              bottom: "-1px", // Adjust line placement
-              left: "5%", // Center the line under the text
-            },
-          }}
-        >
-          Followers
-        </Tab>
-        <Tab
-          w={"100%"}
-          paddingY={3}
-          color={"white"}
-          fontWeight={500}
-          fontSize={"16px"}
-          lineHeight={"20px"}
-          _selected={{
-            position: "relative",
-            _after: {
-              content: '""',
-              position: "absolute",
-              width: "90%",
-              height: "4px",
-              bg: "brand.green",
-              borderRadius: "full", // Rounded ends for the line
-              bottom: "-1px", // Adjust line placement
-              left: "5%", // Center the line under the text
-            },
-          }}
-        >
-          Following
-        </Tab>
+        <TabItem tabName="Followers" />
+        <TabItem tabName="Following" />
       </TabList>
+      <TabIndicatorCircle />
       <TabPanels>
         <TabPanel display={"flex"} flexDirection={"column"} gap={4}>
           <OthersAccountItem

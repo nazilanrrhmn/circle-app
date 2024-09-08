@@ -4,14 +4,12 @@ import OthersAccountItem from "../ui/others-account-item";
 
 export default function RightBar() {
   return (
-    <Box width={"563px"}>
+    <Box position={"sticky"} width={"563px"}>
       <Flex
-        width={"563px"}
-        position={"fixed"}
+        position={"sticky"}
+        top={0}
         gap={"16px"}
         direction={"column"}
-        borderLeft={"solid 1px"}
-        borderColor={"brand.borderAbu"}
         height={"100vh"}
         padding={8}
       >
@@ -20,36 +18,20 @@ export default function RightBar() {
           padding={"12px 20px 20px 20px"}
           rounded={12}
         >
-          <Text
-            fontSize={"20px"}
-            fontWeight={700}
-            lineHeight={"28px"}
-            mb={4}
-            backgroundColor={"brand.backgroundBox"}
-          >
+          <Text fontSize={"20px"} fontWeight={700} lineHeight={"28px"} mb={4}>
             My Profile
           </Text>
-          <ProfileHeading />
+          <ProfileHeading thumbnailH="100px" />
         </Box>
         <Box
           backgroundColor={"brand.backgroundBox"}
           padding={"12px 20px 20px 20px"}
           rounded={12}
         >
-          <Text
-            fontSize={"20px"}
-            fontWeight={700}
-            lineHeight={"28px"}
-            mb={4}
-            backgroundColor={"brand.backgroundBox"}
-          >
+          <Text fontSize={"20px"} fontWeight={700} lineHeight={"28px"} mb={4}>
             Suggested for you
           </Text>
-          <Flex
-            direction={"column"}
-            gap={4}
-            backgroundColor={"brand.backgroundBox"}
-          >
+          <Flex direction={"column"} gap={4}>
             <OthersAccountItem
               image="src/assets/img/avatar.png"
               fullName="Elon Musk"
@@ -82,13 +64,7 @@ export default function RightBar() {
           padding={"12px 20px 20px 20px"}
           rounded={12}
         >
-          <Text
-            fontSize={"16px"}
-            fontWeight={700}
-            lineHeight={"20px"}
-            mb={4}
-            backgroundColor={"brand.backgroundBox"}
-          >
+          <Text fontSize={"16px"} fontWeight={700} lineHeight={"20px"} mb={4}>
             Developed by Nazila Nur Rohman •
           </Text>
           <Text
@@ -96,7 +72,6 @@ export default function RightBar() {
             fontWeight={400}
             lineHeight={"16px"}
             color={"brand.fontSecondary"}
-            backgroundColor={"brand.backgroundBox"}
           >
             Powered by DumbWays Indonesia • #1Coding Bootcamp
           </Text>

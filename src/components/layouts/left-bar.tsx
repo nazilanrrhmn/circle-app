@@ -1,15 +1,17 @@
 import { Box, Flex, Image, Button } from "@chakra-ui/react";
-import ItemMenu from "../ui/item-menu";
+import ItemMenu from "../ui/menu-item";
+import { Modal, ModalOverlay, useDisclosure } from "@chakra-ui/react";
+import CreatePostModal from "../ui/post-modal";
 
 export default function LeftBar() {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
   return (
     <Box width={"417px"}>
       <Flex
-        position={"fixed"}
-        width={"417px"}
+        position={"sticky"}
+        top={0}
         direction={"column"}
-        borderRight={"solid 1px"}
-        borderColor={"brand.borderAbu"}
         height={"100vh"}
         padding={8}
       >
@@ -29,7 +31,7 @@ export default function LeftBar() {
           />
           <ItemMenu
             route="/follows"
-            menuIcon="src/assets/icons/heart.svg"
+            menuIcon="src/assets/icons/user-search.svg"
             menuTitle="Follows"
           />
           <ItemMenu
@@ -37,7 +39,12 @@ export default function LeftBar() {
             menuIcon="src/assets/icons/profile-circle.svg"
             menuTitle="Profile"
           />
-          <Button backgroundColor={"brand.green"} color={"white"} fontSize={20}>
+          <Button
+            onClick={onOpen}
+            backgroundColor={"brand.green"}
+            color={"white"}
+            fontSize={20}
+          >
             Create Post
           </Button>
         </Flex>
@@ -49,6 +56,10 @@ export default function LeftBar() {
           />
         </Box>
       </Flex>
+      <Modal closeOnOverlayClick={false} isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <CreatePostModal />
+      </Modal>
     </Box>
   );
 }

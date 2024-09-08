@@ -1,65 +1,67 @@
-import { Box, Flex, Image, Text } from "@chakra-ui/react";
+import { Box, Button, Flex, Image, Text } from "@chakra-ui/react";
 
 interface Account {
   image: string;
   fullName: string;
   userName: string;
+  bio?: string;
 }
 
 export default function OthersAccountItem({
   image,
   fullName,
   userName,
+  bio,
 }: Account) {
   return (
-    <Flex
-      justifyContent={"space-between"}
-      backgroundColor={"brand.backgroundBox"}
-    >
-      <Flex gap={2} backgroundColor={"brand.backgroundBox"}>
-        <Image
-          src={image}
-          alt="thumbnail"
-          borderColor={"brand.backgroundBox"}
-          height={"40px"}
-          rounded={"full"}
-          objectFit="cover"
-        />
-        <Box backgroundColor={"brand.backgroundBox"}>
-          <Text
-            fontSize={"14px"}
-            mb={1}
-            fontWeight={700}
-            lineHeight={"16px"}
-            backgroundColor={"brand.backgroundBox"}
-          >
-            {fullName}
-          </Text>
-          <Text
-            fontSize={"14px"}
-            fontWeight={400}
-            lineHeight={"16px"}
-            color={"brand.fontSecondary"}
-            backgroundColor={"brand.backgroundBox"}
-          >
-            {userName}
-          </Text>
-        </Box>
-      </Flex>
-      <Box
-        height={"33px"}
-        justifyItems={"center"}
-        border={"solid 1px"}
+    <Flex gap={2} justifyContent={"space-between"}>
+      <Image
+        src={image}
+        alt="thumbnail"
+        borderColor={"brand.backgroundBox"}
+        height={"40px"}
+        width={"40px"}
         rounded={"full"}
-        alignItems={"center"}
-        padding={"7px 20px"}
-        fontSize={"14px"}
-        fontWeight={700}
-        lineHeight={"17px"}
-        backgroundColor={"brand.backgroundBox"}
-      >
-        Follow
-      </Box>
+        objectFit="cover"
+      />
+      <Flex direction={"column"} gap={2} width={"100%"}>
+        <Flex justifyContent={"space-between"}>
+          <Box>
+            <Text fontSize={"14px"} mb={1} fontWeight={700} lineHeight={"16px"}>
+              {fullName}
+            </Text>
+            <Text
+              fontSize={"14px"}
+              fontWeight={400}
+              lineHeight={"16px"}
+              color={"brand.fontSecondary"}
+            >
+              {userName}
+            </Text>
+          </Box>
+          <Button
+            backgroundColor={"transparent"}
+            height={"33px"}
+            border={"solid 1px"}
+            borderColor={"white"}
+            color={"white"}
+            rounded={"full"}
+            padding={"7px 20px"}
+            fontSize={"14px"}
+            fontWeight={700}
+          >
+            Follow
+          </Button>
+        </Flex>
+        <Text
+          noOfLines={1}
+          fontSize={"14px"}
+          fontWeight={400}
+          lineHeight={"20px"}
+        >
+          {bio}
+        </Text>
+      </Flex>
     </Flex>
   );
 }

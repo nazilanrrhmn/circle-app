@@ -1,17 +1,27 @@
-import { Flex, Input, Icon } from "@chakra-ui/react";
-import { RiUserSearchLine } from "react-icons/ri";
+import { Flex, Input, Image } from "@chakra-ui/react";
 
 export default function SearchBar() {
   return (
-    <Flex
-      backgroundColor={"brand.searchBar"}
-      rounded={"full"}
-      margin={4}
-      padding={"4px 18px"}
-      alignItems={"center"}
-    >
-      <Icon as={RiUserSearchLine} w="24px" h="24px" color="tweet.gray" />
-      <Input border={"none"} placeholder="Search your friend" />
+    <Flex position={"relative"}>
+      <Image
+        position={"absolute"}
+        zIndex={2}
+        top={3}
+        left={4}
+        src="src/assets/icons/user-search.svg"
+        alt="gallery"
+        height={"24px"}
+      />
+      <Input
+        h={"48px"}
+        backgroundColor="brand.searchBar"
+        focusBorderColor={"brand.green"}
+        alignItems={"center"}
+        pl={12}
+        rounded={"full"}
+        border={"none"}
+        placeholder="Search your friend"
+      />
     </Flex>
   );
 }

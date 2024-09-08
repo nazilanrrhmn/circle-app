@@ -23,7 +23,6 @@ export default function ItemMenu({ menuIcon, menuTitle, route }: menu) {
           fontSize={"18px"}
           lineHeight={"24px"}
           fontWeight={500}
-          color={"white"}
         >
           {menuTitle}
         </Text>

@@ -1,17 +1,17 @@
-import { Box, Flex, Image, Text } from "@chakra-ui/react";
+import { Box, Button, Flex, Image, Text } from "@chakra-ui/react";
+import { Modal, ModalOverlay, useDisclosure } from "@chakra-ui/react";
+import EditProfileModal from "./profile-modal";
 
-export default function ProfileHeading() {
+export default function ProfileHeading({ thumbnailH }: { thumbnailH: string }) {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
   return (
     <>
-      <Box
-        position={"relative"}
-        marginBottom={4}
-        backgroundColor={"brand.backgroundBox"}
-      >
+      <Box position={"relative"} marginBottom={4}>
         <Image
           src="src/assets/img/cover.png"
           alt="thumbnail"
-          height={"100px"}
+          height={thumbnailH}
           width={"100%"}
           rounded={8}
           objectFit="cover"
@@ -28,92 +28,68 @@ export default function ProfileHeading() {
           rounded={"full"}
           objectFit="cover"
         />
-        <Flex
-          justifyContent={"flex-end"}
-          marginTop={2}
-          backgroundColor={"brand.backgroundBox"}
-        >
-          <Text
+        <Flex justifyContent={"flex-end"} marginTop={2}>
+          <Button
+            onClick={onOpen}
+            backgroundColor={"transparent"}
+            height={"33px"}
             border={"solid 1px"}
+            borderColor={"white"}
+            color={"white"}
             rounded={"full"}
-            padding={"8px 20px"}
+            padding={"7px 20px"}
             fontSize={"14px"}
             fontWeight={700}
             lineHeight={"17px"}
-            backgroundColor={"brand.backgroundBox"}
           >
             Edit Profile
-          </Text>
+          </Button>
         </Flex>
       </Box>
-      <Flex
-        direction={"column"}
-        gap={2}
-        backgroundColor={"brand.backgroundBox"}
-      >
-        <Text
-          as={"h1"}
-          fontSize={"24px"}
-          fontWeight={700}
-          lineHeight={"32px"}
-          backgroundColor={"brand.backgroundBox"}
-        >
-          ✨ Nazila Nur Rohman ✨
+      <Flex direction={"column"} gap={2}>
+        <Text as={"h1"} fontSize={"24px"} fontWeight={700} lineHeight={"32px"}>
+          ✨ Stella Audhina ✨
         </Text>
         <Text
           fontSize={"14px"}
           fontWeight={400}
           lineHeight={"20px"}
           color={"brand.fontSecondary"}
-          backgroundColor={"brand.backgroundBox"}
         >
-          @nazilnrr
+          @audhinafh
         </Text>
-        <Text
-          fontSize={"16px"}
-          fontWeight={400}
-          lineHeight={"24px"}
-          backgroundColor={"brand.backgroundBox"}
-        >
+        <Text fontSize={"16px"} fontWeight={400} lineHeight={"24px"}>
           picked over by the worms, and weird fishes
         </Text>
-        <Flex gap={4} backgroundColor={"brand.backgroundBox"}>
-          <Text
-            fontSize={"16px"}
-            fontWeight={700}
-            lineHeight={"24px"}
-            backgroundColor={"brand.backgroundBox"}
-          >
-            100{" "}
+        <Flex gap={4}>
+          <Text fontSize={"16px"} fontWeight={700} lineHeight={"24px"}>
+            291{" "}
             <Text
               as={"span"}
               fontWeight={400}
               color={"brand.fontSecondary"}
               marginLeft={1}
-              backgroundColor={"brand.backgroundBox"}
             >
               Following
             </Text>
           </Text>
-          <Text
-            fontSize={"16px"}
-            fontWeight={700}
-            lineHeight={"24px"}
-            backgroundColor={"brand.backgroundBox"}
-          >
-            10K{" "}
+          <Text fontSize={"16px"} fontWeight={700} lineHeight={"24px"}>
+            310{" "}
             <Text
               as={"span"}
               fontWeight={400}
               color={"brand.fontSecondary"}
               marginLeft={1}
-              backgroundColor={"brand.backgroundBox"}
             >
               Followers
             </Text>
           </Text>
         </Flex>
       </Flex>
+      <Modal closeOnOverlayClick={false} isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <EditProfileModal thumbnailH={thumbnailH} />
+      </Modal>
     </>
   );
 }
