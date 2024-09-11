@@ -7,6 +7,8 @@ import Home from "./pages/home";
 import Search from "./pages/search";
 import Follows from "./pages/folows";
 import Profile from "./pages/profile";
+import DetailPost from "./pages/detail-post";
+import DetailImage from "./pages/detail-image";
 
 export default function RouterApp() {
   return (
@@ -22,7 +24,8 @@ export default function RouterApp() {
         <Route path="/search" element={<Search />} />
         <Route path="/follows" element={<Follows />} />
         <Route path="/profile" element={<Profile />} />
-        <Route path="/profile" element={<Profile />} />
+        <Route path="/detail-post" element={<DetailPost />} />
+        <Route path="/detail-image" element={<DetailImage />} />
       </Routes>
     </BrowserRouter>
   );
