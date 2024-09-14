@@ -7,7 +7,7 @@ export default function HelloController(req: Request, res: Response) {
     res.send(hello);
   } catch (error: unknown) {
     res.status(500).json({
-      messages: "404 Hayo Liat Link apa!",
+      messages: "404 Hayo loe Liat Link apa!",
     });
   }
 }
