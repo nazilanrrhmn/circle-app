@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import sayHello from "../services/hello-service";
+import sayHello from "../services/hello.services";
 
 export default function HelloController(req: Request, res: Response) {
   try {
