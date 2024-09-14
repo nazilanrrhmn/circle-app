@@ -5,6 +5,6 @@ export default function GreetingMiddleware(
   res: Response,
   next: NextFunction
 ) {
-  console.log("Welcome");
+  console.log("Welcome Bro :D");
   next();
 }
