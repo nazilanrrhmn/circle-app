@@ -10,6 +10,22 @@ class UserServices {
     return await prisma.user.findMany();
   }
 
+  async getUserById(id: number): Promise<User | null> {
+    const user = await prisma.user.findUnique({
+      where: { id },
+    });
+
+    if (!user) {
+      throw {
+        code: "USER_NOT_EXIST",
+        status: 404,
+        message: "User Not Found!",
+      } as customError;
+    }
+
+    return user;
+  }
+
   async createUser(data: CreateUserDTO): Promise<User | null> {
     return await prisma.user.create({ data });
   }

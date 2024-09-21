@@ -1,9 +1,14 @@
-import { PrismaClient, Thread } from "@prisma/client";
+import { PrismaClient, Thread, User } from "@prisma/client";
 import { customError } from "../types/custom.error";
+import { CreateThreadsDTO } from "../dto/thread.dto";
 
 const prisma = new PrismaClient();
 
 class ThreadServies {
+  async createThread(data: CreateThreadsDTO): Promise<Thread | null> {
+    return await prisma.thread.create({ data });
+  }
+
   async getAllThreads(): Promise<Thread[]> {
     return await prisma.thread.findMany();
   }
@@ -22,6 +27,25 @@ class ThreadServies {
     }
 
     return thread;
+  }
+
+  async getThreadByUser(id: number) {
+    const user = await prisma.user.findUnique({
+      where: { id },
+      select: {
+        threads: true,
+      },
+    });
+
+    if (!user) {
+      throw {
+        code: "USER_NOT_EXIST",
+        status: 404,
+        message: "User Not Found!",
+      } as customError;
+    }
+
+    return user;
   }
 
   async deleteThread(id: number): Promise<Thread | null> {
