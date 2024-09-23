@@ -8,6 +8,19 @@ const prisma = new PrismaClient();
 
 class AuthServices {
   async register(data: RegisterDTO): Promise<User | null> {
+    const user = await prisma.user.findUnique({
+      where: {
+        email: data.email,
+      },
+    });
+
+    if (data.email == user?.email) {
+      throw {
+        status: "fail",
+        message: "Email already use",
+      };
+    }
+
     const saltRounds = 10;
     const hashedPassword = await bcrypt.hash(data.password, saltRounds);
 
@@ -55,8 +68,6 @@ class AuthServices {
       data: userToSign,
     };
   }
-
-  async test() {}
 }
 
 export default new AuthServices();

@@ -14,18 +14,19 @@ datasource db {
 }
 
 model User {
-  id Int @id @default(autoincrement())
-  username String? @unique
-  email String @unique
-  password String
-  fullname String
-  bio String?
-  profilePhoto String?
-  thumbnail String?
+  id            Int     @id @default(autoincrement())
+  fullname      String
+  email         String  @unique
+  password      String
+  username      String? @unique
+  bio           String?
+  profilePhoto  String?
 
   role RoleEnum @default(MEMBER)
 
   threads Thread[]
+  replies Reply[]
+  likes Like[]
 
   createdAt DateTime @default(now())
   updateAt DateTime @default(now()) @updatedAt
@@ -43,11 +44,46 @@ model Thread {
   content String
   image String?
 
-  user User @relation(fields: [userId], references: [id])
-  userId Int
+  author User @relation(fields: [authorId], references: [id])
+  authorId Int
+
+  replies Reply[]
+  like Like[]
 
   createdAt DateTime @default(now())
   updateAt DateTime @default(now()) @updatedAt
 
   @@map("threads")
+}
+
+model Reply {
+  id Int @id @default(autoincrement())
+  content String
+  image String?
+
+  author User @relation(fields: [authorId], references: [id])
+  authorId Int
+
+  thread Thread @relation(fields: [threadId], references: [id])
+  threadId Int
+
+  createdAt DateTime @default(now())
+  updateAt DateTime @default(now()) @updatedAt
+
+  @@map("replies")
+}
+
+model Like {
+  id Int @id @default(autoincrement())
+
+  author User @relation(fields: [authorId], references: [id])
+  authorId Int
+
+  thread Thread @relation(fields: [threadId], references: [id])
+  threadId Int
+
+  createdAt DateTime @default(now())
+  updateAt DateTime @default(now()) @updatedAt
+
+  @@map("likes")
 }

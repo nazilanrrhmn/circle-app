@@ -4,4 +4,7 @@ export type customError = {
   code: CustemErrorCode;
 };
 
-export type CustemErrorCode = "USER_NOT_EXIST";
+export type CustemErrorCode =
+  | "USER_NOT_EXIST"
+  | "THREAD_NOT_EXIST"
+  | "REPLY_NOT_EXIST";

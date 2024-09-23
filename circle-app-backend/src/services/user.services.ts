@@ -1,5 +1,5 @@
 import { PrismaClient, User } from "@prisma/client";
-import { CreateUserDTO, UpdateUSerDTO } from "../dto/user.dto";
+import { UpdateUSerDTO } from "../dto/user.dto";
 import { error } from "console";
 import { customError } from "../types/custom.error";
 
@@ -26,9 +26,9 @@ class UserServices {
     return user;
   }
 
-  async createUser(data: CreateUserDTO): Promise<User | null> {
-    return await prisma.user.create({ data });
-  }
+  // async createUser(data: CreateUserDTO): Promise<User | null> {
+  //   return await prisma.user.create({ data });
+  // }
 
   async updateUser(data: UpdateUSerDTO): Promise<User | null> {
     const user = await prisma.user.findUnique({
@@ -49,12 +49,16 @@ class UserServices {
       user.fullname = data.fullname;
     }
 
-    if (data.password) {
-      user.password = data.password;
-    }
-
     if (data.username) {
       user.username = data.username;
+    }
+
+    if (data.bio) {
+      user.bio = data.bio;
+    }
+
+    if (data.profilePhoto) {
+      user.profilePhoto = data.profilePhoto;
     }
 
     return await prisma.user.update({

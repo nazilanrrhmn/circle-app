@@ -10,12 +10,16 @@ class ThreadServies {
   }
 
   async getAllThreads(): Promise<Thread[]> {
-    return await prisma.thread.findMany();
+    return await prisma.thread.findMany({});
   }
 
   async getThreadById(id: number): Promise<Thread | null> {
     const thread = await prisma.thread.findFirst({
       where: { id },
+      include: {
+        replies: true,
+        like: true,
+      },
     });
 
     if (!thread) {
@@ -56,8 +60,8 @@ class ThreadServies {
     if (!thread) {
       throw {
         status: 404,
-        message: "User Not Found!",
-        code: "USER_NOT_EXIST",
+        message: "Thread Not Found!",
+        code: "THREAD_NOT_EXIST",
       } as customError;
     }
 

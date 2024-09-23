@@ -2,7 +2,7 @@ import Joi from "joi";
 import { LoginDTO, RegisterDTO } from "../../dto/auth.dto";
 
 export const RegisterSchema = Joi.object<RegisterDTO>({
-  fullName: Joi.string().required(),
+  fullname: Joi.string().required(),
   email: Joi.string().email().required(),
   password: Joi.string().min(6),
 });
