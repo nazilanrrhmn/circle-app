@@ -1,4 +1,4 @@
-import { Post } from "../../types/post";
+import { ThreadEntity } from "../../entities/thread";
 import { PostAction } from "./post-action";
 import PostContent from "./post-content";
 
@@ -7,7 +7,7 @@ export default function PostItem({
   fullName,
   userName,
   postImage,
-}: Post) {
+}: ThreadEntity) {
   return (
     <PostContent
       image={image}

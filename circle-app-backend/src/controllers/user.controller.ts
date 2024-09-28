@@ -13,7 +13,7 @@ class UserController {
   //     const user = await UserServices.createUser(value);
   //     res.json(user);
   //   } catch (error) {
-  //     res.json(error);
+  //     res.status(500).json(error);
   //   }
   // }
 
@@ -24,7 +24,7 @@ class UserController {
       const users = await UserServices.getAllUsers();
       res.json(users);
     } catch (error: unknown) {
-      res.json(error);
+      res.status(500).json(error);
     }
   }
 
@@ -36,7 +36,7 @@ class UserController {
       const user = await userServices.getUserById(Number(id));
       res.json(user);
     } catch (error) {
-      res.json(error);
+      res.status(500).json(error);
     }
   }
 
@@ -49,7 +49,7 @@ class UserController {
       const user = await UserServices.updateUser(value);
       res.json(user);
     } catch (error) {
-      res.json(error);
+      res.status(500).json(error);
     }
   }
 }

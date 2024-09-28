@@ -3,11 +3,14 @@ import { LoginDTO, RegisterDTO } from "../dto/auth.dto";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { customError } from "../types/custom.error";
+import { SuccessResponse } from "../types/success.respons";
 
 const prisma = new PrismaClient();
 
 class AuthServices {
-  async register(data: RegisterDTO): Promise<User | null> {
+  async register(
+    data: RegisterDTO
+  ): Promise<SuccessResponse<{ user: Omit<User, "password"> }>> {
     const user = await prisma.user.findUnique({
       where: {
         email: data.email,
@@ -24,15 +27,27 @@ class AuthServices {
     const saltRounds = 10;
     const hashedPassword = await bcrypt.hash(data.password, saltRounds);
 
-    return await prisma.user.create({
+    const { password, ...result } = await prisma.user.create({
       data: {
         ...data,
         password: hashedPassword,
       },
     });
+
+    return {
+      status: "success",
+      message: "User Created",
+      data: {
+        user: result,
+      },
+    };
   }
 
-  async login(data: LoginDTO) {
+  async login(
+    data: LoginDTO
+  ): Promise<
+    SuccessResponse<{ user?: Omit<User, "password">; accessToken: string }>
+  > {
     const user = await prisma.user.findUnique({
       where: {
         email: data.email,
@@ -64,8 +79,11 @@ class AuthServices {
     const token = jwt.sign(userToSign, secretKey);
 
     return {
-      token: token,
-      data: userToSign,
+      status: "success",
+      message: "User logged succesfully",
+      data: {
+        accessToken: token,
+      },
     };
   }
 }

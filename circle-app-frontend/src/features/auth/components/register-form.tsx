@@ -1,21 +1,10 @@
-import { Box, Image, Text, Input, Button } from "@chakra-ui/react";
+import { Box, Image, Text, Input, Button, Spinner } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { RegisterFormInput, registerSchema } from "../schemas/register";
+import { useRegisterForm } from "../hooks/use-register-form";
 
 export default function RegisterForm() {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<RegisterFormInput>({
-    resolver: zodResolver(registerSchema),
-  });
-
-  function onSubmit(data: object) {
-    console.log(data);
-  }
+  const { register, handleSubmit, errors, isSubmitting, onSubmit } =
+    useRegisterForm();
 
   return (
     <Box color={"white"} width={"brand.form"}>
@@ -26,7 +15,7 @@ export default function RegisterForm() {
       <form onSubmit={handleSubmit(onSubmit)}>
         <Box display={"flex"} flexDirection={"column"} gap={"12px"}>
           <Input
-            {...register("fullName")}
+            {...register("fullname")}
             type="text"
             placeholder="Fullname*"
             rounded={8}
@@ -35,9 +24,9 @@ export default function RegisterForm() {
             fontWeight={500}
             borderColor={"brand.borderAbu"}
           />
-          {errors.fullName && (
+          {errors.fullname && (
             <Text fontSize={13} color={"red"}>
-              * {errors.fullName.message}
+              * {errors.fullname.message}
             </Text>
           )}
           <Input
@@ -76,7 +65,7 @@ export default function RegisterForm() {
             color={"white"}
             fontSize={20}
           >
-            Create
+            {isSubmitting ? <Spinner /> : "Create"}
           </Button>
         </Box>
       </form>
@@ -87,6 +76,9 @@ export default function RegisterForm() {
           <Link to="/login"> Login</Link>
         </Text>
       </Text>
+      {/* <Button onClick={() => dispatch(fetchUserLogged())} backgroundColor={"brand.green"} color={"white"} fontSize={20}>
+        Fetch
+      </Button> */}
     </Box>
   );
 }

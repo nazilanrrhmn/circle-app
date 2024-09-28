@@ -31,7 +31,7 @@ class ReactionController {
         message: "Reply Created",
       });
     } catch (error) {
-      res.json(error);
+      res.status(500).json(error);
     }
   }
 
@@ -46,7 +46,7 @@ class ReactionController {
         message: "Reply deleted",
       });
     } catch (error) {
-      res.json(error);
+      res.status(500).json(error);
     }
   }
 
@@ -76,7 +76,7 @@ class ReactionController {
         message: "Thread liked",
       });
     } catch (error) {
-      res.json(error);
+      res.status(500).json(error);
     }
   }
 
@@ -91,7 +91,7 @@ class ReactionController {
         message: "Thread unlike",
       });
     } catch (error) {
-      res.json(error);
+      res.status(500).json(error);
     }
   }
 }

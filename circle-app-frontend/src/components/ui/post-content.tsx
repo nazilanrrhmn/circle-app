@@ -1,6 +1,6 @@
 import { Avatar, Flex, Image, Text } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
-import { Post } from "../../types/post";
+import { ThreadEntity } from "../../entities/thread";
 
 export default function PostContent({
   image,
@@ -8,7 +8,7 @@ export default function PostContent({
   userName,
   postImage,
   children,
-}: Post) {
+}: ThreadEntity) {
   return (
     <Link to="/detail-post">
       <Flex
