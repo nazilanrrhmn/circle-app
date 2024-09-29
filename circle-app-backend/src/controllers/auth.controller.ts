@@ -21,10 +21,11 @@ class AuthController {
       await authServices.register(value);
       const user = await authServices.login(value);
       res.json({
-        status: "Success",
+        status: "success",
         message: "User Created",
         data: {
           accessToken: user.data?.accessToken,
+          user: user.data?.user,
         },
       });
     } catch (error) {

@@ -1,13 +1,13 @@
 import { Box, Flex, Image, Text } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
-import { Post } from "../../../types/post";
+import { ThreadEntity } from "../../../entities/thread";
 
 export default function PostDetail({
   image,
   fullName,
   userName,
   postImage,
-}: Post) {
+}: ThreadEntity) {
   return (
     <Flex
       direction={"column"}

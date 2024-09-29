@@ -1,4 +1,4 @@
-import { Post } from "../../../types/post";
+import { ThreadEntity } from "../../../entities/thread";
 import PostContent from "../../../components/ui/post-content";
 import { RepliesAction } from "../../../components/ui/post-action";
 
@@ -7,7 +7,7 @@ export default function RepliesItem({
   fullName,
   userName,
   postImage,
-}: Post) {
+}: ThreadEntity) {
   return (
     <PostContent
       image={image}

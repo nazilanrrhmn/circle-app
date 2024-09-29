@@ -5,6 +5,9 @@ import { useNavigate } from "react-router-dom";
 import { LoginFormInput, loginSchema } from "../schemas/login";
 import { LoginRequestDTO, LoginResponseDTO } from "../types/auth.dto";
 import Cookies from "js-cookie";
+import { apiV1 } from "../../../libs/api";
+import { useAppDispatch } from "../../../hooks/use.store";
+import { setUser } from "../auth.slice";
 
 export function useLoginForm() {
   const {
@@ -16,19 +19,22 @@ export function useLoginForm() {
   });
 
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
   async function onSubmit({ email, password }: LoginFormInput) {
     try {
-      const response = await axios.post<
+      const response = await apiV1.post<
         null,
         { data: LoginResponseDTO },
         LoginRequestDTO
-      >("http://localhost:3000/api/v1/auth/login", { email, password });
-      alert(response.data.message);
+      >("/auth/login", { email, password });
 
-      const { accessToken } = response.data.data;
+      const { accessToken, user } = response.data.data;
 
       Cookies.set("token", accessToken, { expires: 2 });
+      alert(response.data.message);
+
+      dispatch(setUser(user));
 
       navigate("/");
     } catch (error) {

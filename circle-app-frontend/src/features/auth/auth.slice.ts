@@ -1,45 +1,48 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { User } from "../../types/user";
+import { apiV1 } from "../../libs/api";
+import { UserStoreDTO } from "./types/auth.dto";
 
-// Sesuaikan initialState dengan properti opsional atau berikan nilai default yang sesuai
-const initialState: User = {} as User;
-
-export const fetchUserLogged = createAsyncThunk(
-  "users/fetchUserLogged",
+export const getUserLogged = createAsyncThunk(
+  "users/getUserLogged",
   async () => {
-    const response = await fetch(
-      "https://63660b33046eddf1baf77f68.mockapi.io/api/v1/user"
-    );
-    return response.json();
+    const response = await apiV1.get<null, { data: UserStoreDTO }>("/user/me");
+    return response.data;
   }
 );
+
+// const initialState: UserStoreDTO = {} as UserStoreDTO;
+
+interface UserState {
+  entities: UserStoreDTO;
+  loading: "idle" | "pending" | "succeeded" | "failed";
+}
+
+const initialState: UserState = {
+  entities: {} as UserStoreDTO,
+  loading: "idle",
+};
 
 const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    setUser(state, action: PayloadAction<User>) {
-      state.id = action.payload.id;
-      state.fullname = action.payload.fullname;
-      state.email = action.payload.email;
-      state.password = action.payload.password;
+    setUser: (state, action: PayloadAction<UserStoreDTO>) => {
+      state.entities = action.payload;
     },
-    removeUser(state) {
-      // Mengosongkan state dengan tetap mempertahankan struktur object yang sama
-      state.id = 0;
-      state.fullname = "";
-      state.email = "";
-      state.password = "";
+    removeUser() {
+      return initialState;
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(fetchUserLogged.fulfilled, (state, action) => {
-      // Memastikan payload sesuai dengan User atau melakukan parsing sesuai kebutuhan
-      const fetchedUser = action.payload as User;
-      state.id = fetchedUser.id;
-      state.fullname = fetchedUser.fullname;
-      state.email = fetchedUser.email;
-      state.password = fetchedUser.password;
+    builder.addCase(getUserLogged.fulfilled, (state, action) => {
+      state.entities = action.payload;
+      state.loading = "succeeded";
+    });
+    builder.addCase(getUserLogged.pending, (state) => {
+      state.loading = "pending";
+    });
+    builder.addCase(getUserLogged.rejected, (state) => {
+      state.loading = "failed";
     });
   },
 });

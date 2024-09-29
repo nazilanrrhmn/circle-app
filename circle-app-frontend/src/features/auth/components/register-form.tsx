@@ -76,9 +76,6 @@ export default function RegisterForm() {
           <Link to="/login"> Login</Link>
         </Text>
       </Text>
-      {/* <Button onClick={() => dispatch(fetchUserLogged())} backgroundColor={"brand.green"} color={"white"} fontSize={20}>
-        Fetch
-      </Button> */}
     </Box>
   );
 }

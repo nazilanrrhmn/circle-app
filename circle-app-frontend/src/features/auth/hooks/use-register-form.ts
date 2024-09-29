@@ -1,12 +1,11 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import { useForm } from "react-hook-form";
-import { useAppDispatch, useAppSelector } from "../../../hooks/use.store";
-import { setUser } from "../auth.slice";
 import { RegisterFormInput, registerSchema } from "../schemas/register";
 import { RegisterRequestDTO, RegisterResponseDTO } from "../types/auth.dto";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
+import { apiV1 } from "../../../libs/api";
 
 export function useRegisterForm() {
   const {
@@ -17,19 +16,15 @@ export function useRegisterForm() {
     resolver: zodResolver(registerSchema),
   });
 
-  const user = useAppSelector((state) => state.auth);
-  const dispatch = useAppDispatch();
   const navigate = useNavigate();
-
-  console.log("user", user);
 
   async function onSubmit(data: RegisterFormInput) {
     try {
-      const response = await axios.post<
+      const response = await apiV1.post<
         null,
         { data: RegisterResponseDTO },
         RegisterRequestDTO
-      >("http://localhost:5000/api/v1/auth/register", {
+      >("/auth/register", {
         fullname: data.fullname,
         email: data.email,
         password: data.password,
@@ -37,17 +32,7 @@ export function useRegisterForm() {
       alert(response.data.message);
       const { accessToken } = response.data.data;
 
-      Cookies.set("token", accessToken, { expires: 2 });
-
-      dispatch(
-        setUser({
-          id: 1,
-          fullname: "fullname",
-          email: "email",
-          password: "password",
-          role: "MEMBER",
-        })
-      );
+      Cookies.set("token", accessToken, { expires: 1 });
 
       navigate("/");
     } catch (error) {
