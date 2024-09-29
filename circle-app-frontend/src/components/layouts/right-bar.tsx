@@ -1,8 +1,11 @@
 import { Box, Flex, Text } from "@chakra-ui/react";
 import ProfileHeading from "../ui/profile-heading";
 import OthersAccountItem from "../ui/others-account-item";
+import { useAppSelector } from "../../hooks/use.store";
 
 export default function RightBar() {
+  const user = useAppSelector((state) => state.auth.entities);
+
   return (
     <Box position={"sticky"} width={"563px"}>
       <Flex
@@ -21,7 +24,13 @@ export default function RightBar() {
           <Text fontSize={"20px"} fontWeight={700} lineHeight={"28px"} mb={4}>
             My Profile
           </Text>
-          <ProfileHeading thumbnailH="100px" />
+          <ProfileHeading
+            profilePhoto={user.profilePhoto}
+            fullname={user.fullname}
+            username={user.username}
+            bio={user.bio}
+            thumbnailH="100px"
+          />
         </Box>
         <Box
           backgroundColor={"brand.backgroundBox"}
@@ -33,29 +42,34 @@ export default function RightBar() {
           </Text>
           <Flex direction={"column"} gap={4}>
             <OthersAccountItem
-              image="src/assets/img/avatar.png"
+              image="./profile.png"
               fullName="Elon Musk"
               userName="@elonnnn"
+              isFollow="Follow"
             />
             <OthersAccountItem
-              image="src/assets/img/avatar.png"
+              image="./profile.png"
               fullName="Cristiano Ronaldo"
               userName="@cristiano"
+              isFollow="Follow"
             />
             <OthersAccountItem
-              image="src/assets/img/avatar.png"
+              image="./profile.png"
               fullName="Gibran Rakbuming"
               userName="@gibranraka"
+              isFollow="Follow"
             />
             <OthersAccountItem
-              image="src/assets/img/avatar.png"
+              image="./profile.png"
               fullName="Billie Eilish"
               userName="@billieelish"
+              isFollow="Follow"
             />
             <OthersAccountItem
-              image="src/assets/img/avatar.png"
+              image="./profile.png"
               fullName="Najwa Shihab"
               userName="@najwa"
+              isFollow="Follow"
             />
           </Flex>
         </Box>

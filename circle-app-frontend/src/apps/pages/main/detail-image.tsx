@@ -2,9 +2,9 @@ import { Flex, Box, Image } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { HiXCircle } from "react-icons/hi";
 import { HiChevronRight, HiChevronLeft } from "react-icons/hi";
-import PostDetail from "../../features/detail/components/post-detail";
-import FormPost from "../../components/ui/post-form";
-import RepliesList from "../../features/detail/components/replies-list";
+import PostDetail from "../../../features/detail/components/post-detail";
+import FormPost from "../../../components/ui/post-form";
+import RepliesList from "../../../features/detail/components/replies-list";
 import { useState } from "react";
 
 export default function DetailImage() {
@@ -62,9 +62,10 @@ export default function DetailImage() {
           borderColor={"brand.borderAbu"}
         >
           <PostDetail
-            image="src/assets/img/avatar.png"
-            fullName="Leo Messi"
-            userName="@leomessi"
+            image="./profile.png"
+            fullName="Cristiano Ronaldo"
+            userName="@cristiano"
+            postContent="okee"
           />
           <FormPost placeholder="Type your reply!" buttonTitle="Reply" />
           <RepliesList />

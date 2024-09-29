@@ -5,6 +5,7 @@ interface Account {
   fullName: string;
   userName: string;
   bio?: string;
+  isFollow: string;
 }
 
 export default function OthersAccountItem({
@@ -12,6 +13,7 @@ export default function OthersAccountItem({
   fullName,
   userName,
   bio,
+  isFollow,
 }: Account) {
   return (
     <Flex gap={2} justifyContent={"space-between"}>
@@ -50,7 +52,7 @@ export default function OthersAccountItem({
             fontSize={"14px"}
             fontWeight={700}
           >
-            Follow
+            {isFollow}
           </Button>
         </Flex>
         <Text

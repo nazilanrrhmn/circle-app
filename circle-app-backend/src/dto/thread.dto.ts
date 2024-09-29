@@ -3,3 +3,7 @@ export type CreateThreadsDTO = {
   image?: string;
   authorId: number;
 };
+
+export type UpdateThreadDTO = CreateThreadsDTO & {
+  id: number;
+};

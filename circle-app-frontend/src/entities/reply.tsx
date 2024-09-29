@@ -1,14 +1,12 @@
-import { ReplyEntity } from "./reply";
 import { UserEntity } from "./user";
 
-export interface ThreadEntity {
+export interface ReplyEntity {
   id: number;
   content: string;
   image?: string;
   author: UserEntity;
   authorId: number;
-  replies: ReplyEntity[];
-  like: any[];
+  threadId: number;
   createdAt: Date;
   updateAt: Date;
 }
