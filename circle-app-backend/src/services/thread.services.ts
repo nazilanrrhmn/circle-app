@@ -1,6 +1,7 @@
 import { PrismaClient, Thread, User } from "@prisma/client";
 import { customError } from "../types/custom.error";
 import { CreateThreadsDTO } from "../dto/thread.dto";
+import { SuccessResponse } from "../types/success.respons";
 
 const prisma = new PrismaClient();
 
@@ -9,15 +10,30 @@ class ThreadServies {
     return await prisma.thread.create({ data });
   }
 
-  async getAllThreads(): Promise<Thread[]> {
-    return await prisma.thread.findMany({});
+  async getAllThreads(): Promise<SuccessResponse<Thread[]>> {
+    const threads = await prisma.thread.findMany({
+      include: {
+        author: true,
+        replies: true,
+        like: true,
+      },
+    });
+
+    return {
+      status: "success",
+      message: "Threads retrived",
+      data: threads,
+    };
   }
 
-  async getThreadById(id: number): Promise<Thread | null> {
+  async getThreadById(id: number): Promise<SuccessResponse<Thread>> {
     const thread = await prisma.thread.findFirst({
       where: { id },
       include: {
-        replies: true,
+        author: true,
+        replies: {
+          include: { author: true },
+        },
         like: true,
       },
     });
@@ -30,18 +46,24 @@ class ThreadServies {
       } as customError;
     }
 
-    return thread;
+    return {
+      status: "success",
+      message: "Thread retrived",
+      data: thread,
+    };
   }
 
-  async getThreadByUser(id: number) {
-    const user = await prisma.user.findUnique({
-      where: { id },
-      select: {
-        threads: true,
+  async getThreadByUser(id: number): Promise<SuccessResponse<Thread[]>> {
+    const thread = await prisma.thread.findMany({
+      where: { authorId: id },
+      include: {
+        author: true,
+        replies: true,
+        like: true,
       },
     });
 
-    if (!user) {
+    if (!thread) {
       throw {
         code: "USER_NOT_EXIST",
         status: 404,
@@ -49,7 +71,11 @@ class ThreadServies {
       } as customError;
     }
 
-    return user;
+    return {
+      status: "success",
+      message: "Threads retrived",
+      data: thread,
+    };
   }
 
   async deleteThread(id: number): Promise<Thread | null> {

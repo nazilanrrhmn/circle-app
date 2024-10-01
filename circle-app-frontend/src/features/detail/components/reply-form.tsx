@@ -9,18 +9,20 @@ import {
   Text,
   Avatar,
 } from "@chakra-ui/react";
-import { usePostThread } from "../../features/home/hooks/use-post-form";
-import { useAppSelector } from "../../hooks/use.store";
+import { usePostReply } from "../hooks/use-post-reply";
+import { useAppSelector } from "../../../hooks/use.store";
 
-export default function FormPost({
+export default function FormReply({
   placeholder,
   buttonTitle,
+  threadId,
 }: {
   placeholder: string;
   buttonTitle: string;
+  threadId: number;
 }) {
   const { register, handleSubmit, errors, isSubmitting, onSubmit } =
-    usePostThread();
+    usePostReply({ threadId });
   const user = useAppSelector((state) => state.auth.entities);
 
   return (
@@ -57,7 +59,7 @@ export default function FormPost({
           )}
         </Box>
         <Flex alignItems={"center"} gap={4}>
-          <Image src="/icons/gallery-add.svg" alt="gallery" height={"24px"} />
+          <Image src="/gallery-add.svg" alt="gallery" height={"24px"} />
           <Button
             type="submit"
             backgroundColor={"brand.green-dark"}

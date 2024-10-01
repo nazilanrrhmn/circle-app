@@ -3,10 +3,9 @@ import { useAppSelector } from "../../hooks/use.store";
 
 export default function ProtectedRoutes() {
   const auth = useAppSelector((state) => state.auth);
-  console.log("logged user", auth);
 
   if (auth.loading == "pending") {
-    return <p>Loading ...</p>;
+    return <p>Loading....</p>;
   }
 
   if (auth.entities.id) {

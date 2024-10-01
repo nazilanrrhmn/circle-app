@@ -19,7 +19,9 @@ class ReactionController {
         */
     try {
       const authorId = (req as any).user.id;
-      const { content, image, threadId } = req.body;
+      const { id } = req.params;
+      const threadId = Number(id);
+      const { content, image } = req.body;
       const reply = await reactionSevices.createReply({
         threadId,
         content,

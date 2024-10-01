@@ -30,6 +30,8 @@ export default function LoginForm() {
         <FormControl display={"flex"} flexDirection={"column"} gap={"12px"}>
           <Input
             {...register("email")}
+            id="email"
+            type="email"
             placeholder="Email/Username*"
             rounded={8}
             padding={5}
@@ -44,6 +46,8 @@ export default function LoginForm() {
           )}
           <Input
             {...register("password")}
+            id="password"
+            type="password"
             placeholder="Password"
             rounded={8}
             padding={5}

@@ -8,7 +8,7 @@ export default function SearchBar() {
         zIndex={2}
         top={3}
         left={4}
-        src="src/assets/icons/user-search.svg"
+        src="/search-bar.svg"
         alt="gallery"
         height={"24px"}
       />

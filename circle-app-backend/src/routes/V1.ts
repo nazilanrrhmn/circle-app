@@ -13,20 +13,20 @@ routerV1.post("/auth/register", authControllers.register);
 routerV1.get("/user/me", authentication, authControllers.getUserLogged);
 
 // USER
-routerV1.get("/users", UserController.findAll);
-routerV1.get("/users/:id", UserController.findOne);
+routerV1.get("/users", authentication, UserController.findAll);
+routerV1.get("/users/:id", authentication, UserController.findOne);
 // routerV1.post("/users", UserController.create);
 routerV1.patch("/users", authentication, UserController.update);
 
 // THREADS
-routerV1.get("/threads", ThreadController.findAll);
-routerV1.get("/threads/:id", ThreadController.findOne);
-routerV1.get("/user/threads/:id", ThreadController.findByUser);
+routerV1.get("/threads", authentication, ThreadController.findAll);
+routerV1.get("/threads/:id", authentication, ThreadController.findOne);
+routerV1.get("/user/threads/:id", authentication, ThreadController.findByUser);
 routerV1.post("/threads", authentication, ThreadController.create);
 routerV1.delete("/threads/:id", authentication, ThreadController.delete);
 
 // THREAD REACTION
-routerV1.post("/threads/reply", authentication, reactionController.reply);
+routerV1.post("/threads/:id/reply", authentication, reactionController.reply);
 routerV1.delete(
   "/threads/reply/:id",
   authentication,

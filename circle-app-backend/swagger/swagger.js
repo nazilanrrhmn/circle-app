@@ -5,8 +5,8 @@ const swaggerAutogen = require("swagger-autogen")({
 
 const doc = {
   info: {
-    title: "CIRCLE API",
-    description: "API Documentation for Circle App",
+    title: "API-CIRCLE",
+    description: "API Documentation for Circle-App",
   },
   host: "localhost:5000",
   components: {
@@ -57,7 +57,7 @@ const doc = {
           },
         },
       },
-      createThreadSchema: {
+      createReplySchema: {
         type: "object",
         properties: {
           threadId: {
@@ -83,7 +83,7 @@ const doc = {
   },
 };
 
-const outputFile = "/swagger-output.json";
+const outputFile = "./swagger-output.json";
 const routes = ["./src/index.ts"];
 
 /* NOTE: If you are using the express Router, you must pass in the 'routes' only the 

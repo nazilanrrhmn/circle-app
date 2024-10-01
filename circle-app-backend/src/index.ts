@@ -13,20 +13,17 @@ const port = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
-if (process.env.NODE_ENV !== "production") {
-  app.use(
-    "/api-docs",
-    swaggerUI.serve,
-    swaggerUI.setup(swaggerDocument, {
-      explorer: true,
-      swaggerOptions: {
-        persistAuthorization: true,
-        displayRequestDuration: true,
-      },
-    })
-  );
-}
-
+app.use(
+  "/api-docs",
+  swaggerUI.serve,
+  swaggerUI.setup(swaggerDocument, {
+    explorer: true,
+    swaggerOptions: {
+      persistAuthorization: true,
+      displayRequestDuration: true,
+    },
+  })
+);
 app.use("/api/v1", routerV1);
 
 app.listen(port, () => {

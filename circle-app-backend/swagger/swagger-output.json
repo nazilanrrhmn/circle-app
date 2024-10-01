@@ -1,8 +1,8 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "title": "CIRCLE API",
-    "description": "API Documentation for Circle App",
+    "title": "API-CIRCLE",
+    "description": "API Documentation for Circle-App",
     "version": "1.0.0"
   },
   "servers": [
@@ -13,32 +13,26 @@
   "paths": {
     "/api/v1/auth/login": {
       "post": {
-        "tags": ["Auth"],
         "description": "",
         "responses": {
-          "200": {
-            "description": "OK"
-          }
-        },
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/loginSchema"
-              }
-            }
+          "default": {
+            "description": ""
           }
         }
       }
     },
     "/api/v1/auth/register": {
       "post": {
-        "tags": ["Auth"],
+        "tags": [
+          "Auth"
+        ],
         "description": "",
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         },
         "requestBody": {
@@ -55,7 +49,9 @@
     },
     "/api/v1/user/me": {
       "get": {
-        "tags": ["Auth"],
+        "tags": [
+          "Auth"
+        ],
         "description": "",
         "parameters": [
           {
@@ -72,6 +68,9 @@
           },
           "401": {
             "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         },
         "security": [
@@ -83,17 +82,41 @@
     },
     "/api/v1/users": {
       "get": {
-        "tags": ["Users"],
+        "tags": [
+          "Users"
+        ],
         "summary": "Find all users",
         "description": "",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       },
       "patch": {
-        "tags": ["Users"],
+        "tags": [
+          "Users"
+        ],
         "summary": "Update existing user",
         "description": "",
         "parameters": [
@@ -111,6 +134,9 @@
           },
           "401": {
             "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         },
         "security": [
@@ -122,7 +148,9 @@
     },
     "/api/v1/users/{id}": {
       "get": {
-        "tags": ["Users"],
+        "tags": [
+          "Users"
+        ],
         "summary": "Find a user by params id",
         "description": "",
         "parameters": [
@@ -133,28 +161,70 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/api/v1/threads": {
       "get": {
-        "tags": ["Threads"],
+        "tags": [
+          "Threads"
+        ],
         "summary": "Get all thread",
         "description": "",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       },
       "post": {
-        "tags": ["Threads"],
+        "tags": [
+          "Threads"
+        ],
         "summary": "Create new thread",
         "description": "",
         "parameters": [
@@ -172,6 +242,9 @@
           },
           "401": {
             "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         },
         "security": [
@@ -193,7 +266,9 @@
     },
     "/api/v1/threads/{id}": {
       "get": {
-        "tags": ["Threads"],
+        "tags": [
+          "Threads"
+        ],
         "summary": "get single thread",
         "description": "",
         "parameters": [
@@ -204,16 +279,36 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       },
       "delete": {
-        "tags": ["Threads"],
+        "tags": [
+          "Threads"
+        ],
         "summary": "Delete thread",
         "description": "",
         "parameters": [
@@ -239,6 +334,9 @@
           },
           "401": {
             "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         },
         "security": [
@@ -250,7 +348,9 @@
     },
     "/api/v1/user/threads/{id}": {
       "get": {
-        "tags": ["Threads"],
+        "tags": [
+          "Threads"
+        ],
         "description": "",
         "parameters": [
           {
@@ -260,21 +360,7 @@
             "schema": {
               "type": "string"
             }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/v1/threads/reply": {
-      "post": {
-        "tags": ["Reaction"],
-        "summary": "Create new Reply",
-        "description": "",
-        "parameters": [
+          },
           {
             "name": "Authorization",
             "in": "header",
@@ -289,6 +375,51 @@
           },
           "401": {
             "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/threads/{id}/reply": {
+      "post": {
+        "tags": [
+          "Reaction"
+        ],
+        "summary": "Create new Reply",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         },
         "security": [
@@ -310,7 +441,9 @@
     },
     "/api/v1/threads/reply/{id}": {
       "delete": {
-        "tags": ["Reaction"],
+        "tags": [
+          "Reaction"
+        ],
         "summary": "Delete reply",
         "description": "",
         "parameters": [
@@ -336,6 +469,9 @@
           },
           "401": {
             "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         },
         "security": [
@@ -347,7 +483,9 @@
     },
     "/api/v1/threads/like": {
       "post": {
-        "tags": ["Reaction"],
+        "tags": [
+          "Reaction"
+        ],
         "summary": "Like a thread",
         "description": "",
         "parameters": [
@@ -365,6 +503,9 @@
           },
           "401": {
             "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         },
         "security": [
@@ -386,7 +527,9 @@
     },
     "/api/v1/threads/like/{id}": {
       "delete": {
-        "tags": ["Reaction"],
+        "tags": [
+          "Reaction"
+        ],
         "summary": "Unlike a thread",
         "description": "",
         "parameters": [
@@ -412,6 +555,9 @@
           },
           "401": {
             "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         },
         "security": [
@@ -460,6 +606,17 @@
         }
       },
       "createThreadSchema": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "string"
+          },
+          "image": {
+            "type": "string"
+          }
+        }
+      },
+      "createReplySchema": {
         "type": "object",
         "properties": {
           "threadId": {

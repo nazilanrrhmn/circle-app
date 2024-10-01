@@ -1,36 +1,40 @@
-import { Box } from "@chakra-ui/react";
+import { Box, Text } from "@chakra-ui/react";
 import PostItem from "../../../components/ui/post-item";
-import { apiV1 } from "../../../libs/api";
-import { useAppSelector } from "../../../hooks/use.store";
-import { ThreadResponseDTO } from "../../home/types/thread.dto";
-import { useEffect, useState } from "react";
+import CreatePost from "./create-post";
+// import axios from "axios";
 import { ThreadEntity } from "../../../entities/thread";
+import { useEffect, useState } from "react";
+import { apiV1 } from "../../../libs/api";
+import { ThreadResponseDTO } from "../types/thread.dto";
 
-export default function PostList() {
+export default function HomePage() {
   const [threads, setThread] = useState<ThreadEntity[]>([]);
-  const user = useAppSelector((state) => state.auth.entities);
 
-  async function getUserThread() {
+  async function getThreads() {
     const response = await apiV1.get<null, { data: ThreadResponseDTO }>(
-      `/user/threads/${user.id}`
+      "/threads"
     );
     const data = response.data.data;
     return { data: data };
   }
 
   useEffect(() => {
-    getUserThread().then(({ data }) => {
+    getThreads().then(({ data }) => {
       setThread(data);
     });
   }, []);
 
   return (
-    <Box id="post">
+    <Box mt={4}>
+      <Text padding={4} fontSize={"28px"} fontWeight={700} lineHeight={"28px"}>
+        Home
+      </Text>
+      <CreatePost />
       {threads.map((threads) => {
         return (
           <PostItem
+            id={threads.author.id}
             key={threads.id}
-            id={threads.id}
             fullName={threads.author.fullname}
             userName={threads.author.username}
             postContent={threads.content}

@@ -1,8 +1,42 @@
-import { Box, Flex, Text } from "@chakra-ui/react";
+import { Box, Flex, Spinner, Text } from "@chakra-ui/react";
 import ProfileHeading from "../ui/profile-heading";
 import OthersAccountItem from "../ui/others-account-item";
+import { useAppSelector } from "../../hooks/use.store";
+import { useEffect, useState } from "react";
+import { apiV1 } from "../../libs/api";
+import { UserEntity } from "../../entities/user";
 
 export default function RightBar() {
+  const user = useAppSelector((state) => state.auth.entities);
+  const [others, setOther] = useState<UserEntity[]>([]);
+  const [loading, setLoading] = useState(true); // Add loading state
+
+  async function getThreads() {
+    try {
+      const response = await apiV1.get("/users");
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching users:", error);
+      return [];
+    } finally {
+      setLoading(false); // Set loading to false after fetching
+    }
+  }
+
+  useEffect(() => {
+    getThreads().then((data) => {
+      setOther(data);
+    });
+  }, []);
+
+  if (loading) {
+    return (
+      <Flex justify="center" align="center" height="100vh">
+        <Spinner />
+      </Flex>
+    );
+  }
+
   return (
     <Box position={"sticky"} width={"563px"}>
       <Flex
@@ -21,8 +55,17 @@ export default function RightBar() {
           <Text fontSize={"20px"} fontWeight={700} lineHeight={"28px"} mb={4}>
             My Profile
           </Text>
-          <ProfileHeading thumbnailH="100px" />
+          {user && (
+            <ProfileHeading
+              profilePhoto={user.profilePhoto}
+              fullname={user.fullname}
+              username={user.username}
+              bio={user.bio}
+              thumbnailH="100px"
+            />
+          )}
         </Box>
+
         <Box
           backgroundColor={"brand.backgroundBox"}
           padding={"12px 20px 20px 20px"}
@@ -32,33 +75,18 @@ export default function RightBar() {
             Suggested for you
           </Text>
           <Flex direction={"column"} gap={4}>
-            <OthersAccountItem
-              image="src/assets/img/avatar.png"
-              fullName="Elon Musk"
-              userName="@elonnnn"
-            />
-            <OthersAccountItem
-              image="src/assets/img/avatar.png"
-              fullName="Cristiano Ronaldo"
-              userName="@cristiano"
-            />
-            <OthersAccountItem
-              image="src/assets/img/avatar.png"
-              fullName="Gibran Rakbuming"
-              userName="@gibranraka"
-            />
-            <OthersAccountItem
-              image="src/assets/img/avatar.png"
-              fullName="Billie Eilish"
-              userName="@billieelish"
-            />
-            <OthersAccountItem
-              image="src/assets/img/avatar.png"
-              fullName="Najwa Shihab"
-              userName="@najwa"
-            />
+            {others.slice(0, 5).map((other) => (
+              <OthersAccountItem
+                key={other.id}
+                image={other.profilePhoto || ""} // Provide default empty string
+                fullName={other.fullname || "Unknown"} // Provide default name if fullname is undefined
+                userName={other.username || "Unknown"} // Handle undefined userName
+                isFollow="Follow"
+              />
+            ))}
           </Flex>
         </Box>
+
         <Box
           backgroundColor={"brand.backgroundBox"}
           padding={"12px 20px 20px 20px"}

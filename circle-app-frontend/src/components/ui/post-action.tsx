@@ -1,6 +1,6 @@
 import { Flex, Image, Text } from "@chakra-ui/react";
 
-export function PostAction() {
+export function PostAction({ like, reply }: { like: number; reply: number }) {
   return (
     <Flex gap={4} marginY={1} alignItems={"center"}>
       <Flex gap={2} alignItems={"center"}>
@@ -11,36 +11,36 @@ export function PostAction() {
           lineHeight={"20px"}
           color={"brand.fontSecondary"}
         >
-          293
+          {like}
         </Text>
       </Flex>
       <Flex gap={2} alignItems={"center"}>
-        <Image src="./message-text.svg" alt="like" height={"18px"} />
+        <Image src="./icons/message-text.svg" alt="like" height={"18px"} />
         <Text
           fontSize={"14px"}
           fontWeight={400}
           lineHeight={"20px"}
           color={"brand.fontSecondary"}
         >
-          281 Replies
+          {reply} Replies
         </Text>
       </Flex>
     </Flex>
   );
 }
 
-export function RepliesAction() {
+export function RepliesAction({ like }: { like: number }) {
   return (
     <Flex gap={4} marginY={1} alignItems={"center"}>
       <Flex gap={2} alignItems={"center"}>
-        <Image src="./heart.svg" alt="like" height={"18px"} />
+        <Image src="/heart.svg" alt="like" height={"18px"} />
         <Text
           fontSize={"14px"}
           fontWeight={400}
           lineHeight={"20px"}
           color={"brand.fontSecondary"}
         >
-          293
+          {like}
         </Text>
       </Flex>
     </Flex>
