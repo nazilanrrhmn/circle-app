@@ -4,5 +4,5 @@ import { CreateThreadsDTO } from "../../dto/thread.dto";
 export const CreateThreadSchema = Joi.object<CreateThreadsDTO>({
   content: Joi.string(),
   image: Joi.string(),
-  // authorId: Joi.number(),
+  authorId: Joi.number(),
 });

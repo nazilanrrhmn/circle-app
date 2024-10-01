@@ -68,7 +68,7 @@ export default function RouterApp() {
         //   element: <Profile />,
         // },
         {
-          path: "/detail-post",
+          path: "/detail-post/:id",
           element: <DetailPost />,
         },
         {

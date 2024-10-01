@@ -1,9 +1,9 @@
-import { Box, Button, Flex, Image, Text } from "@chakra-ui/react";
+import { Avatar, Box, Button, Flex, Text } from "@chakra-ui/react";
 
 interface Account {
   image: string;
   fullName: string;
-  userName: string;
+  userName: string | undefined;
   bio?: string;
   isFollow: string;
 }
@@ -17,9 +17,9 @@ export default function OthersAccountItem({
 }: Account) {
   return (
     <Flex gap={2} justifyContent={"space-between"}>
-      <Image
+      <Avatar
         src={image}
-        alt="thumbnail"
+        name={fullName}
         borderColor={"brand.backgroundBox"}
         height={"40px"}
         width={"40px"}
@@ -38,7 +38,7 @@ export default function OthersAccountItem({
               lineHeight={"16px"}
               color={"brand.fontSecondary"}
             >
-              {userName}
+              @{userName || "Unknown"}
             </Text>
           </Box>
           <Button

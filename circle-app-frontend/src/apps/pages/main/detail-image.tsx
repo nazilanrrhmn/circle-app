@@ -62,6 +62,8 @@ export default function DetailImage() {
           borderColor={"brand.borderAbu"}
         >
           <PostDetail
+            like={20}
+            reply={12}
             image="./profile.png"
             fullName="Cristiano Ronaldo"
             userName="@cristiano"

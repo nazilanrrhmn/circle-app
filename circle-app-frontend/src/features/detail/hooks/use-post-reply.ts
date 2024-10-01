@@ -10,7 +10,7 @@ import {
 import { ThreadDetailResponseDTO } from "../types/thread-detail.dto";
 import { ThreadPostRequestDTO } from "../../home/types/thread.dto";
 
-export function usePostThread() {
+export function usePostReply({ threadId }: { threadId: number }) {
   const {
     register,
     handleSubmit,
@@ -25,7 +25,7 @@ export function usePostThread() {
         null,
         { data: ThreadDetailResponseDTO },
         ThreadPostRequestDTO
-      >("/threads", { content });
+      >(`/threads/${threadId}/reply`, { content });
       alert(response.data.message);
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {

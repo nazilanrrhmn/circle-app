@@ -37,7 +37,7 @@ export default function EditProfileModal({
       <ModalBody p={4}>
         <Box position={"relative"} marginBottom={12}>
           <Image
-            src="./thumbnail.png"
+            src="/cover.png"
             alt="thumbnail"
             height={thumbnailH}
             width={"100%"}
@@ -47,7 +47,7 @@ export default function EditProfileModal({
           <Box position={"absolute"} bottom={"-35px"} left={"14px"}>
             <Box position={"relative"}>
               <Image
-                src="./profile.png"
+                src="/avatar.png"
                 alt="thumbnail"
                 border={"solid 4px"}
                 borderColor={"brand.backgroundCircle"}
@@ -56,7 +56,7 @@ export default function EditProfileModal({
                 objectFit="cover"
               />
               <Image
-                src="./edit-image.svg"
+                src="/icons/edit-image.svg"
                 alt="edit image"
                 position={"absolute"}
                 top={"20px"}

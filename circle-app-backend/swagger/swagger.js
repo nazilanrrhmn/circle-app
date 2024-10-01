@@ -8,7 +8,7 @@ const doc = {
     title: "API-CIRCLE",
     description: "API Documentation for Circle-App",
   },
-  host: "localhost:3000",
+  host: "localhost:5000",
   components: {
     securitySchemes: {
       bearerAuth: {

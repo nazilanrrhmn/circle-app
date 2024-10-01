@@ -16,7 +16,7 @@ export default function ProfileHeading({
     <>
       <Box position={"relative"} marginBottom={4}>
         <Image
-          src="./thumbnail.png"
+          src="/cover.png"
           alt="thumbnail"
           height={thumbnailH}
           width={"100%"}

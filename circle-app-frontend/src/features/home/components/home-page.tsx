@@ -33,7 +33,7 @@ export default function HomePage() {
       {threads.map((threads) => {
         return (
           <PostItem
-            id={threads.id}
+            id={threads.author.id}
             key={threads.id}
             fullName={threads.author.fullname}
             userName={threads.author.username}
