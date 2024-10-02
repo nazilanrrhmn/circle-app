@@ -4,7 +4,7 @@ import { PostAction } from "./post-action";
 import PostContent from "./post-content";
 
 export default function PostItem({
-  image,
+  profilePhoto,
   fullName,
   userName,
   postContent,
@@ -16,7 +16,7 @@ export default function PostItem({
   return (
     <Link to={`/detail-post/${id}`}>
       <PostContent
-        image={image}
+        profilePhoto={profilePhoto}
         fullName={fullName}
         userName={userName}
         postContent={postContent}

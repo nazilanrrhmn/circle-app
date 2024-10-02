@@ -1,7 +1,7 @@
 import { Box, Flex, Spinner, Text } from "@chakra-ui/react";
 import { useEffect, useState, useCallback } from "react";
 import { HiOutlineArrowLeft } from "react-icons/hi";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { ThreadEntity } from "../../../entities/thread";
 import { apiV1 } from "../../../libs/api";
 import { ThreadDetailResponseDTO } from "../types/thread-detail.dto";
@@ -41,7 +41,9 @@ export default function PostPage() {
   return (
     <Box>
       <Flex mt={4} padding={4} gap={3} alignItems={"center"}>
-        <HiOutlineArrowLeft size={26} />
+        <Link to={"/"}>
+          <HiOutlineArrowLeft size={26} />
+        </Link>
         <Text fontSize={"28px"} fontWeight={700} lineHeight={"28px"}>
           Status
         </Text>

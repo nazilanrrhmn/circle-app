@@ -19,9 +19,10 @@ export default function FormPost({
   placeholder: string;
   buttonTitle: string;
 }) {
-  const { register, handleSubmit, errors, isSubmitting, onSubmit } =
+  const { register, handleSubmit, errors, isSubmitting, onSubmit, watch } =
     usePostThread();
   const user = useAppSelector((state) => state.auth.entities);
+  const content = watch("content");
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -57,11 +58,34 @@ export default function FormPost({
           )}
         </Box>
         <Flex alignItems={"center"} gap={4}>
-          <Image src="/icons/gallery-add.svg" alt="gallery" height={"24px"} />
+          {/* Custom upload button */}
+          <label htmlFor="upload-image">
+            <Button
+              variant="outline"
+              size="sm"
+              cursor="pointer"
+              leftIcon={
+                <Image
+                  src="/icons/gallery-add.svg"
+                  alt="gallery"
+                  height="24px"
+                />
+              }
+              as="span"
+            />
+            <Input
+              type="file"
+              accept="image/*"
+              {...register("image")}
+              id="upload-image"
+              style={{ display: "none" }}
+            />
+          </label>
+
           <Button
             type="submit"
-            backgroundColor={"brand.green-dark"}
-            color={"brand.white-dark"}
+            backgroundColor={content ? "brand.green" : "brand.green-dark"}
+            color={content ? "white" : "brand.white-dark"}
             height={"33px"}
             justifyItems={"center"}
             rounded={"full"}
@@ -70,6 +94,7 @@ export default function FormPost({
             fontSize={"14px"}
             fontWeight={700}
             lineHeight={"17px"}
+            disabled={isSubmitting || !content}
           >
             {isSubmitting ? <Spinner /> : `${buttonTitle}`}
           </Button>

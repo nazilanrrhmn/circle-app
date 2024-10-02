@@ -6,8 +6,15 @@ import { SuccessResponse } from "../types/success.respons";
 const prisma = new PrismaClient();
 
 class ThreadServies {
-  async createThread(data: CreateThreadsDTO): Promise<Thread | null> {
-    return await prisma.thread.create({ data });
+  async createThread(
+    data: CreateThreadsDTO
+  ): Promise<SuccessResponse<Thread | null>> {
+    const result = await prisma.thread.create({ data });
+    return {
+      status: "success",
+      message: "Thread Created",
+      data: result,
+    };
   }
 
   async getAllThreads(): Promise<SuccessResponse<Thread[]>> {

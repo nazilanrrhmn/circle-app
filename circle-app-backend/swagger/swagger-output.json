@@ -1,8 +1,8 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "title": "API CIRCLE",
-    "description": "API Documentation for Circle-App",
+    "title": "API For CIRCLE",
+    "description": "API Documentation for Circle App",
     "version": "1.0.0"
   },
   "servers": [
@@ -704,7 +704,8 @@
             "type": "string"
           },
           "image": {
-            "type": "string"
+            "type": "string",
+            "format": "binary"
           }
         }
       },

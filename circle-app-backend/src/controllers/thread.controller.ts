@@ -1,7 +1,8 @@
 import { Request, Response } from "express";
+import { CreateThreadSchema } from "../utils/schemas/thread.schema";
+import cloudinaryServices from "../services/cloudinary.services";
 import ThreadServices from "../services/thread.services";
 import threadServices from "../services/thread.services";
-import { CreateThreadSchema } from "../utils/schemas/thread.schema";
 
 class ThreadController {
   async create(req: Request, res: Response) {
@@ -10,7 +11,7 @@ class ThreadController {
     /*  #swagger.requestBody = {
             required: true,
             content: {
-                "application/json": {
+                "multipart/form-data": {
                     schema: {
                         $ref: "#/components/schemas/createThreadSchema"
                     }  
@@ -20,18 +21,23 @@ class ThreadController {
     */
     try {
       const authorId = (req as any).user.id;
-      const { content, image } = await CreateThreadSchema.validateAsync(
-        req.body
-      );
-      const threads = await threadServices.createThread({
-        content,
-        image,
-        authorId,
-      });
-      res.json({
-        status: "success",
-        message: "Thread Created",
-      });
+      const fileUpload = req.file;
+      let imageUrl = null;
+
+      if (fileUpload) {
+        const image = await cloudinaryServices.upload(
+          req.file as Express.Multer.File
+        );
+        imageUrl = image.secure_url;
+      }
+      const value = {
+        ...req.body,
+        image: imageUrl,
+        authorId: authorId,
+      };
+      const data = await CreateThreadSchema.validateAsync(value);
+      const threads = await threadServices.createThread(data);
+      res.json(threads);
     } catch (error) {
       res.status(500).json(error);
     }

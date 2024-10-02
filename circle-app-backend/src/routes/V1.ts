@@ -1,10 +1,11 @@
 import express from "express";
 import authControllers from "../controllers/auth.controller";
-import { authentication } from "../middlewares/authentication";
 import followController from "../controllers/follow.controller";
 import reactionController from "../controllers/reaction.controller";
 import ThreadController from "../controllers/thread.controller";
 import UserController from "../controllers/user.controller";
+import { authentication } from "../middlewares/authentication";
+import { upload } from "../middlewares/upload.file";
 
 export const routerV1 = express.Router();
 
@@ -27,7 +28,12 @@ routerV1.delete("/unfollow", authentication, followController.unfollow);
 routerV1.get("/threads", authentication, ThreadController.findAll);
 routerV1.get("/threads/:id", authentication, ThreadController.findOne);
 routerV1.get("/user/threads/:id", authentication, ThreadController.findByUser);
-routerV1.post("/threads", authentication, ThreadController.create);
+routerV1.post(
+  "/threads",
+  authentication,
+  upload.single("image"),
+  ThreadController.create
+);
 routerV1.delete("/threads/:id", authentication, ThreadController.delete);
 
 // THREAD REACTION
@@ -40,7 +46,7 @@ routerV1.delete(
 routerV1.post("/threads/like", authentication, reactionController.like);
 routerV1.delete("/threads/like/:id", authentication, reactionController.unlike);
 
-//DASHBOARD ADMIN
+// DASHBOARD | ADMIN
 // routerV1.get("/dashboard", authentication, authorization("ADMIN"), (req: Request, res: Response) => {
 //   res.json({ message: "Dashboard Admin" });
 // });

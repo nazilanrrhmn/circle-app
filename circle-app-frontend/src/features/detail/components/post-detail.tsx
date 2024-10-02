@@ -29,7 +29,7 @@ export default function PostDetail({
           rounded={"full"}
           objectFit="cover"
         />
-        <Link to="profile">
+        <Link to="/profile">
           <Box>
             <Text fontSize={"14px"} mb={1} fontWeight={700} lineHeight={"16px"}>
               {fullName}
