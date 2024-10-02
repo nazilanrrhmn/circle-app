@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "title": "API-CIRCLE",
+    "title": "API CIRCLE",
     "description": "API Documentation for Circle-App",
     "version": "1.0.0"
   },
@@ -186,6 +186,98 @@
             "bearerAuth": []
           }
         ]
+      }
+    },
+    "/api/v1/follow": {
+      "post": {
+        "tags": [
+          "Follow"
+        ],
+        "summary": "Follow User",
+        "description": "",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/followSchema"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/unfollow": {
+      "delete": {
+        "tags": [
+          "Follow"
+        ],
+        "summary": "Unollow User",
+        "description": "",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/api/v1/threads": {
@@ -619,9 +711,6 @@
       "createReplySchema": {
         "type": "object",
         "properties": {
-          "threadId": {
-            "type": "integer"
-          },
           "content": {
             "type": "string"
           },
@@ -634,6 +723,14 @@
         "type": "object",
         "properties": {
           "threadId": {
+            "type": "integer"
+          }
+        }
+      },
+      "followSchema": {
+        "type": "object",
+        "properties": {
+          "followersId": {
             "type": "integer"
           }
         }

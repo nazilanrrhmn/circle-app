@@ -70,7 +70,7 @@ export default function CreatePostModal() {
           borderTop={"solid 1px"}
           borderColor={"brand.borderAbu"}
         >
-          <Image src="/icons/gallery-add.svg" alt="gallery" height={"24px"} />
+          <Image src="/gallery-add.svg" alt="gallery" height={"24px"} />
           <Button
             type="submit"
             backgroundColor={"brand.green-dark"}

@@ -1,6 +1,5 @@
 import { PrismaClient, User } from "@prisma/client";
 import { UpdateUSerDTO } from "../dto/user.dto";
-import { error } from "console";
 import { customError } from "../types/custom.error";
 
 const prisma = new PrismaClient();
@@ -13,6 +12,17 @@ class UserServices {
   async getUserById(id: number): Promise<User | null> {
     const user = await prisma.user.findUnique({
       where: { id },
+      include: {
+        followers: true,
+        following: true,
+        threads: {
+          include: {
+            author: true,
+            like: true,
+            replies: true,
+          },
+        },
+      },
     });
 
     if (!user) {
@@ -26,14 +36,10 @@ class UserServices {
     return user;
   }
 
-  // async createUser(data: CreateUserDTO): Promise<User | null> {
-  //   return await prisma.user.create({ data });
-  // }
-
-  async updateUser(data: UpdateUSerDTO): Promise<User | null> {
+  async updateUser(id: number, data: UpdateUSerDTO): Promise<User | null> {
     const user = await prisma.user.findUnique({
       where: {
-        id: 8,
+        id,
       },
     });
 
@@ -45,25 +51,29 @@ class UserServices {
       } as customError;
     }
 
+    // Create a new data object to store updates
+    const updatedData: Partial<User> = {};
+
     if (data.fullname) {
-      user.fullname = data.fullname;
+      updatedData.fullname = data.fullname;
     }
 
     if (data.username) {
-      user.username = data.username;
+      updatedData.username = data.username;
     }
 
     if (data.bio) {
-      user.bio = data.bio;
+      updatedData.bio = data.bio;
     }
 
     if (data.profilePhoto) {
-      user.profilePhoto = data.profilePhoto;
+      updatedData.profilePhoto = data.profilePhoto;
     }
 
+    // Update the user with the new data
     return await prisma.user.update({
-      data: user,
-      where: { id: 8 },
+      where: { id },
+      data: updatedData,
     });
   }
 }

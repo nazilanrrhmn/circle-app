@@ -10,36 +10,31 @@ import RepliesItem from "./replies-item";
 import FormReply from "./reply-form";
 
 export default function PostPage() {
-  const [threads, setThread] = useState<ThreadEntity | null>(null); // Initialize as null
+  const [thread, setThread] = useState<ThreadEntity | null>(null); // Update type
   const { id } = useParams();
   const threadId = Number(id);
 
-  const getThreads = useCallback(async () => {
+  const getThread = useCallback(async () => {
     try {
       const response = await apiV1.get<null, { data: ThreadDetailResponseDTO }>(
         `/threads/${threadId}`
       );
-      const data = response.data.data;
-      return { data: data };
+      return response.data.data;
     } catch (error) {
-      console.error("Failed to fetch thread details:", error);
-      return null; // Return null on error
+      console.error("Error fetching thread:", error);
+      return null;
     }
   }, [threadId]);
 
   useEffect(() => {
-    const fetchThreads = async () => {
-      const result = await getThreads();
-      if (result) {
-        setThread(result.data); // Ensure data is set only if result is valid
+    getThread().then((data) => {
+      if (data) {
+        setThread(data);
       }
-    };
-    fetchThreads();
-  }, [getThreads]);
+    });
+  }, [getThread]);
 
-  console.log("thread detail", threads);
-
-  if (!threads) {
+  if (!thread) {
     return <Spinner />;
   }
 
@@ -52,27 +47,29 @@ export default function PostPage() {
         </Text>
       </Flex>
       <PostDetail
-        image={threads.author?.profilePhoto || ""}
-        fullName={threads.author?.fullname || "Unknown"}
-        userName={threads.author?.username || "Unknown"}
-        postContent={threads.content}
-        postImage={threads.image || ""}
-        like={threads.like.length}
-        reply={threads.replies.length}
+        image={thread.author?.profilePhoto || ""}
+        fullName={thread.author?.fullname || "Anonymous"}
+        userName={thread.author?.username || "Unknown"}
+        postContent={thread.content || ""}
+        postImage={thread.image || ""}
+        like={thread.likes?.length ?? 0} /* Memastikan likes adalah array */
+        reply={
+          thread.replies?.length ?? 0
+        } /* Memastikan replies adalah array */
       />
       <FormReply
         threadId={threadId}
         placeholder="Type your reply!"
         buttonTitle="Reply"
       />
-      {threads.replies.map((reply) => (
+      {thread.replies?.map((reply) => (
         <RepliesItem
           key={reply.id}
           image={reply.author?.profilePhoto || ""}
-          fullName={reply.author?.fullname || "Unknown"}
+          fullName={reply.author?.fullname || "Anonymous"}
           userName={reply.author?.username || "Unknown"}
-          postContent={reply.content}
-          like={10}
+          postContent={reply.content || ""}
+          like={10} /* Update with actual like count if available */
           postImage={reply.image || ""}
         />
       ))}

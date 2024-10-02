@@ -5,14 +5,30 @@ import CreatePostModal from "../ui/post-modal";
 import Cookies from "js-cookie";
 import { useAppDispatch } from "../../hooks/use.store";
 import { removeUser } from "../../features/auth/auth.slice";
+import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
 
 export default function LeftBar() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   function onClick() {
-    Cookies.remove("token");
-    dispatch(removeUser());
+    Swal.fire({
+      icon: "question",
+      title: "Are you sure want to logout?",
+      showCancelButton: true,
+      confirmButtonText: "Logout",
+      background: "#1D1D1D",
+      color: "#fff",
+      iconColor: "#04A51E",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Cookies.remove("token");
+        dispatch(removeUser());
+        navigate("/login");
+      }
+    });
   }
 
   return (

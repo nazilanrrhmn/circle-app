@@ -1,15 +1,6 @@
 import { Avatar, Box, Flex, Image, Text } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
-
-interface PostDetailProps {
-  image: string;
-  fullName: string;
-  userName: string;
-  postImage?: string;
-  postContent: string;
-  like: number;
-  reply: number;
-}
+import { Thread } from "../../home/types/thread.dto";
 
 export default function PostDetail({
   image,
@@ -19,7 +10,7 @@ export default function PostDetail({
   postContent,
   like,
   reply,
-}: PostDetailProps) {
+}: Thread) {
   return (
     <Flex
       direction={"column"}
@@ -57,14 +48,7 @@ export default function PostDetail({
       <Text fontSize={"14px"} fontWeight={400} lineHeight={"20px"}>
         {postContent}
       </Text>
-      {postImage && (
-        <Image
-          src={postImage}
-          width={{ base: "100%", md: "400px" }} // Responsif
-          rounded={8}
-          objectFit="contain"
-        />
-      )}
+      <Image src={postImage} width={"400px"} rounded={8} />
       <Flex gap={1} mb={1}>
         <Text
           fontSize={"14px"}
@@ -93,7 +77,7 @@ export default function PostDetail({
       </Flex>
       <Flex gap={4} marginY={1} alignItems={"center"}>
         <Flex gap={2} alignItems={"center"}>
-          <Image src="/icons/heart.svg" alt="like" height={"18px"} />
+          <Image src="/heart.svg" alt="like" height={"18px"} />
           <Text
             fontSize={"14px"}
             fontWeight={400}
@@ -104,7 +88,7 @@ export default function PostDetail({
           </Text>
         </Flex>
         <Flex gap={2} alignItems={"center"}>
-          <Image src="/icons/message-text.svg" alt="reply" height={"18px"} />
+          <Image src="/icons/message-text.svg" alt="like" height={"18px"} />
           <Text
             fontSize={"14px"}
             fontWeight={400}

@@ -1,11 +1,11 @@
 import { Flex, Box, Image } from "@chakra-ui/react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { HiXCircle } from "react-icons/hi";
 import { HiChevronRight, HiChevronLeft } from "react-icons/hi";
 import PostDetail from "../../../features/detail/components/post-detail";
 import FormPost from "../../../components/ui/post-form";
 import RepliesList from "../../../features/detail/components/replies-list";
-import { useState } from "react";
 
 export default function DetailImage() {
   const navigate = useNavigate();

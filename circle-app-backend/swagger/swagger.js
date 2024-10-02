@@ -5,7 +5,7 @@ const swaggerAutogen = require("swagger-autogen")({
 
 const doc = {
   info: {
-    title: "API-CIRCLE",
+    title: "API CIRCLE",
     description: "API Documentation for Circle-App",
   },
   host: "localhost:5000",
@@ -60,9 +60,6 @@ const doc = {
       createReplySchema: {
         type: "object",
         properties: {
-          threadId: {
-            type: "integer",
-          },
           content: {
             type: "string",
           },
@@ -75,6 +72,14 @@ const doc = {
         type: "object",
         properties: {
           threadId: {
+            type: "integer",
+          },
+        },
+      },
+      followSchema: {
+        type: "object",
+        properties: {
+          followersId: {
             type: "integer",
           },
         },

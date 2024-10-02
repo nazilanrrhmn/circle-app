@@ -1,11 +1,12 @@
-import { Navigate, Outlet } from "react-router-dom";
+import { Navigate, Outlet, useNavigate } from "react-router-dom";
 import { useAppSelector } from "../../hooks/use.store";
+import { Spinner } from "@chakra-ui/react";
 
 export default function ProtectedRoutes() {
   const auth = useAppSelector((state) => state.auth);
 
   if (auth.loading == "pending") {
-    return <p>Loading....</p>;
+    return <Spinner />;
   }
 
   if (auth.entities.id) {

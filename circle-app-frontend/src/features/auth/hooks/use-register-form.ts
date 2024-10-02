@@ -8,6 +8,7 @@ import Cookies from "js-cookie";
 import { apiV1 } from "../../../libs/api";
 import { useAppDispatch } from "../../../hooks/use.store";
 import { setUser } from "../auth.slice";
+import Swal from "sweetalert2";
 
 export function useRegisterForm() {
   const {
@@ -32,7 +33,15 @@ export function useRegisterForm() {
         email: data.email,
         password: data.password,
       });
-      alert(response.data.message);
+      Swal.fire({
+        icon: "success",
+        title: response.data.message,
+        showConfirmButton: false,
+        background: "#1D1D1D",
+        color: "#fff",
+        iconColor: "#04A51E",
+        timer: 1000,
+      });
       const { accessToken, user } = response.data.data;
 
       Cookies.set("token", accessToken, { expires: 2 });

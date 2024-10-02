@@ -1,41 +1,40 @@
 import { Box, Flex, Spinner, Text } from "@chakra-ui/react";
-import ProfileHeading from "../ui/profile-heading";
-import OthersAccountItem from "../ui/others-account-item";
-import { useAppSelector } from "../../hooks/use.store";
 import { useEffect, useState } from "react";
+import { useAppSelector } from "../../hooks/use.store";
 import { apiV1 } from "../../libs/api";
-import { UserEntity } from "../../entities/user";
+import OthersAccountItem from "../ui/others-account-item";
+import ProfileHeading from "../ui/profile-heading";
+
+// Define the type for the user object
+interface User {
+  id: number;
+  profilePhoto: string;
+  fullname: string;
+  username: string;
+}
 
 export default function RightBar() {
   const user = useAppSelector((state) => state.auth.entities);
-  const [others, setOther] = useState<UserEntity[]>([]);
-  const [loading, setLoading] = useState(true); // Add loading state
+  const [others, setOther] = useState<User[]>([]); // Explicitly typing 'others' as an array of 'User'
 
   async function getThreads() {
-    try {
-      const response = await apiV1.get("/users");
-      return response.data;
-    } catch (error) {
-      console.error("Error fetching users:", error);
-      return [];
-    } finally {
-      setLoading(false); // Set loading to false after fetching
-    }
+    const response = await apiV1.get("/users");
+    const data = response.data;
+    return { data: data };
   }
 
   useEffect(() => {
-    getThreads().then((data) => {
+    getThreads().then(({ data }) => {
       setOther(data);
     });
   }, []);
 
-  if (loading) {
-    return (
-      <Flex justify="center" align="center" height="100vh">
-        <Spinner />
-      </Flex>
-    );
+  if (!others.length) {
+    return <Spinner />;
   }
+
+  const followersCount = user?.followers?.length || 0;
+  const followingCount = user?.following?.length || 0;
 
   return (
     <Box position={"sticky"} width={"563px"}>
@@ -55,17 +54,16 @@ export default function RightBar() {
           <Text fontSize={"20px"} fontWeight={700} lineHeight={"28px"} mb={4}>
             My Profile
           </Text>
-          {user && (
-            <ProfileHeading
-              profilePhoto={user.profilePhoto}
-              fullname={user.fullname}
-              username={user.username}
-              bio={user.bio}
-              thumbnailH="100px"
-            />
-          )}
+          <ProfileHeading
+            profilePhoto={user?.profilePhoto}
+            fullname={user?.fullname}
+            username={user?.username}
+            bio={user?.bio}
+            followers={followersCount}
+            following={followingCount}
+            thumbnailH="100px"
+          />
         </Box>
-
         <Box
           backgroundColor={"brand.backgroundBox"}
           padding={"12px 20px 20px 20px"}
@@ -77,16 +75,16 @@ export default function RightBar() {
           <Flex direction={"column"} gap={4}>
             {others.slice(0, 5).map((other) => (
               <OthersAccountItem
+                id={other.id}
                 key={other.id}
-                image={other.profilePhoto || ""} // Provide default empty string
-                fullName={other.fullname || "Unknown"} // Provide default name if fullname is undefined
-                userName={other.username || "Unknown"} // Handle undefined userName
+                image={other.profilePhoto}
+                fullName={other.fullname}
+                userName={other.username}
                 isFollow="Follow"
               />
             ))}
           </Flex>
         </Box>
-
         <Box
           backgroundColor={"brand.backgroundBox"}
           padding={"12px 20px 20px 20px"}

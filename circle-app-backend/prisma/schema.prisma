@@ -13,6 +13,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// Model Users
 model User {
   id            Int     @id @default(autoincrement())
   fullname      String
@@ -24,6 +25,9 @@ model User {
 
   role RoleEnum @default(MEMBER)
 
+  following Follow [] @relation(name: "following")
+  followers Follow [] @relation(name: "followers")
+
   threads Thread[]
   replies Reply[]
   likes Like[]
@@ -34,11 +38,26 @@ model User {
   @@map("users")
 }
 
+// Model Follows
+model Follow {
+  id Int @id @default(autoincrement())
+
+  followingId Int
+  followersId Int
+
+  following User @relation(name: "following", fields: [followingId], references: [id])
+  followers User @relation(name: "followers", fields: [followersId], references: [id])
+
+  createdAt DateTime @default(now())
+  updateAt DateTime @default(now()) @updatedAt
+}
+
 enum RoleEnum {
   ADMIN
   MEMBER
 }
 
+// Model Threads
 model Thread {
   id Int @id @default(autoincrement())
   content String
@@ -56,6 +75,7 @@ model Thread {
   @@map("threads")
 }
 
+// Model Replys
 model Reply {
   id Int @id @default(autoincrement())
   content String
@@ -73,6 +93,7 @@ model Reply {
   @@map("replies")
 }
 
+// Model Likes
 model Like {
   id Int @id @default(autoincrement())
 
