@@ -2,6 +2,7 @@ import { Avatar, Box, Button, Flex, Image, Text } from "@chakra-ui/react";
 import { Modal, ModalOverlay, useDisclosure } from "@chakra-ui/react";
 import EditProfileModal from "./profile-modal";
 import { UserStoreDTO } from "../../features/auth/types/auth.dto";
+import { UserProfileDTO } from "../../features/profile/types/profile.dto";
 
 export default function ProfileHeading({
   thumbnailH,
@@ -9,7 +10,9 @@ export default function ProfileHeading({
   username,
   bio,
   profilePhoto,
-}: Omit<UserStoreDTO, "id" | "role" | "email"> & { thumbnailH: string }) {
+  following,
+  followers,
+}: Omit<UserProfileDTO, "id"> & { thumbnailH: string }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
@@ -71,7 +74,7 @@ export default function ProfileHeading({
         </Text>
         <Flex gap={4}>
           <Text fontSize={"16px"} fontWeight={700} lineHeight={"24px"}>
-            291{" "}
+            {following}{" "}
             <Text
               as={"span"}
               fontWeight={400}
@@ -82,7 +85,7 @@ export default function ProfileHeading({
             </Text>
           </Text>
           <Text fontSize={"16px"} fontWeight={700} lineHeight={"24px"}>
-            310{" "}
+            {followers}{" "}
             <Text
               as={"span"}
               fontWeight={400}

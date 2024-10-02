@@ -59,7 +59,7 @@ export default function FormReply({
           )}
         </Box>
         <Flex alignItems={"center"} gap={4}>
-          <Image src="/gallery-add.svg" alt="gallery" height={"24px"} />
+          <Image src="/icons/gallery-add.svg" alt="gallery" height={"24px"} />
           <Button
             type="submit"
             backgroundColor={"brand.green-dark"}

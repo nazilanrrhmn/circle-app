@@ -1,9 +1,15 @@
+// import { Thread } from "../../home/types/thread.dto";
 import { Tabs, TabList, TabPanels, TabPanel } from "@chakra-ui/react";
 import { TabIndicatorCircle, TabItem } from "../../../components/ui/circle-tab";
 import PostList from "./post-list";
 import MediaList from "./media-list";
+import { ThreadEntity } from "../../../entities/thread"; // Import the correct type
 
-export default function ProfileTabs() {
+interface ProfileTabsProps {
+  threads: ThreadEntity[]; // Define the type for threads
+}
+
+export default function ProfileTabs({ threads }: ProfileTabsProps) {
   return (
     <Tabs isFitted variant={"unstyled"}>
       <TabList borderBottom="1px solid" borderColor="brand.borderAbu">
@@ -13,10 +19,10 @@ export default function ProfileTabs() {
       <TabIndicatorCircle />
       <TabPanels>
         <TabPanel p={0}>
-          <PostList />
+          <PostList threads={threads} />
         </TabPanel>
         <TabPanel p={0}>
-          <MediaList />
+          <MediaList threads={threads} />
         </TabPanel>
       </TabPanels>
     </Tabs>

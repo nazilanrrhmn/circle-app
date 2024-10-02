@@ -1,3 +1,5 @@
+import { FollowEntitiy } from "./follow";
+
 export interface UserEntity {
   id: number;
   fullname: string;
@@ -7,4 +9,6 @@ export interface UserEntity {
   bio?: string;
   profilePhoto?: string;
   role: string;
+  following: FollowEntitiy[];
+  followers: FollowEntitiy[];
 }

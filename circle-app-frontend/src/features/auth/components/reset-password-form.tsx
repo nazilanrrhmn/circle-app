@@ -2,20 +2,8 @@ import { Box, Image, Text, Input, Button, FormControl } from "@chakra-ui/react";
 
 export default function ResetPasswordForm() {
   return (
-    <Box
-      color={"white"}
-      width={"brand.form"}
-      display={"flex"}
-      flexDirection={"column"}
-      justifyContent={"center"}
-    >
-      <Image
-        src="src/assets/logo.svg"
-        alt="Circle Logo"
-        boxSize={"150px"}
-        marginBottom={-14}
-        marginLeft={-4}
-      />
+    <Box color={"white"} width={"brand.form"}>
+      <Image src="/logo.svg" alt="Circle Logo" />
       <Text as={"h1"} fontSize={28} fontWeight={700} marginY={5}>
         Reset password
       </Text>

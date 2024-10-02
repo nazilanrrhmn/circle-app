@@ -13,35 +13,40 @@ export default function FollowsTabs() {
       <TabPanels>
         <TabPanel display={"flex"} flexDirection={"column"} gap={4}>
           <OthersAccountItem
-            image="./profile.png"
+            id={1} // Add a unique id
+            image="./avatar.png"
             fullName="Elon Musk"
             userName="@elonnnn"
             bio="Membagikan segala hal yang berhubungan dengan fotografi dan editing (Lightroom pada khususnya) | Pinned tweet adalah kumpulan thread editing 📸 | Seorang Gooner"
             isFollow="Follow"
           />
           <OthersAccountItem
-            image="./profile.png"
+            id={2} // Add a unique id
+            image="./avatar.png"
             fullName="Elon Musk"
             userName="@elonnnn"
             bio="Post about Product Design • My Experience"
             isFollow="Follow"
           />
           <OthersAccountItem
-            image="./profile.png"
+            id={3} // Add a unique id
+            image="./avatar.png"
             fullName="Elon Musk"
             userName="@elonnnn"
             bio="Post about Product Design • My Experience"
             isFollow="Following"
           />
           <OthersAccountItem
-            image="./profile.png"
+            id={4} // Add a unique id
+            image="./avatar.png"
             fullName="Elon Musk"
             userName="@elonnnn"
             bio="Post about Product Design • My Experience"
             isFollow="Follow"
           />
           <OthersAccountItem
-            image="./profile.png"
+            id={5} // Add a unique id
+            image="./avatar.png"
             fullName="Elon Musk"
             userName="@elonnnn"
             bio="Post about Product Design • My Experience"
@@ -50,28 +55,32 @@ export default function FollowsTabs() {
         </TabPanel>
         <TabPanel display={"flex"} flexDirection={"column"} gap={4}>
           <OthersAccountItem
-            image="./profile.png"
+            id={6} // Add a unique id
+            image="./avatar.png"
             fullName="Najwa Shihab"
             userName="@najwa"
             bio="Post about Product Design • My Experience"
             isFollow="Following"
           />
           <OthersAccountItem
-            image="./profile.png"
+            id={7} // Add a unique id
+            image="./avatar.png"
             fullName="Najwa Shihab"
             userName="@najwa"
             bio="Post about Product Design • My Experience"
             isFollow="Following"
           />
           <OthersAccountItem
-            image="./profile.png"
+            id={8} // Add a unique id
+            image="./avatar.png"
             fullName="Najwa Shihab"
             userName="@najwa"
             bio="Post about Product Design • My Experience"
             isFollow="Following"
           />
           <OthersAccountItem
-            image="./profile.png"
+            id={9} // Add a unique id
+            image="./avatar.png"
             fullName="Najwa Shihab"
             userName="@najwa"
             bio="Post about Product Design • My Experience"

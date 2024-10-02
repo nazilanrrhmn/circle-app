@@ -1,6 +1,5 @@
 import { useForm } from "react-hook-form";
 import axios from "axios";
-
 import { zodResolver } from "@hookform/resolvers/zod";
 import { apiV1 } from "../../../libs/api";
 import {
@@ -9,6 +8,7 @@ import {
 } from "../../home/schemas/post-thread";
 import { ThreadDetailResponseDTO } from "../types/thread-detail.dto";
 import { ThreadPostRequestDTO } from "../../home/types/thread.dto";
+import Swal from "sweetalert2";
 
 export function usePostReply({ threadId }: { threadId: number }) {
   const {
@@ -26,7 +26,16 @@ export function usePostReply({ threadId }: { threadId: number }) {
         { data: ThreadDetailResponseDTO },
         ThreadPostRequestDTO
       >(`/threads/${threadId}/reply`, { content });
-      alert(response.data.message);
+      // alert(response.data.message);
+      Swal.fire({
+        icon: "success",
+        title: response.data.message,
+        showConfirmButton: false,
+        background: "#1D1D1D",
+        color: "#fff",
+        iconColor: "#04A51E",
+        timer: 1000,
+      });
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
         console.error(error.response.data); // Log response error dari server
