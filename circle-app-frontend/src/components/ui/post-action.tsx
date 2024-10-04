@@ -1,6 +1,7 @@
 import { Flex, Image, Text } from "@chakra-ui/react";
 
 export function PostAction({ like, reply }: { like: number; reply: number }) {
+  // async await,use effect like
   return (
     <Flex gap={4} marginY={1} alignItems={"center"}>
       <Flex gap={2} alignItems={"center"}>

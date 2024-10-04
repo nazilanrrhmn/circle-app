@@ -8,6 +8,7 @@ export default function PostContent({
   userName,
   postContent,
   postImage,
+  createdAt,
   children,
 }: Omit<Thread, "like" | "reply"> & { children: React.ReactNode }) {
   return (
@@ -51,7 +52,7 @@ export default function PostContent({
               lineHeight={"16px"}
               color={"brand.fontSecondary"}
             >
-              4h
+              {createdAt}
             </Text>
           </Flex>
         </Link>

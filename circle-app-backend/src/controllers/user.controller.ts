@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import UserServices from "../services/user.services";
 import { createUserSchema } from "../utils/schemas/user.schema";
+import userServices from "../services/user.services";
 
 class UserController {
   // async create(req: Request, res: Response) {
@@ -32,7 +33,7 @@ class UserController {
     // #swagger.summary = 'Find a user by params id'
     try {
       const { id } = req.params;
-      const user = await UserServices.getUserById(Number(id));
+      const user = await userServices.getUserById(Number(id));
       res.json(user);
     } catch (error) {
       res.status(500).json(error);
@@ -42,11 +43,25 @@ class UserController {
   async update(req: Request, res: Response) {
     // #swagger.tags = ['Users']
     // #swagger.summary = 'Update existing user'
+    /*  #swagger.requestBody = {
+            required: true,
+            content: {
+                "application/json": {
+                    schema: {
+                        $ref: "#/components/schemas/profileEditSchema"
+                    }  
+                }
+            }
+        } 
+    */
     try {
-      const { id } = req.params; // Ambil ID dari parameter URL
-      const value = req.body; // Ambil data dari body request
+      const id = (req as any).user.id;
+      const value = {
+        ...req.body,
+        id: id,
+      };
 
-      const user = await UserServices.updateUser(Number(id), value); // Berikan ID dan data ke metode updateUser
+      const user = await UserServices.updateUser(value);
       res.json(user);
     } catch (error) {
       res.status(500).json(error);

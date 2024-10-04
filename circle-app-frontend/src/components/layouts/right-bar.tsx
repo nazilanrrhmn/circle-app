@@ -5,17 +5,9 @@ import { apiV1 } from "../../libs/api";
 import OthersAccountItem from "../ui/others-account-item";
 import ProfileHeading from "../ui/profile-heading";
 
-// Define the type for the user object
-interface User {
-  id: number;
-  profilePhoto: string;
-  fullname: string;
-  username: string;
-}
-
 export default function RightBar() {
   const user = useAppSelector((state) => state.auth.entities);
-  const [others, setOther] = useState<User[]>([]); // Explicitly typing 'others' as an array of 'User'
+  const [others, setOther] = useState([]);
 
   async function getThreads() {
     const response = await apiV1.get("/users");
@@ -29,12 +21,9 @@ export default function RightBar() {
     });
   }, []);
 
-  if (!others.length) {
+  if (!others) {
     return <Spinner />;
   }
-
-  const followersCount = user?.followers?.length || 0;
-  const followingCount = user?.following?.length || 0;
 
   return (
     <Box position={"sticky"} width={"563px"}>
@@ -55,12 +44,12 @@ export default function RightBar() {
             My Profile
           </Text>
           <ProfileHeading
-            profilePhoto={user?.profilePhoto}
-            fullname={user?.fullname}
-            username={user?.username}
-            bio={user?.bio}
-            followers={followersCount}
-            following={followingCount}
+            profilePhoto={user.profilePhoto}
+            fullname={user.fullname}
+            username={user.username}
+            bio={user.bio}
+            followers={user.followers.length}
+            following={user.following.length}
             thumbnailH="100px"
           />
         </Box>
@@ -73,16 +62,93 @@ export default function RightBar() {
             Suggested for you
           </Text>
           <Flex direction={"column"} gap={4}>
-            {others.slice(0, 5).map((other) => (
-              <OthersAccountItem
-                id={other.id}
-                key={other.id}
-                image={other.profilePhoto}
-                fullName={other.fullname}
-                userName={other.username}
-                isFollow="Follow"
-              />
-            ))}
+            {others.slice(0, 5).map((other) => {
+              return (
+                <OthersAccountItem
+                  id={other.id}
+                  key={other.id}
+                  image={other.profilePhoto}
+                  fullName={other.fullname}
+                  userName={other.username}
+                  isFollow="Follow"
+                />
+              );
+            })}
+          </Flex>
+        </Box>
+        <Box
+          backgroundColor={"brand.backgroundBox"}
+          padding={"12px 20px 20px 20px"}
+          rounded={12}
+        >
+          <Text fontSize={"16px"} fontWeight={700} lineHeight={"20px"} mb={4}>
+            Developed by Nazila Nur Rohman •
+          </Text>
+          <Text
+            fontSize={"14px"}
+            fontWeight={400}
+            lineHeight={"16px"}
+            color={"brand.fontSecondary"}
+          >
+            Powered by DumbWays Indonesia • #1Coding Bootcamp
+          </Text>
+        </Box>
+      </Flex>
+    </Box>
+  );
+}
+
+export function RightBarProfile() {
+  const user = useAppSelector((state) => state.auth.entities);
+  const [others, setOther] = useState([]);
+
+  async function getThreads() {
+    const response = await apiV1.get("/users");
+    const data = response.data;
+    return { data: data };
+  }
+
+  useEffect(() => {
+    getThreads().then(({ data }) => {
+      setOther(data);
+    });
+  }, []);
+
+  if (!others) {
+    return <Spinner />;
+  }
+
+  return (
+    <Box position={"sticky"} width={"563px"}>
+      <Flex
+        position={"sticky"}
+        top={0}
+        gap={"16px"}
+        direction={"column"}
+        height={"100vh"}
+        padding={8}
+      >
+        <Box
+          backgroundColor={"brand.backgroundBox"}
+          padding={"12px 20px 20px 20px"}
+          rounded={12}
+        >
+          <Text fontSize={"20px"} fontWeight={700} lineHeight={"28px"} mb={4}>
+            Suggested for you
+          </Text>
+          <Flex direction={"column"} gap={4}>
+            {others.slice(0, 5).map((other) => {
+              return (
+                <OthersAccountItem
+                  id={other.id}
+                  key={other.id}
+                  image={other.profilePhoto}
+                  fullName={other.fullname}
+                  userName={other.username}
+                  isFollow="Follow"
+                />
+              );
+            })}
           </Flex>
         </Box>
         <Box

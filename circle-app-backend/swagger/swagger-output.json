@@ -1,8 +1,8 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "title": "API For CIRCLE",
-    "description": "API Documentation for Circle App",
+    "title": "API FOR CIRCLE",
+    "description": "API Documentation for Circle-App",
     "version": "1.0.0"
   },
   "servers": [
@@ -143,7 +143,17 @@
           {
             "bearerAuth": []
           }
-        ]
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/profileEditSchema"
+              }
+            }
+          }
+        }
       }
     },
     "/api/v1/users/{id}": {
@@ -270,7 +280,7 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "id": {
+                  "userId": {
                     "example": "any"
                   }
                 }
@@ -278,6 +288,40 @@
             }
           }
         }
+      }
+    },
+    "/api/v1/follows": {
+      "get": {
+        "tags": [
+          "Follow"
+        ],
+        "summary": "Following and Followers List",
+        "description": "",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/api/v1/threads": {
@@ -347,7 +391,7 @@
         "requestBody": {
           "required": true,
           "content": {
-            "application/json": {
+            "multipart/form-data": {
               "schema": {
                 "$ref": "#/components/schemas/createThreadSchema"
               }
@@ -694,6 +738,23 @@
           "password": {
             "type": "string",
             "format": "password"
+          }
+        }
+      },
+      "profileEditSchema": {
+        "type": "object",
+        "properties": {
+          "fullname": {
+            "type": "string"
+          },
+          "username": {
+            "type": "string"
+          },
+          "bio": {
+            "type": "string"
+          },
+          "profilePhoto": {
+            "type": "string"
           }
         }
       },

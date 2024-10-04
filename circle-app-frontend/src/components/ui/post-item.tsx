@@ -9,6 +9,7 @@ export default function PostItem({
   userName,
   postContent,
   postImage,
+  createdAt,
   like,
   reply,
   id,
@@ -21,6 +22,7 @@ export default function PostItem({
         userName={userName}
         postContent={postContent}
         postImage={postImage}
+        createdAt={createdAt}
       >
         <PostAction like={like} reply={reply} />
       </PostContent>

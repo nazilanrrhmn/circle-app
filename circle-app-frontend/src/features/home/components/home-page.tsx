@@ -40,7 +40,8 @@ export default function HomePage() {
             userName={thread.author?.username}
             postContent={thread.content}
             postImage={thread.image}
-            like={thread.likes?.length || 0} // Add null check for likes
+            createdAt={new Date(thread.createdAt).toLocaleTimeString()}
+            like={thread.like?.length || 0} // Add null check for likes
             reply={thread.replies?.length || 0} // Add null check for replies
           />
         );

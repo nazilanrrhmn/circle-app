@@ -56,32 +56,15 @@ export default function FormPost({
               * {errors.content.message}
             </Text>
           )}
+          <Input
+            {...register("image")}
+            type="file"
+            variant={"unstyled"}
+            border={"none"}
+          />
         </Box>
         <Flex alignItems={"center"} gap={4}>
-          {/* Custom upload button */}
-          <label htmlFor="upload-image">
-            <Button
-              variant="outline"
-              size="sm"
-              cursor="pointer"
-              leftIcon={
-                <Image
-                  src="/icons/gallery-add.svg"
-                  alt="gallery"
-                  height="24px"
-                />
-              }
-              as="span"
-            />
-            <Input
-              type="file"
-              accept="image/*"
-              {...register("image")}
-              id="upload-image"
-              style={{ display: "none" }}
-            />
-          </label>
-
+          <Image src="/gallery-add.svg" alt="gallery" height={"24px"} />
           <Button
             type="submit"
             backgroundColor={content ? "brand.green" : "brand.green-dark"}
@@ -94,7 +77,7 @@ export default function FormPost({
             fontSize={"14px"}
             fontWeight={700}
             lineHeight={"17px"}
-            disabled={isSubmitting || !content}
+            disabled={isSubmitting}
           >
             {isSubmitting ? <Spinner /> : `${buttonTitle}`}
           </Button>

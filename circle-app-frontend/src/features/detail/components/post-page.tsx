@@ -54,7 +54,7 @@ export default function PostPage() {
         userName={thread.author?.username || "Unknown"}
         postContent={thread.content || ""}
         postImage={thread.image || ""}
-        like={thread.likes?.length ?? 0} /* Memastikan likes adalah array */
+        like={thread.like?.length ?? 0} /* Memastikan likes adalah array */
         reply={
           thread.replies?.length ?? 0
         } /* Memastikan replies adalah array */

@@ -1,8 +1,37 @@
-import { Tabs, TabList, TabPanels, TabPanel } from "@chakra-ui/react";
+import { Tabs, TabList, TabPanels, TabPanel, Spinner } from "@chakra-ui/react";
 import OthersAccountItem from "../../../components/ui/others-account-item";
 import { TabIndicatorCircle, TabItem } from "../../../components/ui/circle-tab";
+import { apiV1 } from "../../../libs/api";
+import { useEffect, useState } from "react";
+import { FollowEntitiy } from "../../../entities/follow";
 
 export default function FollowsTabs() {
+  const [following, setFollowing] = useState<FollowEntitiy[]>();
+  const [followers, setFollowers] = useState<FollowEntitiy[]>();
+
+  async function getFollowList() {
+    const response = await apiV1.get("/follows");
+    const data = response.data.data;
+    return { following: data.following, followers: data.followers };
+  }
+
+  // useEffect(() => {
+  //   getFollowList().then(({ following, followers }) => {
+  //     setFollowing(following), setFollowers(followers);
+  //   });
+  // }, []);
+
+  useEffect(() => {
+    getFollowList().then(({ following, followers }) => {
+      setFollowing(following);
+      setFollowers(followers);
+    });
+  }, []);
+
+  if (!following || !followers) {
+    return <Spinner />;
+  }
+
   return (
     <Tabs isFitted variant={"unstyled"}>
       <TabList borderBottom="1px solid" borderColor="brand.borderAbu">
@@ -12,80 +41,32 @@ export default function FollowsTabs() {
       <TabIndicatorCircle />
       <TabPanels>
         <TabPanel display={"flex"} flexDirection={"column"} gap={4}>
-          <OthersAccountItem
-            id={1} // Add a unique id
-            image="./avatar.png"
-            fullName="Elon Musk"
-            userName="@elonnnn"
-            bio="Membagikan segala hal yang berhubungan dengan fotografi dan editing (Lightroom pada khususnya) | Pinned tweet adalah kumpulan thread editing 📸 | Seorang Gooner"
-            isFollow="Follow"
-          />
-          <OthersAccountItem
-            id={2} // Add a unique id
-            image="./avatar.png"
-            fullName="Elon Musk"
-            userName="@elonnnn"
-            bio="Post about Product Design • My Experience"
-            isFollow="Follow"
-          />
-          <OthersAccountItem
-            id={3} // Add a unique id
-            image="./avatar.png"
-            fullName="Elon Musk"
-            userName="@elonnnn"
-            bio="Post about Product Design • My Experience"
-            isFollow="Following"
-          />
-          <OthersAccountItem
-            id={4} // Add a unique id
-            image="./avatar.png"
-            fullName="Elon Musk"
-            userName="@elonnnn"
-            bio="Post about Product Design • My Experience"
-            isFollow="Follow"
-          />
-          <OthersAccountItem
-            id={5} // Add a unique id
-            image="./avatar.png"
-            fullName="Elon Musk"
-            userName="@elonnnn"
-            bio="Post about Product Design • My Experience"
-            isFollow="Follow"
-          />
+          {followers.map((follower) => {
+            return (
+              <OthersAccountItem
+                id={follower.followers.id}
+                key={follower.id}
+                image={follower.followers.profilePhoto}
+                fullName={follower.followers.fullname}
+                userName={follower.followers.username}
+                isFollow="Follow"
+              />
+            );
+          })}
         </TabPanel>
         <TabPanel display={"flex"} flexDirection={"column"} gap={4}>
-          <OthersAccountItem
-            id={6} // Add a unique id
-            image="./avatar.png"
-            fullName="Najwa Shihab"
-            userName="@najwa"
-            bio="Post about Product Design • My Experience"
-            isFollow="Following"
-          />
-          <OthersAccountItem
-            id={7} // Add a unique id
-            image="./avatar.png"
-            fullName="Najwa Shihab"
-            userName="@najwa"
-            bio="Post about Product Design • My Experience"
-            isFollow="Following"
-          />
-          <OthersAccountItem
-            id={8} // Add a unique id
-            image="./avatar.png"
-            fullName="Najwa Shihab"
-            userName="@najwa"
-            bio="Post about Product Design • My Experience"
-            isFollow="Following"
-          />
-          <OthersAccountItem
-            id={9} // Add a unique id
-            image="./avatar.png"
-            fullName="Najwa Shihab"
-            userName="@najwa"
-            bio="Post about Product Design • My Experience"
-            isFollow="Following"
-          />
+          {following.map((following) => {
+            return (
+              <OthersAccountItem
+                id={following.following.id}
+                key={following.id}
+                image={following.following.profilePhoto}
+                fullName={following.following.fullname}
+                userName={following.following.username}
+                isFollow="Follow"
+              />
+            );
+          })}
         </TabPanel>
       </TabPanels>
     </Tabs>

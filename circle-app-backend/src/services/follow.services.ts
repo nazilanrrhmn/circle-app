@@ -39,6 +39,51 @@ class FollowServices {
       message: "Unfollowed",
     };
   }
+
+  async followList(userId: number): Promise<SuccessResponse<any>> {
+    const following = await prisma.follow.findMany({
+      where: {
+        followersId: userId,
+      },
+      include: {
+        following: {
+          select: {
+            id: true,
+            fullname: true,
+            username: true,
+            bio: true,
+            profilePhoto: true,
+          },
+        },
+      },
+    });
+
+    const followers = await prisma.follow.findMany({
+      where: {
+        followingId: userId,
+      },
+      include: {
+        followers: {
+          select: {
+            id: true,
+            fullname: true,
+            username: true,
+            bio: true,
+            profilePhoto: true,
+          },
+        },
+      },
+    });
+
+    return {
+      status: "success",
+      message: "Following and Followers List Retrived",
+      data: {
+        followers,
+        following,
+      },
+    };
+  }
 }
 
 export default new FollowServices();

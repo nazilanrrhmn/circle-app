@@ -6,8 +6,9 @@ export type CreateUserDTO = {
 };
 
 export type UpdateUSerDTO = {
+  id: number;
   fullname: string;
-  username: string;
-  bio: string;
-  profilePhoto: string;
+  username?: string;
+  bio?: string;
+  profilePhoto?: string;
 };

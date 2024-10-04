@@ -1,38 +1,37 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import { useForm } from "react-hook-form";
-import { RegisterFormInput, registerSchema } from "../schemas/register";
-import { RegisterRequestDTO, RegisterResponseDTO } from "../types/auth.dto";
-import { useNavigate } from "react-router-dom";
-import Cookies from "js-cookie";
-import { apiV1 } from "../../../libs/api";
-import { useAppDispatch } from "../../../hooks/use.store";
-import { setUser } from "../auth.slice";
 import Swal from "sweetalert2";
+import { apiV1 } from "../../../libs/api";
+import { EditProfileFormInput, editProfileSchema } from "../schemas/edit";
+import {
+  EditProfileRequestDTO,
+  EditProfileResponseDTO,
+} from "../types/profile.dto";
+import { useAppSelector } from "../../../hooks/use.store";
 
-export function useRegisterForm() {
+export default function useEditProfile() {
+  const user = useAppSelector((state) => state.auth.entities);
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<RegisterFormInput>({
-    resolver: zodResolver(registerSchema),
+  } = useForm<EditProfileFormInput>({
+    resolver: zodResolver(editProfileSchema),
+    defaultValues: {
+      fullname: user.fullname,
+      username: user.username,
+      bio: user.bio,
+    },
   });
 
-  const navigate = useNavigate();
-  const dispatch = useAppDispatch();
-
-  async function onSubmit(data: RegisterFormInput) {
+  async function onSubmit(data: EditProfileFormInput) {
     try {
-      const response = await apiV1.post<
+      const response = await apiV1.patch<
         null,
-        { data: RegisterResponseDTO },
-        RegisterRequestDTO
-      >("/auth/register", {
-        fullname: data.fullname,
-        email: data.email,
-        password: data.password,
-      });
+        { data: EditProfileResponseDTO },
+        EditProfileRequestDTO
+      >("/users", data);
       Swal.fire({
         icon: "success",
         title: response.data.message,
@@ -42,13 +41,6 @@ export function useRegisterForm() {
         iconColor: "#04A51E",
         timer: 1000,
       });
-      const { accessToken, user } = response.data.data;
-
-      Cookies.set("token", accessToken, { expires: 2 });
-
-      dispatch(setUser(user));
-
-      navigate("/");
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
         console.error(error.response.data);

@@ -32,9 +32,21 @@ class FollowController {
     // #swagger.tags = ['Follow']
     // #swagger.summary = 'Unollow User'
     try {
-      const { id } = req.body;
-      const unfollow = await followServices.unfollow(id);
+      const { userId } = req.body;
+      const unfollow = await followServices.unfollow(userId);
       res.json(unfollow);
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  }
+
+  async followList(req: Request, res: Response) {
+    // #swagger.tags = ['Follow']
+    // #swagger.summary = 'Following and Followers List'
+    try {
+      const userId = (req as any).user.id;
+      const follows = await followServices.followList(userId);
+      res.json(follows);
     } catch (error) {
       res.status(500).json(error);
     }
