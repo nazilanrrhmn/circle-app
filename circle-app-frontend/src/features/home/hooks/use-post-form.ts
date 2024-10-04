@@ -13,18 +13,21 @@ export function usePostThread() {
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors, isSubmitting },
   } = useForm<PostThradInput>({
     resolver: zodResolver(postThreadSchema),
   });
 
-  async function onSubmit({ content }: PostThradInput) {
+  async function onSubmit(data: PostThradInput) {
     try {
-      const response = await apiV1.post<
-        null,
-        { data: ThreadPostResponseDTO },
-        ThreadPostRequestDTO
-      >("/threads", { content });
+      const formData = new FormData();
+      formData.append("content", data.content);
+      formData.append("image", data.image[0]);
+      const response = await apiV1.post<null, { data: ThreadPostResponseDTO }>(
+        "/threads",
+        formData
+      );
       // alert(response.data.message);
       Swal.fire({
         icon: "success",
@@ -52,5 +55,6 @@ export function usePostThread() {
     errors,
     isSubmitting,
     onSubmit,
+    watch,
   };
 }

@@ -65,7 +65,7 @@ export default function LoginForm() {
               Forgot password?
             </Text>
           </Link>
-          <Button type="submit" sx={buttonStyle}>
+          <Button type="submit" sx={buttonStyle} disabled={isSubmitting}>
             {isSubmitting ? <Spinner /> : "Login"}
           </Button>
         </FormControl>

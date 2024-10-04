@@ -5,7 +5,7 @@ const swaggerAutogen = require("swagger-autogen")({
 
 const doc = {
   info: {
-    title: "API CIRCLE",
+    title: "API FOR CIRCLE",
     description: "API Documentation for Circle-App",
   },
   host: "localhost:5000",
@@ -46,6 +46,23 @@ const doc = {
           },
         },
       },
+      profileEditSchema: {
+        type: "object",
+        properties: {
+          fullname: {
+            type: "string",
+          },
+          username: {
+            type: "string",
+          },
+          bio: {
+            type: "string",
+          },
+          profilePhoto: {
+            type: "string",
+          },
+        },
+      },
       createThreadSchema: {
         type: "object",
         properties: {
@@ -54,6 +71,7 @@ const doc = {
           },
           image: {
             type: "string",
+            format: "binary",
           },
         },
       },

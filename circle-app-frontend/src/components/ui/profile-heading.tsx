@@ -81,7 +81,7 @@ export default function ProfileHeading({
               color={"brand.fontSecondary"}
               marginLeft={1}
             >
-              Following
+              Followers
             </Text>
           </Text>
           <Text fontSize={"16px"} fontWeight={700} lineHeight={"24px"}>
@@ -92,7 +92,7 @@ export default function ProfileHeading({
               color={"brand.fontSecondary"}
               marginLeft={1}
             >
-              Followers
+              Following
             </Text>
           </Text>
         </Flex>

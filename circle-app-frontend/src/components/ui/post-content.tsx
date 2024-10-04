@@ -3,11 +3,12 @@ import { Link } from "react-router-dom";
 import { Thread } from "../../features/home/types/thread.dto";
 
 export default function PostContent({
-  image,
+  profilePhoto,
   fullName,
   userName,
   postContent,
   postImage,
+  createdAt,
   children,
 }: Omit<Thread, "like" | "reply"> & { children: React.ReactNode }) {
   return (
@@ -17,7 +18,12 @@ export default function PostContent({
       borderBottom={"solid 1px"}
       borderColor={"brand.borderAbu"}
     >
-      <Avatar src={image} name={fullName} height={"40px"} width={"40px"} />
+      <Avatar
+        src={profilePhoto}
+        name={fullName}
+        height={"40px"}
+        width={"40px"}
+      />
       <Flex direction={"column"} gap={2}>
         <Link to="/profile">
           <Flex gap={1}>
@@ -46,7 +52,7 @@ export default function PostContent({
               lineHeight={"16px"}
               color={"brand.fontSecondary"}
             >
-              4h
+              {createdAt}
             </Text>
           </Flex>
         </Link>

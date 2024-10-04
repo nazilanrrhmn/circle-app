@@ -8,25 +8,19 @@ import { apiV1 } from "../../../libs/api";
 import { ThreadResponseDTO } from "../types/thread.dto";
 
 export default function HomePage() {
-  const [threads, setThreads] = useState<ThreadEntity[]>([]);
+  const [threads, setThread] = useState<ThreadEntity[]>([]);
 
-  async function getThreads(): Promise<ThreadResponseDTO | null> {
-    try {
-      const response = await apiV1.get<null, { data: ThreadResponseDTO }>(
-        "/threads"
-      );
-      return response.data;
-    } catch (error) {
-      console.error("Error fetching threads:", error);
-      return null;
-    }
+  async function getThreads() {
+    const response = await apiV1.get<null, { data: ThreadResponseDTO }>(
+      "/threads"
+    );
+    const data = response.data.data;
+    return { data: data };
   }
 
   useEffect(() => {
-    getThreads().then((responseData) => {
-      if (responseData) {
-        setThreads(responseData.data);
-      }
+    getThreads().then(({ data }) => {
+      setThread(data);
     });
   }, []);
 
@@ -36,20 +30,22 @@ export default function HomePage() {
         Home
       </Text>
       <CreatePost />
-      {threads.map((thread) => (
-        <PostItem
-          id={thread.id}
-          key={thread.id}
-          fullName={thread.author?.fullname || "Anonymous"}
-          userName={thread.author?.username || "Unknown"}
-          postContent={thread.content || ""}
-          postImage={thread.image || ""}
-          like={thread.likes?.length ?? 0} /* Memastikan likes adalah array */
-          reply={
-            thread.replies?.length ?? 0
-          } /* Memastikan replies adalah array */
-        />
-      ))}
+      {threads.map((thread) => {
+        return (
+          <PostItem
+            id={thread.id}
+            key={thread.id}
+            profilePhoto={thread.author?.profilePhoto}
+            fullName={thread.author?.fullname}
+            userName={thread.author?.username}
+            postContent={thread.content}
+            postImage={thread.image}
+            createdAt={new Date(thread.createdAt).toLocaleTimeString()}
+            like={thread.like?.length || 0} // Add null check for likes
+            reply={thread.replies?.length || 0} // Add null check for replies
+          />
+        );
+      })}
     </Box>
   );
 }

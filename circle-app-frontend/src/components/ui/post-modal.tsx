@@ -4,6 +4,7 @@ import {
   Button,
   FormControl,
   Image,
+  Input,
   ModalCloseButton,
   ModalContent,
   Spinner,
@@ -15,9 +16,10 @@ import { usePostThread } from "../../features/home/hooks/use-post-form";
 import { useAppSelector } from "../../hooks/use.store";
 
 export default function CreatePostModal() {
-  const { register, handleSubmit, errors, isSubmitting, onSubmit } =
+  const { register, handleSubmit, errors, isSubmitting, onSubmit, watch } =
     usePostThread();
   const user = useAppSelector((state) => state.auth.entities);
+  const content = watch("content");
 
   return (
     <ModalContent
@@ -52,6 +54,12 @@ export default function CreatePostModal() {
                 border={"none"}
                 placeholder="What is happening?!"
               />
+              <Input
+                {...register("image")}
+                type="file"
+                variant={"unstyled"}
+                border={"none"}
+              />
             </Box>
           </FormControl>
           {errors.content && (
@@ -73,8 +81,8 @@ export default function CreatePostModal() {
           <Image src="/gallery-add.svg" alt="gallery" height={"24px"} />
           <Button
             type="submit"
-            backgroundColor={"brand.green-dark"}
-            color={"brand.white-dark"}
+            backgroundColor={content ? "brand.green" : "brand.green-dark"}
+            color={content ? "white" : "brand.white-dark"}
             height={"33px"}
             justifyItems={"center"}
             rounded={"full"}
@@ -83,6 +91,7 @@ export default function CreatePostModal() {
             fontSize={"14px"}
             fontWeight={700}
             lineHeight={"17px"}
+            disabled={isSubmitting}
           >
             {isSubmitting ? <Spinner /> : "Post"}
           </Button>

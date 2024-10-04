@@ -64,6 +64,7 @@ export default function RegisterForm() {
             backgroundColor={"brand.green"}
             color={"white"}
             fontSize={20}
+            disabled={isSubmitting}
           >
             {isSubmitting ? <Spinner /> : "Create"}
           </Button>

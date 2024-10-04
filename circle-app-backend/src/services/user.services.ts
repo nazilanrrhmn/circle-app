@@ -1,6 +1,8 @@
 import { PrismaClient, User } from "@prisma/client";
 import { UpdateUSerDTO } from "../dto/user.dto";
+import { error } from "console";
 import { customError } from "../types/custom.error";
+import { SuccessResponse } from "../types/success.respons";
 
 const prisma = new PrismaClient();
 
@@ -36,10 +38,14 @@ class UserServices {
     return user;
   }
 
-  async updateUser(id: number, data: UpdateUSerDTO): Promise<User | null> {
+  // async createUser(data: CreateUserDTO): Promise<User | null> {
+  //   return await prisma.user.create({ data });
+  // }
+
+  async updateUser(data: UpdateUSerDTO): Promise<SuccessResponse<User | null>> {
     const user = await prisma.user.findUnique({
       where: {
-        id,
+        id: data.id,
       },
     });
 
@@ -51,30 +57,31 @@ class UserServices {
       } as customError;
     }
 
-    // Create a new data object to store updates
-    const updatedData: Partial<User> = {};
-
     if (data.fullname) {
-      updatedData.fullname = data.fullname;
+      user.fullname = data.fullname;
     }
 
     if (data.username) {
-      updatedData.username = data.username;
+      user.username = data.username;
     }
 
     if (data.bio) {
-      updatedData.bio = data.bio;
+      user.bio = data.bio;
     }
 
     if (data.profilePhoto) {
-      updatedData.profilePhoto = data.profilePhoto;
+      user.profilePhoto = data.profilePhoto;
     }
 
-    // Update the user with the new data
-    return await prisma.user.update({
-      where: { id },
-      data: updatedData,
+    await prisma.user.update({
+      data: user,
+      where: { id: data.id },
     });
+
+    return {
+      status: "success",
+      message: "Profile successfully edited",
+    };
   }
 }
 

@@ -1,11 +1,11 @@
 import { Flex, Box, Image } from "@chakra-ui/react";
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { HiXCircle } from "react-icons/hi";
 import { HiChevronRight, HiChevronLeft } from "react-icons/hi";
 import PostDetail from "../../../features/detail/components/post-detail";
 import FormPost from "../../../components/ui/post-form";
 import RepliesList from "../../../features/detail/components/replies-list";
+import { useState } from "react";
 
 export default function DetailImage() {
   const navigate = useNavigate();
@@ -64,10 +64,11 @@ export default function DetailImage() {
           <PostDetail
             like={20}
             reply={12}
-            image="./profile.png"
+            image="/avatar.png"
             fullName="Cristiano Ronaldo"
             userName="@cristiano"
             postContent="okee"
+            createdAt="4H"
           />
           <FormPost placeholder="Type your reply!" buttonTitle="Reply" />
           <RepliesList />

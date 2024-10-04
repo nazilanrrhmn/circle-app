@@ -4,11 +4,12 @@ import { PostAction } from "./post-action";
 import PostContent from "./post-content";
 
 export default function PostItem({
-  image,
+  profilePhoto,
   fullName,
   userName,
   postContent,
   postImage,
+  createdAt,
   like,
   reply,
   id,
@@ -16,11 +17,12 @@ export default function PostItem({
   return (
     <Link to={`/detail-post/${id}`}>
       <PostContent
-        image={image}
+        profilePhoto={profilePhoto}
         fullName={fullName}
         userName={userName}
         postContent={postContent}
         postImage={postImage}
+        createdAt={createdAt}
       >
         <PostAction like={like} reply={reply} />
       </PostContent>
