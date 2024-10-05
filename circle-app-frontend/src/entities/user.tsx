@@ -1,4 +1,5 @@
 import { FollowEntitiy } from "./follow";
+import { ThreadEntity } from "./thread";
 
 export interface UserEntity {
   id: number;
@@ -11,4 +12,6 @@ export interface UserEntity {
   role: string;
   following: FollowEntitiy[];
   followers: FollowEntitiy[];
+  threads: ThreadEntity[];
+  isFollow: boolean;
 }

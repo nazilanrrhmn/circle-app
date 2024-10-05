@@ -73,7 +73,7 @@ export default function RouterApp() {
           element: <DetailPost />,
         },
         {
-          path: "/detail-image",
+          path: "/detail-image/:id",
           element: <DetailImage />,
         },
       ],

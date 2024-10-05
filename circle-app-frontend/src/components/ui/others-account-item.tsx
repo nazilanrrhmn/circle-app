@@ -1,5 +1,8 @@
-import { Avatar, Box, Button, Flex, Text } from "@chakra-ui/react";
+import { Avatar, Box, Button, Flex, Spinner, Text } from "@chakra-ui/react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
+import Swal from "sweetalert2";
+import { apiV1 } from "../../libs/api";
 
 interface Account {
   id: number;
@@ -7,7 +10,7 @@ interface Account {
   fullName: string;
   userName?: string;
   bio?: string;
-  isFollow: string;
+  isFollow: boolean;
 }
 
 export default function OthersAccountItem({
@@ -18,6 +21,42 @@ export default function OthersAccountItem({
   bio,
   isFollow,
 }: Account) {
+  const [isFollowUser, setIsFollowUser] = useState<boolean>(isFollow);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  async function onFollow(
+    event: React.MouseEvent<HTMLButtonElement>,
+    followingId: number
+  ) {
+    event.preventDefault();
+
+    try {
+      let response;
+      if (isFollowUser) {
+        setIsLoading(true);
+        response = await apiV1.delete(`/unfollow/${followingId}`);
+        setIsLoading(false);
+        setIsFollowUser(false);
+      } else {
+        setIsLoading(true);
+        response = await apiV1.post("/follow", { followingId });
+        setIsLoading(false);
+        setIsFollowUser(true);
+      }
+      Swal.fire({
+        icon: "success",
+        title: response.data.message,
+        showConfirmButton: false,
+        background: "#1D1D1D",
+        color: "#fff",
+        iconColor: "#04A51E",
+        timer: 800,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   return (
     <Link to={`/profile/${id}`}>
       <Flex gap={2} justifyContent={"space-between"}>
@@ -51,6 +90,7 @@ export default function OthersAccountItem({
               </Text>
             </Box>
             <Button
+              onClick={(event) => onFollow(event, id)}
               backgroundColor={"transparent"}
               height={"33px"}
               border={"solid 1px"}
@@ -60,8 +100,9 @@ export default function OthersAccountItem({
               padding={"7px 20px"}
               fontSize={"14px"}
               fontWeight={700}
+              isDisabled={isLoading}
             >
-              {isFollow}
+              {isLoading ? <Spinner /> : isFollowUser ? "Unfollow" : "Follow"}
             </Button>
           </Flex>
           <Text

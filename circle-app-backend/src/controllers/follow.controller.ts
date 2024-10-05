@@ -17,8 +17,8 @@ class FollowController {
             } 
         */
     try {
-      const followingId = (req as any).user.id;
-      const { followersId } = req.body;
+      const followersId = (req as any).user.id;
+      const { followingId } = req.body;
 
       const follow = await followServices.follow({ followingId, followersId });
 
@@ -30,10 +30,15 @@ class FollowController {
 
   async unfollow(req: Request, res: Response) {
     // #swagger.tags = ['Follow']
-    // #swagger.summary = 'Unollow User'
+    // #swagger.summary = 'Unfollow User'
     try {
-      const { userId } = req.body;
-      const unfollow = await followServices.unfollow(userId);
+      const followersId = (req as any).user.id;
+      const followingId = Number(req.params.id);
+
+      const unfollow = await followServices.unfollow({
+        followingId,
+        followersId,
+      });
       res.json(unfollow);
     } catch (error) {
       res.status(500).json(error);

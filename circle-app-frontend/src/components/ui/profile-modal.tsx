@@ -1,30 +1,45 @@
 import {
+  Avatar,
   Box,
   Button,
   Flex,
   Image,
   Input,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
   Spinner,
   Text,
   Textarea,
 } from "@chakra-ui/react";
-import {
-  ModalContent,
-  ModalHeader,
-  ModalFooter,
-  ModalBody,
-  ModalCloseButton,
-} from "@chakra-ui/react";
+import { useState } from "react";
 import { HiOutlineXCircle } from "react-icons/hi";
 import useEditProfile from "../../features/profile/hooks/use-edit-profile";
 
 export default function EditProfileModal({
   thumbnailH,
+  fullname,
+  profilePhoto,
 }: {
   thumbnailH: string;
+  fullname: string;
+  profilePhoto?: string;
 }) {
   const { register, handleSubmit, errors, isSubmitting, onSubmit } =
     useEditProfile();
+  const [image, setImage] = useState<string | undefined>(profilePhoto);
+
+  const onImageChage = (
+    event: React.ChangeEvent<HTMLInputElement>,
+    onChange: (...event: any[]) => void
+  ) => {
+    if (event.target.files && event.target.files[0]) {
+      setImage(URL.createObjectURL(event.target.files[0]));
+      onChange(event);
+    }
+  };
 
   return (
     <ModalContent
@@ -52,23 +67,37 @@ export default function EditProfileModal({
             />
             <Box position={"absolute"} bottom={"-35px"} left={"14px"}>
               <Box position={"relative"}>
-                <Image
-                  src="/profile.png"
-                  alt="thumbnail"
+                <Input
+                  {...register("profilePhoto")}
+                  onChange={(e) =>
+                    onImageChage(e, register("profilePhoto").onChange)
+                  }
+                  id="uploadPhoto"
+                  type="file"
+                  variant={"unstyled"}
+                  border={"none"}
+                  hidden
+                />
+                <Avatar
+                  src={image}
+                  name={fullname}
                   border={"solid 4px"}
                   borderColor={"brand.backgroundCircle"}
                   height={"80px"}
+                  width={"80px"}
                   rounded={"full"}
                   objectFit="cover"
                 />
-                <Image
-                  src="/edit-image.svg"
-                  alt="edit image"
-                  position={"absolute"}
-                  top={"20px"}
-                  left={"20px"}
-                  objectFit="cover"
-                />
+                <label htmlFor="uploadPhoto">
+                  <Image
+                    src="/edit-image.svg"
+                    alt="edit image"
+                    position={"absolute"}
+                    top={"20px"}
+                    left={"20px"}
+                    objectFit="cover"
+                  />
+                </label>
               </Box>
             </Box>
           </Box>

@@ -1,6 +1,7 @@
 import { Follow, PrismaClient } from "@prisma/client";
 import { FollowDTO } from "../dto/follow.dto";
 import { SuccessResponse } from "../types/success.respons";
+import { when } from "joi";
 
 const prisma = new PrismaClient();
 
@@ -29,9 +30,23 @@ class FollowServices {
     };
   }
 
-  async unfollow(id: number): Promise<SuccessResponse<any>> {
+  async unfollow(data: FollowDTO): Promise<SuccessResponse<any>> {
+    const followRecord = await prisma.follow.findFirst({
+      where: {
+        followersId: data.followersId,
+        followingId: data.followingId,
+      },
+    });
+
+    if (!followRecord) {
+      throw {
+        status: "fail",
+        message: "you haven't followed this account yet",
+      };
+    }
+
     const unfollow = await prisma.follow.delete({
-      where: { id },
+      where: { id: followRecord.id },
     });
 
     return {
@@ -75,12 +90,31 @@ class FollowServices {
       },
     });
 
+    const followedUsers = await prisma.follow.findMany({
+      where: { followersId: userId },
+      select: { followingId: true },
+    });
+
+    const followedIds = new Set(
+      followedUsers.map((follow) => follow.followingId)
+    );
+
+    const followersWithIsFollow = followers.map((follow) => ({
+      ...follow,
+      isFollow: followedIds.has(follow.followers.id),
+    }));
+
+    const followingWithIsFollow = following.map((follow) => ({
+      ...follow,
+      isFollow: followedIds.has(follow.following.id),
+    }));
+
     return {
       status: "success",
       message: "Following and Followers List Retrived",
       data: {
-        followers,
-        following,
+        followers: followersWithIsFollow,
+        following: followingWithIsFollow,
       },
     };
   }

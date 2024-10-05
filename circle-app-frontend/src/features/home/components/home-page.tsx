@@ -1,27 +1,31 @@
-// import axios from "axios";
-import { Box, Text } from "@chakra-ui/react";
-import PostItem from "../../../components/ui/post-item";
-import CreatePost from "./create-post";
-import { ThreadEntity } from "../../../entities/thread";
+import { Box, SkeletonCircle, SkeletonText, Text } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
+import PostItem from "../../../components/ui/post-item";
+import { ThreadEntity } from "../../../entities/thread";
 import { apiV1 } from "../../../libs/api";
 import { ThreadResponseDTO } from "../types/thread.dto";
+import CreatePost from "./create-post";
 
 export default function HomePage() {
   const [threads, setThread] = useState<ThreadEntity[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   async function getThreads() {
-    const response = await apiV1.get<null, { data: ThreadResponseDTO }>(
-      "/threads"
-    );
-    const data = response.data.data;
-    return { data: data };
+    try {
+      const response = await apiV1.get<null, { data: ThreadResponseDTO }>(
+        "/threads"
+      );
+      const data = response.data.data;
+      setThread(data);
+    } catch (errors) {
+      console.error(errors);
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   useEffect(() => {
-    getThreads().then(({ data }) => {
-      setThread(data);
-    });
+    getThreads();
   }, []);
 
   return (
@@ -30,22 +34,30 @@ export default function HomePage() {
         Home
       </Text>
       <CreatePost />
-      {threads.map((thread) => {
-        return (
+
+      {isLoading ? (
+        <Box padding="6">
+          <SkeletonCircle size="10" />
+          <SkeletonText mt="4" noOfLines={4} spacing="4" skeletonHeight="3" />
+        </Box>
+      ) : (
+        threads.map((threads) => (
           <PostItem
-            id={thread.id}
-            key={thread.id}
-            profilePhoto={thread.author?.profilePhoto}
-            fullName={thread.author?.fullname}
-            userName={thread.author?.username}
-            postContent={thread.content}
-            postImage={thread.image}
-            createdAt={new Date(thread.createdAt).toLocaleTimeString()}
-            like={thread.like?.length || 0} // Add null check for likes
-            reply={thread.replies?.length || 0} // Add null check for replies
+            authorId={threads.authorId}
+            id={threads.id}
+            key={threads.id}
+            profilePhoto={threads.author.profilePhoto}
+            fullName={threads.author.fullname}
+            userName={threads.author.username}
+            postContent={threads.content}
+            postImage={threads.image}
+            createdAt={new Date(threads.createdAt).toLocaleTimeString()}
+            isLike={threads.isLike}
+            like={threads.like.length}
+            reply={threads.replies.length}
           />
-        );
-      })}
+        ))
+      )}
     </Box>
   );
 }

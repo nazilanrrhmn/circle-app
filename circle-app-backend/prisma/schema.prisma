@@ -4,16 +4,18 @@
 // Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
+
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  // directUrl = env("DIRECT_URL")
 }
+        
 
-// Model Users
 model User {
   id            Int     @id @default(autoincrement())
   fullname      String
@@ -38,7 +40,6 @@ model User {
   @@map("users")
 }
 
-// Model Follows
 model Follow {
   id Int @id @default(autoincrement())
 
@@ -50,6 +51,8 @@ model Follow {
 
   createdAt DateTime @default(now())
   updateAt DateTime @default(now()) @updatedAt
+  
+  @@unique([followingId, followersId])
 }
 
 enum RoleEnum {
@@ -57,7 +60,6 @@ enum RoleEnum {
   MEMBER
 }
 
-// Model Threads
 model Thread {
   id Int @id @default(autoincrement())
   content String
@@ -75,7 +77,6 @@ model Thread {
   @@map("threads")
 }
 
-// Model Replys
 model Reply {
   id Int @id @default(autoincrement())
   content String
@@ -93,7 +94,6 @@ model Reply {
   @@map("replies")
 }
 
-// Model Likes
 model Like {
   id Int @id @default(autoincrement())
 

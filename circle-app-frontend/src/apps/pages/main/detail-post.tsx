@@ -1,10 +1,10 @@
 import AppLayout from "../../../components/layouts/app-layout";
-import PostPage from "../../../features/detail/components/post-page";
+import ThreadDetailPage from "../../../features/detail/components/thread-page";
 
 export default function DetailPost() {
   return (
     <AppLayout>
-      <PostPage />
+      <ThreadDetailPage />
     </AppLayout>
   );
 }

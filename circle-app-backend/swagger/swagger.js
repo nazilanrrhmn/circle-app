@@ -5,8 +5,8 @@ const swaggerAutogen = require("swagger-autogen")({
 
 const doc = {
   info: {
-    title: "API FOR CIRCLE",
-    description: "API Documentation for Circle-App",
+    title: "API FOR CIRCLE-APPS",
+    description: "API Documentation for Circle-Apps",
   },
   host: "localhost:5000",
   components: {
@@ -60,6 +60,7 @@ const doc = {
           },
           profilePhoto: {
             type: "string",
+            format: "binary",
           },
         },
       },
@@ -97,7 +98,7 @@ const doc = {
       followSchema: {
         type: "object",
         properties: {
-          followersId: {
+          followingId: {
             type: "integer",
           },
         },
