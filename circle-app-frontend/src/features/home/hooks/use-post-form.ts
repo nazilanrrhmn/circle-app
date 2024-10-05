@@ -1,13 +1,10 @@
-import { useForm } from "react-hook-form";
-import axios from "axios";
-import { PostThradInput, postThreadSchema } from "../schemas/post-thread";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { apiV1 } from "../../../libs/api";
-import {
-  ThreadPostRequestDTO,
-  ThreadPostResponseDTO,
-} from "../types/thread.dto";
+import axios from "axios";
+import { useForm } from "react-hook-form";
 import Swal from "sweetalert2";
+import { apiV1 } from "../../../libs/api";
+import { PostThradInput, postThreadSchema } from "../schemas/post-thread";
+import { ThreadPostResponseDTO } from "../types/thread.dto";
 
 export function usePostThread() {
   const {
@@ -24,6 +21,7 @@ export function usePostThread() {
       const formData = new FormData();
       formData.append("content", data.content);
       formData.append("image", data.image[0]);
+
       const response = await apiV1.post<null, { data: ThreadPostResponseDTO }>(
         "/threads",
         formData

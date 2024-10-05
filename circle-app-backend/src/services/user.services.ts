@@ -7,13 +7,42 @@ import { SuccessResponse } from "../types/success.respons";
 const prisma = new PrismaClient();
 
 class UserServices {
-  async getAllUsers(): Promise<User[]> {
-    return await prisma.user.findMany();
+  async getAllUsers(userId: number): Promise<User[]> {
+    const users = await prisma.user.findMany({
+      include: {
+        followers: true,
+      },
+    });
+
+    const followedUsers = await prisma.follow.findMany({
+      where: { followersId: userId },
+      select: { followingId: true },
+    });
+
+    const followedIds = new Set(
+      followedUsers.map((follow) => follow.followingId)
+    );
+
+    return users.map((user) => ({
+      ...user,
+      isFollow: followedIds.has(user.id),
+    }));
   }
 
-  async getUserById(id: number): Promise<User | null> {
+  async isFollow(userLoginId: number, userId: number): Promise<boolean> {
+    const follow = await prisma.follow.findFirst({
+      where: {
+        followersId: userId,
+        followingId: userLoginId,
+      },
+    });
+
+    return follow !== null; // Mengembalikan true jika follow ada, false jika tidak
+  }
+
+  async getUserById(userId: number): Promise<User | null> {
     const user = await prisma.user.findUnique({
-      where: { id },
+      where: { id: userId },
       include: {
         followers: true,
         following: true,
@@ -74,7 +103,7 @@ class UserServices {
     }
 
     await prisma.user.update({
-      data: user,
+      data: data,
       where: { id: data.id },
     });
 

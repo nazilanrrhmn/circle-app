@@ -2,19 +2,17 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import { useForm } from "react-hook-form";
 import Swal from "sweetalert2";
+import { useAppSelector } from "../../../hooks/use.store";
 import { apiV1 } from "../../../libs/api";
 import { EditProfileFormInput, editProfileSchema } from "../schemas/edit";
-import {
-  EditProfileRequestDTO,
-  EditProfileResponseDTO,
-} from "../types/profile.dto";
-import { useAppSelector } from "../../../hooks/use.store";
+import { EditProfileResponseDTO } from "../types/profile.dto";
 
 export default function useEditProfile() {
   const user = useAppSelector((state) => state.auth.entities);
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors, isSubmitting },
   } = useForm<EditProfileFormInput>({
     resolver: zodResolver(editProfileSchema),
@@ -27,11 +25,16 @@ export default function useEditProfile() {
 
   async function onSubmit(data: EditProfileFormInput) {
     try {
+      const formData = new FormData();
+      formData.append("fullname", data.fullname);
+      formData.append("username", data.username);
+      formData.append("bio", data.bio);
+      formData.append("profilePhoto", data.profilePhoto[0]);
+
       const response = await apiV1.patch<
         null,
-        { data: EditProfileResponseDTO },
-        EditProfileRequestDTO
-      >("/users", data);
+        { data: EditProfileResponseDTO }
+      >("/users", formData);
       Swal.fire({
         icon: "success",
         title: response.data.message,
@@ -67,6 +70,7 @@ export default function useEditProfile() {
   return {
     register,
     handleSubmit,
+    watch,
     errors,
     isSubmitting,
     onSubmit,

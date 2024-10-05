@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import authServices from "../services/auth.services";
 import { LoginSchema, RegisterSchema } from "../utils/schemas/auth.schema";
+import userServices from "../services/user.services";
 
 class AuthController {
   async register(req: Request, res: Response) {
@@ -58,7 +59,8 @@ class AuthController {
   async getUserLogged(req: Request, res: Response) {
     // #swagger.tags = ['Auth']
     try {
-      const user = (req as any).user;
+      const userId = (req as any).user.id;
+      const user = await userServices.getUserById(userId);
       res.json(user);
     } catch (error) {
       res.status(500).json(error);

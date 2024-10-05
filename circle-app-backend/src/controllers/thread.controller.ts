@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
-import { CreateThreadSchema } from "../utils/schemas/thread.schema";
-import cloudinaryServices from "../services/cloudinary.services";
 import ThreadServices from "../services/thread.services";
 import threadServices from "../services/thread.services";
+import { CreateThreadSchema } from "../utils/schemas/thread.schema";
+import cloudinaryServices from "../services/cloudinary.services";
 
 class ThreadController {
   async create(req: Request, res: Response) {
@@ -47,7 +47,8 @@ class ThreadController {
     // #swagger.tags = ['Threads']
     // #swagger.summary = 'Get all thread'
     try {
-      const threads = await ThreadServices.getAllThreads();
+      const userId = (req as any).user.id;
+      const threads = await ThreadServices.getAllThreads(userId);
       res.json(threads);
     } catch (error) {
       res.status(500).json(error);
@@ -59,7 +60,8 @@ class ThreadController {
     // #swagger.summary = 'get single thread'
     try {
       const { id } = req.params;
-      const thread = await ThreadServices.getThreadById(Number(id));
+      const userId = (req as any).user.id;
+      const thread = await ThreadServices.getThreadById(Number(id), userId);
       res.json(thread);
     } catch (error) {
       res.status(500).json(error);

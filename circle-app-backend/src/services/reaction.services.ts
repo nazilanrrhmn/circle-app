@@ -1,6 +1,7 @@
 import { Like, PrismaClient, Reply } from "@prisma/client";
 import { CreateReplyDTO, LikeDTO } from "../dto/reaction.dto";
 import { customError } from "../types/custom.error";
+import { SuccessResponse } from "../types/success.respons";
 
 const prisma = new PrismaClient();
 
@@ -27,7 +28,26 @@ class ReactionServices {
     });
   }
 
-  async like(data: LikeDTO): Promise<Like | null> {
+  async isLike(data: LikeDTO) {
+    const like = await prisma.like.findFirst({
+      where: {
+        threadId: data.threadId,
+        authorId: data.authorId,
+      },
+    });
+
+    if (like) {
+      return {
+        isLike: true,
+      };
+    }
+
+    return {
+      isLike: false,
+    };
+  }
+
+  async like(data: LikeDTO): Promise<SuccessResponse<Like | null>> {
     const like = await prisma.like.findFirst({
       where: {
         threadId: data.threadId,
@@ -42,13 +62,38 @@ class ReactionServices {
       };
     }
     const likes = await prisma.like.create({ data });
-    return like;
+
+    return {
+      status: "success",
+      message: "Thread liked",
+    };
   }
 
-  async unlike(id: number): Promise<Like | null> {
-    return await prisma.like.delete({
-      where: { id },
+  async unlike(
+    id: number,
+    userId: number
+  ): Promise<SuccessResponse<Like | null>> {
+    const likeRecord = await prisma.like.findFirst({
+      where: {
+        authorId: userId,
+        threadId: id,
+      },
     });
+
+    if (!likeRecord) {
+      throw new Error("Like not found");
+    }
+
+    const unLike = await prisma.like.delete({
+      where: {
+        id: likeRecord.id,
+      },
+    });
+
+    return {
+      status: "success",
+      message: "Thread unliked",
+    };
   }
 }
 

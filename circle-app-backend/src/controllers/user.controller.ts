@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import UserServices from "../services/user.services";
 import { createUserSchema } from "../utils/schemas/user.schema";
 import userServices from "../services/user.services";
+import cloudinaryServices from "../services/cloudinary.services";
 
 class UserController {
   // async create(req: Request, res: Response) {
@@ -21,7 +22,8 @@ class UserController {
     // #swagger.tags = ['Users']
     // #swagger.summary = 'Find all users'
     try {
-      const users = await UserServices.getAllUsers();
+      const userId = (req as any).user.id;
+      const users = await UserServices.getAllUsers(userId);
       res.json(users);
     } catch (error: unknown) {
       res.status(500).json(error);
@@ -32,9 +34,11 @@ class UserController {
     // #swagger.tags = ['Users']
     // #swagger.summary = 'Find a user by params id'
     try {
-      const { id } = req.params;
-      const user = await userServices.getUserById(Number(id));
-      res.json(user);
+      const userId = req.params.id;
+      const userLoginId = (req as any).user.id;
+      const user = await userServices.getUserById(Number(userId));
+      const isFollow = await userServices.isFollow(Number(userId), userLoginId);
+      res.json({ ...user, isFollow });
     } catch (error) {
       res.status(500).json(error);
     }
@@ -46,7 +50,7 @@ class UserController {
     /*  #swagger.requestBody = {
             required: true,
             content: {
-                "application/json": {
+                "multipart/form-data": {
                     schema: {
                         $ref: "#/components/schemas/profileEditSchema"
                     }  
@@ -56,8 +60,19 @@ class UserController {
     */
     try {
       const id = (req as any).user.id;
+      const fileUpload = req.file;
+      let imageUrl = null;
+
+      if (fileUpload) {
+        const image = await cloudinaryServices.upload(
+          req.file as Express.Multer.File
+        );
+        imageUrl = image.secure_url;
+      }
+
       const value = {
         ...req.body,
+        profilePhoto: imageUrl,
         id: id,
       };
 

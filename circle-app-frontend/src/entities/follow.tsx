@@ -8,4 +8,5 @@ export interface FollowEntitiy {
   followers: UserEntity;
   createdAt: Date;
   updateAt: Date;
+  isFollow: boolean;
 }

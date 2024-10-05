@@ -1,16 +1,23 @@
-// import { useEffect, useState } from "react";
-// import { apiV1 } from "../../../libs/api";
-// import { ThreadResponseDTO } from "../../home/types/thread.dto";
-// import { useAppSelector } from "../../../hooks/use.store";
-import { Grid, Image, AspectRatio } from "@chakra-ui/react";
+import { AspectRatio, Grid, Image } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import { ThreadEntity } from "../../../entities/thread";
 
-interface MediaListProps {
-  threads: ThreadEntity[]; // Define the type for threads
-}
+export default function MediaList({ threads }: { threads: ThreadEntity[] }) {
+  // const [medias, setMedia] = useState<ThreadEntity[]>([]);
+  // const user = useAppSelector((state) => state.auth.entities);
 
-export default function MediaList({ threads }: MediaListProps) {
+  // async function getUserThread() {
+  //   const response = await apiV1.get<null, { data: ThreadResponseDTO }>(`/user/threads/${user.id}`);
+  //   const data = response.data.data;
+  //   return { data: data };
+  // }
+
+  // useEffect(() => {
+  //   getUserThread().then(({ data }) => {
+  //     setMedia(data);
+  //   });
+  // }, []);
+
   return (
     <Grid
       id="media"
@@ -19,7 +26,6 @@ export default function MediaList({ threads }: MediaListProps) {
       padding={"8px 4px"}
     >
       {threads.map((thread) => {
-        // Explicitly specify the type for thread
         if (thread.image !== null) {
           return (
             <Link key={thread.id} to={`/detail-image/${thread.id}`}>
@@ -29,7 +35,6 @@ export default function MediaList({ threads }: MediaListProps) {
             </Link>
           );
         }
-        return null; // Return null for threads without images
       })}
     </Grid>
   );

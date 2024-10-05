@@ -15,16 +15,9 @@ export default function FollowsTabs() {
     return { following: data.following, followers: data.followers };
   }
 
-  // useEffect(() => {
-  //   getFollowList().then(({ following, followers }) => {
-  //     setFollowing(following), setFollowers(followers);
-  //   });
-  // }, []);
-
   useEffect(() => {
     getFollowList().then(({ following, followers }) => {
-      setFollowing(following);
-      setFollowers(followers);
+      setFollowing(following), setFollowers(followers);
     });
   }, []);
 
@@ -49,7 +42,8 @@ export default function FollowsTabs() {
                 image={follower.followers.profilePhoto}
                 fullName={follower.followers.fullname}
                 userName={follower.followers.username}
-                isFollow="Follow"
+                bio={follower.followers.bio}
+                isFollow={follower.isFollow}
               />
             );
           })}
@@ -63,7 +57,8 @@ export default function FollowsTabs() {
                 image={following.following.profilePhoto}
                 fullName={following.following.fullname}
                 userName={following.following.username}
-                isFollow="Follow"
+                bio={following.following.bio}
+                isFollow={following.isFollow}
               />
             );
           })}

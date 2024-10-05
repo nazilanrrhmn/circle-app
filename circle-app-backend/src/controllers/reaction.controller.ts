@@ -52,6 +52,33 @@ class ReactionController {
     }
   }
 
+  async isLike(req: Request, res: Response) {
+    // #swagger.tags = ['Reaction']
+    // #swagger.summary = 'Thread isLike'
+    /*  #swagger.requestBody = {
+                required: true,
+                content: {
+                    "application/json": {
+                        schema: {
+                            $ref: "#/components/schemas/likeSchema"
+                        }  
+                    }
+                }
+            } 
+        */
+    try {
+      const authorId = (req as any).user.id;
+      const { threadId } = req.body;
+      const like = await reactionSevices.isLike({
+        threadId,
+        authorId,
+      });
+      res.json(like);
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  }
+
   async like(req: Request, res: Response) {
     // #swagger.tags = ['Reaction']
     // #swagger.summary = 'Like a thread'
@@ -73,10 +100,7 @@ class ReactionController {
         threadId,
         authorId,
       });
-      res.json({
-        status: "success",
-        message: "Thread liked",
-      });
+      res.json(like);
     } catch (error) {
       res.status(500).json(error);
     }
@@ -86,12 +110,10 @@ class ReactionController {
     // #swagger.tags = ['Reaction']
     // #swagger.summary = 'Unlike a thread'
     try {
+      const userId = (req as any).user.id;
       const { id } = req.params;
-      const thread = await reactionSevices.unlike(Number(id));
-      res.json({
-        status: "success",
-        message: "Thread unlike",
-      });
+      const unLike = await reactionSevices.unlike(Number(id), userId);
+      res.json(unLike);
     } catch (error) {
       res.status(500).json(error);
     }

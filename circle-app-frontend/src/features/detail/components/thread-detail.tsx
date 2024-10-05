@@ -1,16 +1,26 @@
 import { Avatar, Box, Flex, Image, Text } from "@chakra-ui/react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Thread } from "../../home/types/thread.dto";
+import { PostAction } from "../../../components/ui/post-action";
 
-export default function PostDetail({
-  image,
+export default function ThreadDetail({
+  profilePhoto,
   fullName,
   userName,
   postImage,
   postContent,
   like,
   reply,
-}: Thread) {
+  id,
+  isLike,
+  authorId,
+}: Thread & { isLike: boolean; authorId: number }) {
+  const navigate = useNavigate();
+  const handleClick = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    event.preventDefault();
+    navigate(`/profile/${authorId}`);
+  };
+
   return (
     <Flex
       direction={"column"}
@@ -21,7 +31,9 @@ export default function PostDetail({
     >
       <Flex gap={3}>
         <Avatar
-          src={image}
+          src={profilePhoto}
+          onClick={handleClick}
+          cursor={"pointer"}
           name={fullName}
           borderColor={"brand.backgroundBox"}
           height={"40px"}
@@ -29,7 +41,7 @@ export default function PostDetail({
           rounded={"full"}
           objectFit="cover"
         />
-        <Link to="/profile">
+        <Link to={`/profile/${authorId}`}>
           <Box>
             <Text fontSize={"14px"} mb={1} fontWeight={700} lineHeight={"16px"}>
               {fullName}
@@ -48,7 +60,9 @@ export default function PostDetail({
       <Text fontSize={"14px"} fontWeight={400} lineHeight={"20px"}>
         {postContent}
       </Text>
-      <Image src={postImage} width={"400px"} rounded={8} />
+      <Link to={`/detail-image/${id}`}>
+        <Image src={postImage} width={"400px"} rounded={8} />
+      </Link>
       <Flex gap={1} mb={1}>
         <Text
           fontSize={"14px"}
@@ -76,28 +90,19 @@ export default function PostDetail({
         </Text>
       </Flex>
       <Flex gap={4} marginY={1} alignItems={"center"}>
-        <Flex gap={2} alignItems={"center"}>
-          <Image src="/icons/heart.svg" alt="like" height={"18px"} />
-          <Text
-            fontSize={"14px"}
-            fontWeight={400}
-            lineHeight={"20px"}
-            color={"brand.fontSecondary"}
-          >
+        <PostAction isLike={isLike} id={id} like={like} reply={reply} />
+        {/* <Flex gap={2} alignItems={"center"}>
+          <Image src="/heart.svg" alt="like" height={"18px"} />
+          <Text fontSize={"14px"} fontWeight={400} lineHeight={"20px"} color={"brand.fontSecondary"}>
             {like}
           </Text>
         </Flex>
         <Flex gap={2} alignItems={"center"}>
-          <Image src="/icons/message-text.svg" alt="like" height={"18px"} />
-          <Text
-            fontSize={"14px"}
-            fontWeight={400}
-            lineHeight={"20px"}
-            color={"brand.fontSecondary"}
-          >
+          <Image src="/message-text.svg" alt="like" height={"18px"} />
+          <Text fontSize={"14px"} fontWeight={400} lineHeight={"20px"} color={"brand.fontSecondary"}>
             {reply} Replies
           </Text>
-        </Flex>
+        </Flex> */}
       </Flex>
     </Flex>
   );

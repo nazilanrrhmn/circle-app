@@ -1,41 +1,40 @@
-// import { apiV1 } from "../../../libs/api";
-// import { useAppSelector } from "../../../hooks/use.store";
-// import { Thread, ThreadResponseDTO } from "../../home/types/thread.dto";
-// import { useEffect, useState } from "react";
-// import { ThreadEntity } from "../../../entities/thread";
 import { Box } from "@chakra-ui/react";
 import PostItem from "../../../components/ui/post-item";
 import { ThreadEntity } from "../../../entities/thread";
+// import { formatDistanceToNow } from "date-fns"; // Import date-fns function
 
-interface PostListProps {
-  threads: ThreadEntity[]; // Define the type for threads
-}
+export default function PostList({ threads }: { threads: ThreadEntity[] }) {
+  // const [threads, setThread] = useState<ThreadEntity[]>([]);
+  // const user = useAppSelector((state) => state.auth.entities);
 
-export default function PostList({ threads }: PostListProps) {
+  // async function getUserThread() {
+  //   const response = await apiV1.get<null, { data: ThreadResponseDTO }>(`/user/threads/${user.id}`);
+  //   const data = response.data.data;
+  //   return { data: data };
+  // }
+
+  // useEffect(() => {
+  //   getUserThread().then(({ data }) => {
+  //     setThread(data);
+  //   });
+  // }, []);
+
   return (
     <Box id="post">
       {threads.map((thread) => {
         return (
           <PostItem
+            authorId={thread.authorId}
+            isLike={thread.isLike}
             key={thread.id}
             id={thread.id}
-            image={
-              thread.author?.profilePhoto || ""
-            } /* Optional chaining to handle undefined */
-            fullName={
-              thread.author?.fullname || "Anonymous"
-            } /* Optional chaining with default value */
-            userName={
-              thread.author?.username || "Unknown"
-            } /* Optional chaining with default value */
-            postContent={thread.content || ""} /* Default empty string */
-            postImage={thread.image || ""} /* Default empty string */
-            like={
-              thread.likes?.length ?? 0
-            } /* Optional chaining with default to handle undefined */
-            reply={
-              thread.replies?.length ?? 0
-            } /* Optional chaining with default to handle undefined */
+            profilePhoto={thread.author.profilePhoto}
+            fullName={thread.author.fullname}
+            userName={thread.author.username}
+            postContent={thread.content}
+            postImage={thread.image}
+            like={thread.like.length}
+            reply={thread.replies.length}
           />
         );
       })}

@@ -1,8 +1,8 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "title": "API FOR CIRCLE",
-    "description": "API Documentation for Circle-App",
+    "title": "API FOR CIRCLE-APPS",
+    "description": "API Documentation for Circle-Apps",
     "version": "1.0.0"
   },
   "servers": [
@@ -147,7 +147,7 @@
         "requestBody": {
           "required": true,
           "content": {
-            "application/json": {
+            "multipart/form-data": {
               "schema": {
                 "$ref": "#/components/schemas/profileEditSchema"
               }
@@ -242,14 +242,22 @@
         }
       }
     },
-    "/api/v1/unfollow": {
+    "/api/v1/unfollow/{id}": {
       "delete": {
         "tags": [
           "Follow"
         ],
-        "summary": "Unollow User",
+        "summary": "Unfollow User",
         "description": "",
         "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
           {
             "name": "Authorization",
             "in": "header",
@@ -273,21 +281,7 @@
           {
             "bearerAuth": []
           }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "userId": {
-                    "example": "any"
-                  }
-                }
-              }
-            }
-          }
-        }
+        ]
       }
     },
     "/api/v1/follows": {
@@ -661,6 +655,50 @@
         }
       }
     },
+    "/api/v1/threads/islike": {
+      "post": {
+        "tags": [
+          "Reaction"
+        ],
+        "summary": "Thread isLike",
+        "description": "",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/likeSchema"
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/threads/like/{id}": {
       "delete": {
         "tags": [
@@ -754,7 +792,8 @@
             "type": "string"
           },
           "profilePhoto": {
-            "type": "string"
+            "type": "string",
+            "format": "binary"
           }
         }
       },
@@ -792,7 +831,7 @@
       "followSchema": {
         "type": "object",
         "properties": {
-          "followersId": {
+          "followingId": {
             "type": "integer"
           }
         }

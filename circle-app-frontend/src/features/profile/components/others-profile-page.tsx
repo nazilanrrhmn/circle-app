@@ -1,18 +1,15 @@
-import { Box, Text, Flex, Spinner } from "@chakra-ui/react";
-import AppLayout from "../../../components/layouts/app-layout";
-import ProfileHeading from "../../../components/ui/profile-heading";
-import ProfileTabs from "../../../features/profile/components/profile-tab";
+import { Box, Flex, Spinner, Text } from "@chakra-ui/react";
 import { HiOutlineArrowLeft } from "react-icons/hi";
 import { Link, useParams } from "react-router-dom";
-import { useAppSelector } from "../../../hooks/use.store";
+import ProfileHeading from "../../../components/ui/profile-heading";
+import ProfileTabs from "../../../features/profile/components/profile-tab";
 
 import { useEffect, useState } from "react";
-import { ThreadEntity } from "../../../entities/thread";
+import { UserEntity } from "../../../entities/user";
 import { apiV1 } from "../../../libs/api";
-import { ThreadResponseDTO } from "../../../features/home/types/thread.dto";
 
 export default function ProfilePage() {
-  const [user, setUser] = useState();
+  const [user, setUser] = useState<UserEntity>();
   let { id } = useParams();
 
   async function getUserThread() {
@@ -26,8 +23,6 @@ export default function ProfilePage() {
       setUser(data);
     });
   }, [id]);
-
-  console.log(user);
 
   if (!user) {
     return <Spinner />;
@@ -46,11 +41,15 @@ export default function ProfilePage() {
 
       <Box padding={4}>
         <ProfileHeading
+          id={Number(id)}
+          isMyProfile={false}
+          buttonTitle={user.isFollow ? "Unfollow" : "Follow"}
+          isFollow={user.isFollow}
           profilePhoto={user.profilePhoto}
           fullname={user.fullname}
           username={user.username}
-          following={user.following.length}
-          followers={user.followers.length}
+          followers={user.following.length}
+          following={user.followers.length}
           bio={user.bio}
           thumbnailH="140px"
         />

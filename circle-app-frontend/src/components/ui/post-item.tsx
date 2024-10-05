@@ -13,18 +13,22 @@ export default function PostItem({
   like,
   reply,
   id,
-}: Thread & { id: number }) {
+  isLike,
+  authorId,
+}: Thread & { authorId: number; isLike: boolean }) {
   return (
     <Link to={`/detail-post/${id}`}>
       <PostContent
+        authorId={authorId}
         profilePhoto={profilePhoto}
         fullName={fullName}
         userName={userName}
         postContent={postContent}
         postImage={postImage}
         createdAt={createdAt}
+        id={id}
       >
-        <PostAction like={like} reply={reply} />
+        <PostAction isLike={isLike} like={like} reply={reply} id={id} />
       </PostContent>
     </Link>
   );
