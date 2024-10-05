@@ -58,7 +58,7 @@ export default function EditProfileModal({
         <ModalBody p={4}>
           <Box position={"relative"} marginBottom={12}>
             <Image
-              src="/thumbnail.png"
+              src="/img/cover.png"
               alt="thumbnail"
               height={thumbnailH}
               width={"100%"}
