@@ -33,6 +33,7 @@ export default function PostList({ threads }: { threads: ThreadEntity[] }) {
             userName={thread.author.username}
             postContent={thread.content}
             postImage={thread.image}
+            createdAt={new Date(thread.createdAt).toLocaleTimeString()}
             like={thread.like.length}
             reply={thread.replies.length}
           />

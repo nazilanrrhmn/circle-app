@@ -8,6 +8,7 @@ export default function PostDetail({
   userName,
   postImage,
   postContent,
+  createdAt,
   like,
   reply,
 }: Thread) {
@@ -56,7 +57,7 @@ export default function PostDetail({
           lineHeight={"20px"}
           color={"brand.fontSecondary"}
         >
-          11:32 PM
+          {createdAt}
         </Text>
         <Text
           fontSize={"14px"}

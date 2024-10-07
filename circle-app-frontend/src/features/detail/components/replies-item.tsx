@@ -8,6 +8,7 @@ export default function RepliesItem({
   userName,
   postContent,
   postImage,
+  createdAt,
   like,
   id,
   authorId,
@@ -21,6 +22,7 @@ export default function RepliesItem({
       userName={userName}
       postContent={postContent}
       postImage={postImage}
+      createdAt={createdAt}
     >
       <RepliesAction like={like} />
     </PostContent>

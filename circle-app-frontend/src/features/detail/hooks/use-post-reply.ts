@@ -3,11 +3,11 @@ import axios from "axios";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { apiV1 } from "../../../libs/api";
 import {
-  PostThradInput,
+  PostThreadInput,
   postThreadSchema,
 } from "../../home/schemas/post-thread";
 import { ThreadDetailResponseDTO } from "../types/thread-detail.dto";
-import { ThreadPostRequestDTO } from "../../home/types/thread.dto";
+// import { ThreadPostRequestDTO } from "../../home/types/thread.dto";
 import Swal from "sweetalert2";
 
 export function usePostReply({ threadId }: { threadId: number }) {
@@ -15,17 +15,37 @@ export function usePostReply({ threadId }: { threadId: number }) {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<PostThradInput>({
+  } = useForm<PostThreadInput>({
     resolver: zodResolver(postThreadSchema),
   });
 
-  async function onSubmit({ content }: PostThradInput) {
+  async function onSubmit(data: PostThreadInput) {
     try {
+      const formData = new FormData();
+      formData.append("content", data.content);
+      // Check if an image is selected and append to formData
+      if (data.image && data.image[0]) {
+        formData.append("image", data.image[0]);
+      }
+
       const response = await apiV1.post<
         null,
-        { data: ThreadDetailResponseDTO },
-        ThreadPostRequestDTO
-      >(`/threads/${threadId}/reply`, { content });
+        { data: ThreadDetailResponseDTO }
+      >(
+        `/threads/${threadId}/reply`, // Corrected the template literal here
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data", // Ensure correct content type
+          },
+        }
+      );
+
+      // const response = await apiV1.post<
+      //   null,
+      //   { data: ThreadDetailResponseDTO },
+      //   ThreadPostRequestDTO
+      // >(`/threads/${threadId}/reply`, data);
       // alert(response.data.message);
       Swal.fire({
         icon: "success",

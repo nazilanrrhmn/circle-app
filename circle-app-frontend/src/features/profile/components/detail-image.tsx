@@ -14,7 +14,7 @@ export default function DetailImagePage() {
   const navigate = useNavigate();
   const [isContentOpen, setIsContentOpen] = useState(true);
   const [threads, setThread] = useState<ThreadEntity>();
-  let { id } = useParams();
+  const { id } = useParams();
   const threadId = Number(id);
 
   async function getThreads() {
@@ -95,6 +95,7 @@ export default function DetailImagePage() {
             fullName={threads.author.fullname}
             userName={threads.author.username}
             postContent={threads.content}
+            createdAt={new Date(threads.createdAt).toLocaleTimeString()}
           />
           <FormReply
             threadId={threadId}
@@ -110,6 +111,7 @@ export default function DetailImagePage() {
                 fullName={reply.author.fullname}
                 userName={reply.author.username}
                 postContent={reply.content}
+                createdAt={new Date(threads.createdAt).toLocaleTimeString()}
                 like={10}
                 postImage={reply.image}
               />

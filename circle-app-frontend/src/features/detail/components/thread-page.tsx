@@ -11,7 +11,7 @@ import FormReply from "./reply-form";
 
 export default function ThreadDetailPage() {
   const [threads, setThread] = useState<ThreadEntity>();
-  let { id } = useParams();
+  const { id } = useParams();
   const threadId = Number(id);
 
   async function getThreads() {
@@ -49,6 +49,7 @@ export default function ThreadDetailPage() {
         userName={threads?.author.username}
         postContent={threads.content}
         postImage={threads?.image}
+        createdAt={new Date(threads.createdAt).toLocaleTimeString()}
         isLike={threads.isLike}
         like={threads.like.length}
         reply={threads.replies.length}
@@ -67,6 +68,7 @@ export default function ThreadDetailPage() {
             fullName={reply.author.fullname}
             userName={reply.author.username}
             postContent={reply.content}
+            createdAt={new Date(threads.createdAt).toLocaleTimeString()}
             like={10}
             postImage={reply.image}
           />

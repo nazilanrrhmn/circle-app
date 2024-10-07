@@ -5,4 +5,4 @@ export const postThreadSchema = z.object({
   image: z.any(),
 });
 
-export type PostThradInput = z.infer<typeof postThreadSchema>;
+export type PostThreadInput = z.infer<typeof postThreadSchema>;

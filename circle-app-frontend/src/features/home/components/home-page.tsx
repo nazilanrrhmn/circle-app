@@ -25,7 +25,13 @@ export default function HomePage() {
   }
 
   useEffect(() => {
-    getThreads();
+    const intervalId = setInterval(() => {
+      getThreads();
+    }, 5000);
+    // getThreads();
+    return () => {
+      clearInterval(intervalId);
+    };
   }, []);
 
   return (

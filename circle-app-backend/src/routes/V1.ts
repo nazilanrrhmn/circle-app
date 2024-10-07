@@ -42,13 +42,25 @@ routerV1.post(
 );
 routerV1.delete("/threads/:id", authentication, ThreadController.delete);
 
-// THREAD REACTION
-routerV1.post("/threads/:id/reply", authentication, reactionController.reply);
+routerV1.post(
+  "/threads/:id/reply",
+  upload.single("image"),
+  authentication,
+  ThreadController.replyToThread
+);
 routerV1.delete(
   "/threads/reply/:id",
   authentication,
-  reactionController.deleteReply
+  ThreadController.deleteReply
 );
+
+// THREAD REACTION
+// routerV1.post("/threads/:id/reply", authentication, reactionController.reply);
+// routerV1.delete(
+//   "/threads/reply/:id",
+//   authentication,
+//   reactionController.deleteReply
+// );
 routerV1.post("/threads/like", authentication, reactionController.like);
 routerV1.post("/threads/islike", authentication, reactionController.isLike);
 routerV1.delete("/threads/like/:id", authentication, reactionController.unlike);
