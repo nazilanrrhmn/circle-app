@@ -9,4 +9,6 @@ export interface ReplyEntity {
   threadId: number;
   createdAt: Date;
   updateAt: Date;
+  like_replies: any[];
+  isLike: boolean;
 }

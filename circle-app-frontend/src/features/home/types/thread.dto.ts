@@ -8,6 +8,7 @@ export type Thread = {
   postContent: string;
   postImage?: string;
   createdAt: string;
+  image?: string;
   like: number;
   reply: number;
 };

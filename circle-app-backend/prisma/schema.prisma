@@ -34,6 +34,8 @@ model User {
   replies Reply[]
   likes Like[]
 
+  like_replies LikeReply[]
+
   createdAt DateTime @default(now())
   updateAt DateTime @default(now()) @updatedAt
 
@@ -88,6 +90,8 @@ model Reply {
   thread Thread @relation(fields: [threadId], references: [id])
   threadId Int
 
+  like_replies LikeReply[]
+
   createdAt DateTime @default(now())
   updateAt DateTime @default(now()) @updatedAt
 
@@ -107,4 +111,20 @@ model Like {
   updateAt DateTime @default(now()) @updatedAt
 
   @@map("likes")
+}
+
+model LikeReply {
+  id Int @id @default(autoincrement())
+
+  author User @relation(fields: [authorId], references: [id])
+  authorId Int
+
+  replies Reply @relation(fields: [repliesId], references: [id])
+  repliesId Int
+
+  createdAt DateTime @default(now())
+  updateAt DateTime @default(now()) @updatedAt
+
+  @@map("like_replies")
+  @@unique([authorId, repliesId])
 }

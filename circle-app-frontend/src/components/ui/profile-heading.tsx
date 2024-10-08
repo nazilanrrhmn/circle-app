@@ -153,6 +153,7 @@ export default function ProfileHeading({
           profilePhoto={profilePhoto}
           thumbnailH={thumbnailH}
           fullname={fullname}
+          onClose={onClose} // Pass the onClose function here
         />
       </Modal>
     </>

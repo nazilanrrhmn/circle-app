@@ -25,7 +25,13 @@ export default function HomePage() {
   }
 
   useEffect(() => {
-    getThreads();
+    const intervalId = setInterval(() => {
+      getThreads();
+    }, 5000);
+    // getThreads();
+    return () => {
+      clearInterval(intervalId);
+    };
   }, []);
 
   return (
@@ -41,22 +47,24 @@ export default function HomePage() {
           <SkeletonText mt="4" noOfLines={4} spacing="4" skeletonHeight="3" />
         </Box>
       ) : (
-        threads.map((threads) => (
-          <PostItem
-            authorId={threads.authorId}
-            id={threads.id}
-            key={threads.id}
-            profilePhoto={threads.author.profilePhoto}
-            fullName={threads.author.fullname}
-            userName={threads.author.username}
-            postContent={threads.content}
-            postImage={threads.image}
-            createdAt={new Date(threads.createdAt).toLocaleTimeString()}
-            isLike={threads.isLike}
-            like={threads.like.length}
-            reply={threads.replies.length}
-          />
-        ))
+        [...threads]
+          .reverse()
+          .map((threads) => (
+            <PostItem
+              authorId={threads.authorId}
+              id={threads.id}
+              key={threads.id}
+              profilePhoto={threads.author.profilePhoto}
+              fullName={threads.author.fullname}
+              userName={threads.author.username}
+              postContent={threads.content}
+              postImage={threads.image}
+              createdAt={new Date(threads.createdAt).toLocaleTimeString()}
+              isLike={threads.isLike}
+              like={threads.like.length}
+              reply={threads.replies.length}
+            />
+          ))
       )}
     </Box>
   );

@@ -18,26 +18,48 @@ import { useState } from "react";
 import { HiOutlineXCircle } from "react-icons/hi";
 import useEditProfile from "../../features/profile/hooks/use-edit-profile";
 
+// Define the shape of the form data
+interface EditProfileFormData {
+  fullname: string;
+  username: string;
+  bio: string;
+  profilePhoto?: FileList;
+}
+
 export default function EditProfileModal({
   thumbnailH,
   fullname,
   profilePhoto,
+  onClose,
 }: {
   thumbnailH: string;
   fullname: string;
   profilePhoto?: string;
+  onClose: () => void;
 }) {
   const { register, handleSubmit, errors, isSubmitting, onSubmit } =
     useEditProfile();
   const [image, setImage] = useState<string | undefined>(profilePhoto);
 
-  const onImageChage = (
+  const onImageChange = (
     event: React.ChangeEvent<HTMLInputElement>,
-    onChange: (...event: any[]) => void
+    onChange: (event: React.ChangeEvent<HTMLInputElement>) => void
   ) => {
     if (event.target.files && event.target.files[0]) {
       setImage(URL.createObjectURL(event.target.files[0]));
       onChange(event);
+    }
+  };
+
+  // Handle form submission and check success correctly
+  const handleFormSubmit = async (data: EditProfileFormData) => {
+    try {
+      const success = await onSubmit(data); // onSubmit returns a boolean
+      if (success) {
+        onClose(); // Close the modal if submission is successful
+      }
+    } catch (error) {
+      console.error("Profile update failed:", error);
     }
   };
 
@@ -47,7 +69,7 @@ export default function EditProfileModal({
       backgroundColor={"brand.backgroundCircle"}
       rounded={15}
     >
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={handleSubmit(handleFormSubmit)}>
         <ModalHeader pl={4} pt={2} pb={0} fontSize={"20px"} fontWeight={700}>
           Edit profile
         </ModalHeader>
@@ -58,7 +80,7 @@ export default function EditProfileModal({
         <ModalBody p={4}>
           <Box position={"relative"} marginBottom={12}>
             <Image
-              src="/thumbnail.png"
+              src="/img/cover.png"
               alt="thumbnail"
               height={thumbnailH}
               width={"100%"}
@@ -70,7 +92,7 @@ export default function EditProfileModal({
                 <Input
                   {...register("profilePhoto")}
                   onChange={(e) =>
-                    onImageChage(e, register("profilePhoto").onChange)
+                    onImageChange(e, register("profilePhoto").onChange)
                   }
                   id="uploadPhoto"
                   type="file"

@@ -3,7 +3,7 @@ import axios from "axios";
 import { useForm } from "react-hook-form";
 import Swal from "sweetalert2";
 import { apiV1 } from "../../../libs/api";
-import { PostThradInput, postThreadSchema } from "../schemas/post-thread";
+import { PostThreadInput, postThreadSchema } from "../schemas/post-thread";
 import { ThreadPostResponseDTO } from "../types/thread.dto";
 
 export function usePostThread() {
@@ -11,12 +11,13 @@ export function usePostThread() {
     register,
     handleSubmit,
     watch,
+    reset,
     formState: { errors, isSubmitting },
-  } = useForm<PostThradInput>({
+  } = useForm<PostThreadInput>({
     resolver: zodResolver(postThreadSchema),
   });
 
-  async function onSubmit(data: PostThradInput) {
+  async function onSubmit(data: PostThreadInput) {
     try {
       const formData = new FormData();
       formData.append("content", data.content);
@@ -36,6 +37,7 @@ export function usePostThread() {
         iconColor: "#04A51E",
         timer: 1500,
       });
+      reset();
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
         console.error(error.response.data); // Log response error dari server

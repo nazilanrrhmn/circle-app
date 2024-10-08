@@ -55,7 +55,7 @@ export default function ProtectedRoutes() {
         </Box>
 
         {/* CSS keyframes for animations */}
-        <style jsx>{`
+        <style>{`
           @keyframes scaleUpDown {
             0% {
               transform: scale(1);

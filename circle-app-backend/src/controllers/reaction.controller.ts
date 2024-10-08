@@ -1,17 +1,16 @@
 import { Request, Response } from "express";
-import { CreateReplySchema } from "../utils/schemas/reaction.schema";
 import reactionSevices from "../services/reaction.services";
 
 class ReactionController {
-  async reply(req: Request, res: Response) {
+  async likeReplies(req: Request, res: Response) {
     // #swagger.tags = ['Reaction']
-    // #swagger.summary = 'Create new Reply'
+    // #swagger.summary = 'Like a thread reply'
     /*  #swagger.requestBody = {
                 required: true,
                 content: {
                     "application/json": {
                         schema: {
-                            $ref: "#/components/schemas/createReplySchema"
+                            $ref: "#/components/schemas/likeRepliesSchema"
                         }  
                     }
                 }
@@ -19,34 +18,25 @@ class ReactionController {
         */
     try {
       const authorId = (req as any).user.id;
-      const { id } = req.params;
-      const threadId = Number(id);
-      const { content, image } = req.body;
-      const reply = await reactionSevices.createReply({
-        threadId,
-        content,
-        image,
+      const { repliesId } = req.body;
+      const isLike = await reactionSevices.isLikeReplies({
+        repliesId,
         authorId,
       });
-      res.json({
-        status: "success",
-        message: "Reply Created",
-      });
-    } catch (error) {
-      res.status(500).json(error);
-    }
-  }
+      if (!isLike) {
+        const like = await reactionSevices.likeReplies({
+          repliesId,
+          authorId,
+        });
+        res.json(like);
+      } else {
+        const like = await reactionSevices.unlikeReplies({
+          repliesId,
+          authorId,
+        });
 
-  async deleteReply(req: Request, res: Response) {
-    // #swagger.tags = ['Reaction']
-    // #swagger.summary = 'Delete reply'
-    try {
-      const { id } = req.params;
-      const thread = await reactionSevices.deleteReply(Number(id));
-      res.json({
-        status: "success",
-        message: "Reply deleted",
-      });
+        res.json(like);
+      }
     } catch (error) {
       res.status(500).json(error);
     }
@@ -96,11 +86,18 @@ class ReactionController {
     try {
       const authorId = (req as any).user.id;
       const { threadId } = req.body;
-      const like = await reactionSevices.like({
-        threadId,
-        authorId,
-      });
-      res.json(like);
+      const isLike = await reactionSevices.isLike({ threadId, authorId });
+      if (!isLike) {
+        const like = await reactionSevices.like({
+          threadId,
+          authorId,
+        });
+        res.json(like);
+      } else {
+        const like = await reactionSevices.unlike({ threadId, authorId });
+
+        res.json(like);
+      }
     } catch (error) {
       res.status(500).json(error);
     }
@@ -110,9 +107,9 @@ class ReactionController {
     // #swagger.tags = ['Reaction']
     // #swagger.summary = 'Unlike a thread'
     try {
-      const userId = (req as any).user.id;
-      const { id } = req.params;
-      const unLike = await reactionSevices.unlike(Number(id), userId);
+      const authorId = (req as any).user.id;
+      const threadId = Number(req.params.id);
+      const unLike = await reactionSevices.unlike({ threadId, authorId });
       res.json(unLike);
     } catch (error) {
       res.status(500).json(error);

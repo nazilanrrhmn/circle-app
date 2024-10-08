@@ -12,41 +12,64 @@ import {
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { HiOutlineXCircle } from "react-icons/hi";
-import { usePostReply } from "../hooks/use-post-reply";
 import { useAppSelector } from "../../../hooks/use.store";
+import { usePostReply } from "../hooks/use-post-reply";
+
+interface FormReplyProps {
+  placeholder: string;
+  buttonTitle: string;
+  threadId: number;
+  onSuccess: () => void; // Tambahkan onSuccess sebagai prop
+}
 
 export default function FormReply({
   placeholder,
   buttonTitle,
   threadId,
-}: {
-  placeholder: string;
-  buttonTitle: string;
-  threadId: number;
-}) {
+  onSuccess, // Ambil onSuccess dari props
+}: FormReplyProps) {
   const { register, handleSubmit, errors, isSubmitting, onSubmit } =
     usePostReply({ threadId });
+
   const user = useAppSelector((state) => state.auth.entities);
   const [image, setImage] = useState<string | null>(null); // State for image preview
+  const [file, setFile] = useState<File | null>(null); // State for the actual file
 
   // Handle image selection and preview
-  const onImageChange = (
-    event: React.ChangeEvent<HTMLInputElement>, // Explicit type for event
-    onChange: (event: React.ChangeEvent<HTMLInputElement>) => void
-  ) => {
+  const onImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
-      setImage(URL.createObjectURL(event.target.files[0]));
-      onChange(event); // Trigger form submission change
+      const selectedFile = event.target.files[0];
+      setImage(URL.createObjectURL(selectedFile));
+      setFile(selectedFile); // Store the file to send in FormData
     }
   };
 
   // Function to remove the selected image
   const handleRemoveImage = () => {
-    setImage(null); // Remove image preview
+    setImage(null);
+    setFile(null);
+  };
+
+  // Submit handler
+  const handleFormSubmit = async (data: { content: string }) => {
+    const formData = new FormData();
+    formData.append("content", data.content);
+    if (file) {
+      formData.append("image", file); // Attach the file to the FormData
+    }
+
+    // Pastikan onSubmit mengembalikan nilai yang dapat dicek
+    const success: boolean = await onSubmit(formData);
+
+    if (success) {
+      onSuccess(); // Panggil onSuccess setelah reply berhasil dibuat
+      setImage(null); // Clear image preview
+      setFile(null); // Clear file state
+    }
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form onSubmit={handleSubmit(handleFormSubmit)}>
       <FormControl
         display={"flex"}
         alignItems={image ? "start" : "center"}
@@ -67,7 +90,7 @@ export default function FormReply({
         />
         <Box flex={"1"}>
           <Input
-            {...register("content")}
+            {...register("content", { required: "Reply content is required" })}
             variant={"unstyled"}
             border={"none"}
             placeholder={placeholder}
@@ -80,12 +103,10 @@ export default function FormReply({
 
           {/* Hidden file input */}
           <Input
-            {...register("image")}
-            onChange={(e) => onImageChange(e, register("image").onChange)}
+            onChange={onImageChange}
             id="upload"
             type="file"
-            variant={"unstyled"}
-            border={"none"}
+            accept="image/*"
             hidden
           />
 
@@ -139,87 +160,3 @@ export default function FormReply({
     </form>
   );
 }
-
-// Lawas
-// import {
-//   Box,
-//   Button,
-//   Flex,
-//   Image,
-//   Input,
-//   FormControl,
-//   Spinner,
-//   Text,
-//   Avatar,
-// } from "@chakra-ui/react";
-// import { usePostReply } from "../hooks/use-post-reply";
-// import { useAppSelector } from "../../../hooks/use.store";
-
-// export default function FormReply({
-//   placeholder,
-//   buttonTitle,
-//   threadId,
-// }: {
-//   placeholder: string;
-//   buttonTitle: string;
-//   threadId: number;
-// }) {
-//   const { register, handleSubmit, errors, isSubmitting, onSubmit } =
-//     usePostReply({ threadId });
-//   const user = useAppSelector((state) => state.auth.entities);
-
-//   return (
-//     <form onSubmit={handleSubmit(onSubmit)}>
-//       <FormControl
-//         display={"flex"}
-//         alignItems={"center"}
-//         gap={4}
-//         justifyContent={"space-between"}
-//         borderBottom={"solid 1px"}
-//         borderColor={"brand.borderAbu"}
-//         p={4}
-//       >
-//         <Avatar
-//           src={user.profilePhoto}
-//           name={user.fullname}
-//           borderColor={"brand.backgroundBox"}
-//           height={"40px"}
-//           width={"40px"}
-//           rounded={"full"}
-//           objectFit="cover"
-//         />
-//         <Box flex={"1"}>
-//           <Input
-//             {...register("content")}
-//             variant={"unstyled"}
-//             border={"none"}
-//             placeholder={placeholder}
-//           />
-//           {errors.content && (
-//             <Text fontSize={13} color={"red"}>
-//               * {errors.content.message}
-//             </Text>
-//           )}
-//         </Box>
-//         <Flex alignItems={"center"} gap={4}>
-//           <Image src="/icons/gallery-add.svg" alt="gallery" height={"24px"} />
-//           <Button
-//             type="submit"
-//             backgroundColor={"brand.green-dark"}
-//             color={"brand.white-dark"}
-//             height={"33px"}
-//             justifyItems={"center"}
-//             rounded={"full"}
-//             alignItems={"center"}
-//             padding={4}
-//             fontSize={"14px"}
-//             fontWeight={700}
-//             lineHeight={"17px"}
-//           >
-//             {isSubmitting ? <Spinner /> : `${buttonTitle}`}
-//           </Button>
-//         </Flex>
-//       </FormControl>
-//     </form>
-//   );
-// }

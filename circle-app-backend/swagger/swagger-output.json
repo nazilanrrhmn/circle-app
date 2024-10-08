@@ -323,7 +323,7 @@
         "tags": [
           "Threads"
         ],
-        "summary": "Get all thread",
+        "summary": "Get all threads",
         "description": "",
         "parameters": [
           {
@@ -399,7 +399,7 @@
         "tags": [
           "Threads"
         ],
-        "summary": "get single thread",
+        "summary": "Get single thread",
         "description": "",
         "parameters": [
           {
@@ -520,7 +520,7 @@
     "/api/v1/threads/{id}/reply": {
       "post": {
         "tags": [
-          "Reaction"
+          "Threads"
         ],
         "summary": "Create new Reply",
         "description": "",
@@ -572,7 +572,7 @@
     "/api/v1/threads/reply/{id}": {
       "delete": {
         "tags": [
-          "Reaction"
+          "Threads"
         ],
         "summary": "Delete reply",
         "description": "",

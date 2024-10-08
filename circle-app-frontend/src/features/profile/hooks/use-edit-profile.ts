@@ -23,18 +23,23 @@ export default function useEditProfile() {
     },
   });
 
-  async function onSubmit(data: EditProfileFormInput) {
+  // Update the onSubmit to return a boolean (true for success, false for failure)
+  async function onSubmit(data: EditProfileFormInput): Promise<boolean> {
     try {
       const formData = new FormData();
       formData.append("fullname", data.fullname);
       formData.append("username", data.username);
       formData.append("bio", data.bio);
-      formData.append("profilePhoto", data.profilePhoto[0]);
+      if (data.profilePhoto && data.profilePhoto[0]) {
+        formData.append("profilePhoto", data.profilePhoto[0]);
+      }
 
       const response = await apiV1.patch<
         null,
         { data: EditProfileResponseDTO }
       >("/users", formData);
+
+      // Show success notification
       Swal.fire({
         icon: "success",
         title: response.data.message,
@@ -44,7 +49,11 @@ export default function useEditProfile() {
         iconColor: "#04A51E",
         timer: 1000,
       });
+
+      // Return true if successful
+      return true;
     } catch (error) {
+      // Handle error response
       if (axios.isAxiosError(error) && error.response) {
         console.error(error.response.data);
         Swal.fire({
@@ -64,6 +73,9 @@ export default function useEditProfile() {
           color: "#fff",
         });
       }
+
+      // Return false if submission failed
+      return false;
     }
   }
 
@@ -73,6 +85,6 @@ export default function useEditProfile() {
     watch,
     errors,
     isSubmitting,
-    onSubmit,
+    onSubmit, // Now returns a boolean indicating success
   };
 }
