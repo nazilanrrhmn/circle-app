@@ -1,4 +1,3 @@
-import { LikeEntity } from "./like";
 import { UserEntity } from "./user";
 
 export interface ReplyEntity {
@@ -10,5 +9,6 @@ export interface ReplyEntity {
   threadId: number;
   createdAt: Date;
   updateAt: Date;
-  like: LikeEntity[];
+  like_replies: any[];
+  isLike: boolean;
 }

@@ -17,7 +17,7 @@ import ProfileHeading from "../ui/profile-heading";
 export default function RightBar() {
   const user = useAppSelector((state) => state.auth.entities);
   const [others, setOther] = useState<UserEntity[]>([]);
-  const [isLoading, setIsLoading] = useState<Boolean>(true);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   async function getThreads() {
     const response = await apiV1.get("/users");

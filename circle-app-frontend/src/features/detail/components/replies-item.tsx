@@ -10,9 +10,10 @@ export default function RepliesItem({
   postImage,
   createdAt,
   like,
+  isLike,
   id,
   authorId,
-}: Omit<Thread, "reply"> & { authorId: number }) {
+}: Omit<Thread, "reply"> & { authorId: number; isLike: boolean }) {
   return (
     <PostContent
       authorId={authorId}
@@ -24,7 +25,7 @@ export default function RepliesItem({
       postImage={postImage}
       createdAt={createdAt}
     >
-      <RepliesAction like={like} />
+      <RepliesAction like={like} id={id} isLike={isLike} />
     </PostContent>
   );
 }

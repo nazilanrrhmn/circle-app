@@ -83,6 +83,7 @@ class ThreadController {
     }
   }
 
+  // Reply threads
   async replyToThread(req: Request, res: Response) {
     // #swagger.tags = ['Threads']
     // #swagger.summary = 'Create new Reply'

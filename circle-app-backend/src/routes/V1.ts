@@ -61,9 +61,12 @@ routerV1.delete(
 //   authentication,
 //   reactionController.deleteReply
 // );
+
+// LIKE
 routerV1.post("/threads/like", authentication, reactionController.like);
 routerV1.post("/threads/islike", authentication, reactionController.isLike);
 routerV1.delete("/threads/like/:id", authentication, reactionController.unlike);
+routerV1.post("/replies/like", authentication, reactionController.likeReplies);
 
 //DASHBOARD ADMIN
 // routerV1.get("/dashboard", authentication, authorization("ADMIN"), (req: Request, res: Response) => {
