@@ -102,6 +102,10 @@ class UserServices {
       user.profilePhoto = data.profilePhoto;
     }
 
+    if (data.coverPhoto) {
+      user.coverPhoto = data.coverPhoto;
+    }
+
     await prisma.user.update({
       data: data,
       where: { id: data.id },

@@ -9,6 +9,7 @@ export interface UserEntity {
   username?: string;
   bio?: string;
   profilePhoto?: string;
+  coverPhoto?: string;
   role: string;
   following: FollowEntitiy[];
   followers: FollowEntitiy[];

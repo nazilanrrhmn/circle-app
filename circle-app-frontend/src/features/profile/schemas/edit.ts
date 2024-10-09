@@ -5,6 +5,7 @@ export const editProfileSchema = z.object({
   username: z.string(),
   bio: z.string(),
   profilePhoto: z.any(),
+  coverPhoto: z.any(),
 });
 
 export type EditProfileFormInput = z.infer<typeof editProfileSchema>;

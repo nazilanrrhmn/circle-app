@@ -21,7 +21,10 @@ routerV1.get("/users/:id", authentication, UserController.findOne);
 routerV1.patch(
   "/users",
   authentication,
-  upload.single("profilePhoto"),
+  upload.fields([
+    { name: "profilePhoto", maxCount: 1 }, // Mengizinkan upload profilePhoto
+    { name: "coverPhoto", maxCount: 1 }, // Mengizinkan upload coverPhoto
+  ]),
   UserController.update
 );
 
