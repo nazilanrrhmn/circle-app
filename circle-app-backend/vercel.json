@@ -7,5 +7,5 @@
       "config": { "includeFiles": ["dist/**"] }
     }
   ],
-  "rewrites": [{ "source": "/(.*)", "destination": "src/*.ts" }]
+  "rewrites": [{ "source": "/(.*)", "destination": "./src/*.ts" }]
 }
