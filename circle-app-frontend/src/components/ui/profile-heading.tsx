@@ -22,6 +22,7 @@ export default function ProfileHeading({
   username,
   bio,
   profilePhoto,
+  coverPhoto,
   following,
   followers,
   isFollow,
@@ -65,7 +66,7 @@ export default function ProfileHeading({
     <>
       <Box position={"relative"} marginBottom={4}>
         <Image
-          src="/img/cover.png"
+          src={coverPhoto}
           alt="thumbnail"
           height={thumbnailH}
           width={"100%"}

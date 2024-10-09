@@ -11,4 +11,5 @@ export type UpdateUSerDTO = {
   username?: string;
   bio?: string;
   profilePhoto?: string;
+  coverPhoto?: string;
 };

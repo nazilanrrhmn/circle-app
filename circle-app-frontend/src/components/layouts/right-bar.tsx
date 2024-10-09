@@ -60,6 +60,7 @@ export default function RightBar() {
             isMyProfile={true}
             buttonTitle={"Edit Profile"}
             profilePhoto={user.profilePhoto}
+            coverPhoto={user.coverPhoto}
             fullname={user.fullname}
             username={user.username}
             bio={user.bio}

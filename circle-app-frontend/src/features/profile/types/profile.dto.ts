@@ -6,13 +6,14 @@ export interface UserProfileDTO {
   username?: string;
   bio?: string;
   profilePhoto?: string;
+  coverPhoto?: string;
   following: number;
   followers: number;
 }
 
 export type EditProfileRequestDTO = Pick<
   UserEntity,
-  "fullname" | "username" | "bio" | "profilePhoto"
+  "fullname" | "username" | "bio" | "profilePhoto" | "coverPhoto"
 >;
 
 export type EditProfileResponseDTO = {

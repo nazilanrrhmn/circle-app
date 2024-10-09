@@ -24,25 +24,33 @@ interface EditProfileFormData {
   username: string;
   bio: string;
   profilePhoto?: FileList;
+  coverPhoto?: FileList;
 }
 
 export default function EditProfileModal({
   thumbnailH,
   fullname,
   profilePhoto,
+  coverPhoto,
   onClose,
 }: {
   thumbnailH: string;
   fullname: string;
   profilePhoto?: string;
+  coverPhoto?: string;
   onClose: () => void;
 }) {
   const { register, handleSubmit, errors, isSubmitting, onSubmit } =
     useEditProfile();
-  const [image, setImage] = useState<string | undefined>(profilePhoto);
+
+  const [coverImage, setCoverImage] = useState<string | undefined>(coverPhoto);
+  const [profileImage, setProfileImage] = useState<string | undefined>(
+    profilePhoto
+  );
 
   const onImageChange = (
     event: React.ChangeEvent<HTMLInputElement>,
+    setImage: React.Dispatch<React.SetStateAction<string | undefined>>,
     onChange: (event: React.ChangeEvent<HTMLInputElement>) => void
   ) => {
     if (event.target.files && event.target.files[0]) {
@@ -51,12 +59,11 @@ export default function EditProfileModal({
     }
   };
 
-  // Handle form submission and check success correctly
   const handleFormSubmit = async (data: EditProfileFormData) => {
     try {
-      const success = await onSubmit(data); // onSubmit returns a boolean
+      const success = await onSubmit(data);
       if (success) {
-        onClose(); // Close the modal if submission is successful
+        onClose(); // Close the modal on successful submission
       }
     } catch (error) {
       console.error("Profile update failed:", error);
@@ -78,30 +85,53 @@ export default function EditProfileModal({
         </ModalCloseButton>
 
         <ModalBody p={4}>
-          <Box position={"relative"} marginBottom={12}>
+          <Box position={"relative"} marginBottom={12} cursor="pointer">
+            {/* Input file for cover photo */}
+            <Input
+              {...register("coverPhoto")}
+              onChange={(e) =>
+                onImageChange(e, setCoverImage, register("coverPhoto").onChange)
+              }
+              id="uploadCoverPhoto"
+              type="file"
+              variant={"unstyled"}
+              border={"none"}
+              position="absolute"
+              top="0"
+              left="0"
+              width="100%"
+              height="100%"
+              opacity="0"
+              cursor="pointer"
+            />
             <Image
-              src="/img/cover.png"
-              alt="thumbnail"
+              src={coverImage || coverPhoto}
+              alt="cover thumbnail"
               height={thumbnailH}
               width={"100%"}
               rounded={8}
               objectFit="cover"
             />
+            {/* Profile photo input */}
             <Box position={"absolute"} bottom={"-35px"} left={"14px"}>
               <Box position={"relative"}>
                 <Input
                   {...register("profilePhoto")}
                   onChange={(e) =>
-                    onImageChange(e, register("profilePhoto").onChange)
+                    onImageChange(
+                      e,
+                      setProfileImage,
+                      register("profilePhoto").onChange
+                    )
                   }
-                  id="uploadPhoto"
+                  id="uploadProfilePhoto"
                   type="file"
                   variant={"unstyled"}
                   border={"none"}
                   hidden
                 />
                 <Avatar
-                  src={image}
+                  src={profileImage || profilePhoto}
                   name={fullname}
                   border={"solid 4px"}
                   borderColor={"brand.backgroundCircle"}
@@ -109,8 +139,9 @@ export default function EditProfileModal({
                   width={"80px"}
                   rounded={"full"}
                   objectFit="cover"
+                  cursor="pointer"
                 />
-                <label htmlFor="uploadPhoto">
+                <label htmlFor="uploadProfilePhoto">
                   <Image
                     src="/edit-image.svg"
                     alt="edit image"
@@ -118,11 +149,14 @@ export default function EditProfileModal({
                     top={"20px"}
                     left={"20px"}
                     objectFit="cover"
+                    cursor="pointer"
                   />
                 </label>
               </Box>
             </Box>
           </Box>
+
+          {/* Other form fields */}
           <Flex direction={"column"} gap={3}>
             <Box position={"relative"}>
               <Text
@@ -194,6 +228,7 @@ export default function EditProfileModal({
             </Box>
           </Flex>
         </ModalBody>
+
         <ModalFooter
           padding={4}
           borderTop={"solid 1px"}

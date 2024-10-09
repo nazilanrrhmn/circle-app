@@ -5,19 +5,6 @@ import userServices from "../services/user.services";
 import cloudinaryServices from "../services/cloudinary.services";
 
 class UserController {
-  // async create(req: Request, res: Response) {
-  //   // #swagger.tags = ['Users']
-  //   // #swagger.summary = 'Create new user'
-  //   try {
-  //     const value = await createUserSchema.validateAsync(req.body);
-
-  //     const user = await UserServices.createUser(value);
-  //     res.json(user);
-  //   } catch (error) {
-  //     res.status(500).json(error);
-  //   }
-  // }
-
   async findAll(req: Request, res: Response) {
     // #swagger.tags = ['Users']
     // #swagger.summary = 'Find all users'
@@ -60,19 +47,33 @@ class UserController {
     */
     try {
       const id = (req as any).user.id;
-      const fileUpload = req.file;
-      let imageUrl = null;
 
-      if (fileUpload) {
-        const image = await cloudinaryServices.upload(
-          req.file as Express.Multer.File
+      const files = req.files as {
+        profilePhoto?: Express.Multer.File[];
+        coverPhoto?: Express.Multer.File[];
+      };
+
+      let imageUrl = null;
+      let imageUrlCover = null;
+
+      // Handle profile photo upload
+      if (files.profilePhoto && files.profilePhoto.length > 0) {
+        const profileImage = await cloudinaryServices.upload(
+          files.profilePhoto[0]
         );
-        imageUrl = image.secure_url;
+        imageUrl = profileImage.secure_url;
+      }
+
+      // Handle cover photo upload
+      if (files.coverPhoto && files.coverPhoto.length > 0) {
+        const coverImage = await cloudinaryServices.upload(files.coverPhoto[0]);
+        imageUrlCover = coverImage.secure_url;
       }
 
       const value = {
         ...req.body,
         profilePhoto: imageUrl,
+        coverPhoto: imageUrlCover,
         id: id,
       };
 
