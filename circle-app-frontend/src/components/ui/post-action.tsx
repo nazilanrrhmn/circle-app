@@ -24,14 +24,13 @@ export function PostAction({
 
     try {
       // let response;
+      await apiV1.post("/threads/like", { threadId });
       if (isThreadLike) {
         setIsThreadLike(false);
         setLikeCount(likeCount - 1);
-        await apiV1.delete(`/threads/like/${threadId}`);
       } else {
         setIsThreadLike(true);
         setLikeCount(likeCount + 1);
-        await apiV1.post("/threads/like", { threadId });
       }
       // Swal.fire({
       //   icon: "success",

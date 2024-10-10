@@ -20,7 +20,9 @@ class AuthController {
     try {
       const value = await RegisterSchema.validateAsync(req.body);
       await authServices.register(value);
+      // console.log("lewat register");
       const user = await authServices.login(value);
+      // console.log("lewat login");
       res.json({
         status: "success",
         message: "User Created",

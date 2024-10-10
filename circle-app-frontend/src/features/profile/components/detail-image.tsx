@@ -1,8 +1,9 @@
 import { Flex, Box, Image, Spinner } from "@chakra-ui/react";
 import { useNavigate, useParams } from "react-router-dom";
-import { HiXCircle, HiChevronRight, HiChevronLeft } from "react-icons/hi";
+import { HiXCircle } from "react-icons/hi";
+import { HiChevronRight, HiChevronLeft } from "react-icons/hi";
 import PostDetail from "../../detail/components/thread-detail";
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState } from "react";
 import { apiV1 } from "../../../libs/api";
 import { ThreadEntity } from "../../../entities/thread";
 import { ThreadDetailResponseDTO } from "../../detail/types/thread-detail.dto";
@@ -12,28 +13,25 @@ import RepliesItem from "../../detail/components/replies-item";
 export default function DetailImagePage() {
   const navigate = useNavigate();
   const [isContentOpen, setIsContentOpen] = useState(true);
-  const [threads, setThread] = useState<ThreadEntity | null>(null); // Set initial state to null to avoid undefined
-  const { id } = useParams();
+  const [threads, setThread] = useState<ThreadEntity>();
+  let { id } = useParams();
   const threadId = Number(id);
 
-  // Move getThreads function inside useEffect or use useCallback to memoize it
-  const getThreads = useCallback(async () => {
-    try {
-      const response = await apiV1.get<null, { data: ThreadDetailResponseDTO }>(
-        `/threads/${threadId}`
-      );
-      const data = response.data.data;
-      setThread(data);
-    } catch (error) {
-      console.error("Error fetching threads", error);
-    }
-  }, [threadId]);
+  async function getThreads() {
+    const response = await apiV1.get<null, { data: ThreadDetailResponseDTO }>(
+      `/threads/${threadId}`
+    );
+    const data = response.data.data;
+    return { data: data };
+  }
 
-  // Fetch thread data on component mount
   useEffect(() => {
-    getThreads();
-  }, [getThreads]); // Add getThreads as a dependency
+    getThreads().then(({ data }) => {
+      setThread(data);
+    });
+  }, []);
 
+  console.log("thread detail", threads);
   if (!threads) {
     return <Spinner />;
   }
@@ -44,12 +42,6 @@ export default function DetailImagePage() {
 
   const openContent = () => {
     setIsContentOpen(true);
-  };
-
-  // Handle the success action after submitting a reply
-  const handleReplySuccess = () => {
-    // Re-fetch thread data to update the replies
-    getThreads();
   };
 
   return (
@@ -100,21 +92,19 @@ export default function DetailImagePage() {
             id={threads.id}
             authorId={threads.authorId}
             profilePhoto={threads.author.profilePhoto}
+            createdAt={new Date(threads.createdAt).toLocaleString()}
             fullName={threads.author.fullname}
             userName={threads.author.username}
             postContent={threads.content}
-            createdAt={new Date(threads.createdAt).toLocaleTimeString()}
           />
           <FormReply
             threadId={threadId}
             placeholder="Type your reply!"
             buttonTitle="Reply"
-            onSuccess={handleReplySuccess} // Pass onSuccess handler to refresh replies
           />
           {threads.replies.map((reply) => {
             return (
               <RepliesItem
-                key={reply.id}
                 isLike={reply.isLike}
                 authorId={reply.authorId}
                 id={reply.id}
@@ -122,7 +112,7 @@ export default function DetailImagePage() {
                 fullName={reply.author.fullname}
                 userName={reply.author.username}
                 postContent={reply.content}
-                createdAt={new Date(reply.createdAt).toLocaleTimeString()}
+                createdAt={new Date(reply.createdAt).toLocaleString()}
                 like={10}
                 postImage={reply.image}
               />

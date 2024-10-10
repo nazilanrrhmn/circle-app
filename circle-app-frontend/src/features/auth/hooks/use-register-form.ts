@@ -51,7 +51,7 @@ export function useRegisterForm() {
       navigate("/");
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
-        console.error(error.response.data);
+        console.error("ERROR BRO", error.response.data);
         Swal.fire({
           icon: "error",
           title: "Oops..",

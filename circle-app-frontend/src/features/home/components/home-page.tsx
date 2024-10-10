@@ -1,37 +1,33 @@
 import { Box, SkeletonCircle, SkeletonText, Text } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import PostItem from "../../../components/ui/post-item";
-import { ThreadEntity } from "../../../entities/thread";
-import { apiV1 } from "../../../libs/api";
-import { ThreadResponseDTO } from "../types/thread.dto";
+import { useAppDispatch, useAppSelector } from "../../../hooks/use.store";
+import { getAllThreads } from "../threads-slice";
 import CreatePost from "./create-post";
 
 export default function HomePage() {
-  const [threads, setThread] = useState<ThreadEntity[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  // const [threads, setThread] = useState<ThreadEntity[]>([]);
+  // const [isLoading, setIsLoading] = useState<boolean>(true);
+  const dispatch = useAppDispatch();
+  const thradsState = useAppSelector((state) => state.threads);
 
-  async function getThreads() {
-    try {
-      const response = await apiV1.get<null, { data: ThreadResponseDTO }>(
-        "/threads"
-      );
-      const data = response.data.data;
-      setThread(data);
-    } catch (errors) {
-      console.error(errors);
-    } finally {
-      setIsLoading(false);
-    }
-  }
+  const threads = thradsState.entities;
+  const Loading = thradsState.loading;
+
+  // async function getThreads() {
+  //   try {
+  //     const response = await apiV1.get<null, { data: ThreadResponseDTO }>("/threads");
+  //     const data = response.data.data;
+  //     setThread(data);
+  //   } catch (errors) {
+  //     console.error(errors);
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // }
 
   useEffect(() => {
-    const intervalId = setInterval(() => {
-      getThreads();
-    }, 5000);
-    // getThreads();
-    return () => {
-      clearInterval(intervalId);
-    };
+    dispatch(getAllThreads());
   }, []);
 
   return (
@@ -41,30 +37,28 @@ export default function HomePage() {
       </Text>
       <CreatePost />
 
-      {isLoading ? (
+      {Loading == "pending" ? (
         <Box padding="6">
           <SkeletonCircle size="10" />
           <SkeletonText mt="4" noOfLines={4} spacing="4" skeletonHeight="3" />
         </Box>
       ) : (
-        [...threads]
-          .reverse()
-          .map((threads) => (
-            <PostItem
-              authorId={threads.authorId}
-              id={threads.id}
-              key={threads.id}
-              profilePhoto={threads.author.profilePhoto}
-              fullName={threads.author.fullname}
-              userName={threads.author.username}
-              postContent={threads.content}
-              postImage={threads.image}
-              createdAt={new Date(threads.createdAt).toLocaleTimeString()}
-              isLike={threads.isLike}
-              like={threads.like.length}
-              reply={threads.replies.length}
-            />
-          ))
+        threads.map((threads) => (
+          <PostItem
+            authorId={threads.authorId}
+            id={threads.id}
+            key={threads.id}
+            profilePhoto={threads.author.profilePhoto}
+            fullName={threads.author.fullname}
+            userName={threads.author.username}
+            postContent={threads.content}
+            postImage={threads.image}
+            createdAt={new Date(threads.createdAt).toLocaleString()}
+            isLike={threads.isLike}
+            like={threads.like.length}
+            reply={threads.replies.length}
+          />
+        ))
       )}
     </Box>
   );

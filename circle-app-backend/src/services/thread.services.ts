@@ -1,6 +1,6 @@
 import { PrismaClient, Thread, User, Reply } from "@prisma/client";
 import { customError } from "../types/custom.error";
-import { CreateThreadsDTO, CreateReplyDTO } from "../dto/thread.dto"; // Make sure to have a DTO for replies
+import { CreateThreadsDTO, CreateReplyDTO } from "../dto/thread.dto";
 import { SuccessResponse } from "../types/success.respons";
 
 const prisma = new PrismaClient();
@@ -17,16 +17,14 @@ class ThreadServies {
     };
   }
 
-  async replyToThread(
-    data: CreateReplyDTO // Define this DTO to match your reply structure
+  async createReply(
+    data: CreateReplyDTO
   ): Promise<SuccessResponse<Reply | null>> {
-    const reply = await prisma.reply.create({
-      data,
-    });
+    const result = await prisma.reply.create({ data });
     return {
       status: "success",
       message: "Reply Created",
-      data: reply,
+      data: result,
     };
   }
 
@@ -37,6 +35,7 @@ class ThreadServies {
         replies: true,
         like: true,
       },
+      orderBy: [{ createdAt: "desc" }],
     });
 
     const threadWithIsLike = threads.map((thread) => {
@@ -136,7 +135,7 @@ class ThreadServies {
     });
   }
 
-  async deleteReply(id: number): Promise<SuccessResponse<null>> {
+  async deleteReply(id: number): Promise<Reply | null> {
     const reply = await prisma.reply.findUnique({
       where: { id },
     });
@@ -149,15 +148,9 @@ class ThreadServies {
       } as customError;
     }
 
-    await prisma.reply.delete({
+    return await prisma.reply.delete({
       where: { id },
     });
-
-    return {
-      status: "success",
-      message: "Reply deleted",
-      data: null,
-    };
   }
 }
 

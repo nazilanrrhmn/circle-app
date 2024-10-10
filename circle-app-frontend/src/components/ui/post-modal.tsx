@@ -3,7 +3,6 @@ import {
   Box,
   Button,
   FormControl,
-  IconButton,
   Image,
   Input,
   ModalCloseButton,
@@ -13,9 +12,10 @@ import {
   Textarea,
 } from "@chakra-ui/react";
 import { HiOutlineXCircle } from "react-icons/hi";
-import { useState, ChangeEvent } from "react";
 import { usePostThread } from "../../features/home/hooks/use-post-form";
-import { useAppSelector } from "../../hooks/use.store";
+import { useAppSelector, useAppDispatch } from "../../hooks/use.store";
+import { useState, ChangeEvent } from "react";
+import { closeModal } from "../../features/home/modal-slice"; // Import closeModal action
 
 interface CreatePostModalProps {
   onClose: () => void;
@@ -25,31 +25,32 @@ export default function CreatePostModal({ onClose }: CreatePostModalProps) {
   const { register, handleSubmit, errors, isSubmitting, onSubmit, watch } =
     usePostThread();
   const user = useAppSelector((state) => state.auth.entities);
+  const [image, setImage] = useState<string | null>(null);
   const content = watch("content");
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const dispatch = useAppDispatch(); // Use dispatch for Redux actions
 
-  const handleImageChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      const previewUrl = URL.createObjectURL(file);
-      setImagePreview(previewUrl);
+  // Function to handle image changes
+  const onImageChange = (
+    event: ChangeEvent<HTMLInputElement>,
+    onChange: (e: ChangeEvent<HTMLInputElement>) => void
+  ) => {
+    if (event.target.files && event.target.files[0]) {
+      setImage(URL.createObjectURL(event.target.files[0]));
+      onChange(event); // Call onChange handler for form register
     }
   };
 
-  const handleRemoveImage = () => {
-    setImagePreview(null);
-  };
-
+  // Function to handle form submission
   const handleFormSubmit = async (data: {
     content: string;
     image?: FileList;
   }) => {
-    console.log("Submitting data:", data);
     try {
       await onSubmit(data);
-      onClose(); // Close the modal after successful submission
+      dispatch(closeModal()); // Dispatch closeModal to update Redux state
+      onClose(); // Close modal after successful submission
     } catch (error) {
-      console.error("Error submitting form:", error);
+      console.error("Error submitting post:", error);
     }
   };
 
@@ -84,8 +85,10 @@ export default function CreatePostModal({ onClose }: CreatePostModalProps) {
                 {...register("content")}
                 variant={"unstyled"}
                 border={"none"}
+                height={"40px"}
                 placeholder="What is happening?!"
               />
+              {image && <Image src={image} rounded={8} mt={4} />}
             </Box>
           </FormControl>
           {errors.content && (
@@ -93,30 +96,16 @@ export default function CreatePostModal({ onClose }: CreatePostModalProps) {
               * {errors.content.message}
             </Text>
           )}
-
-          {imagePreview && (
-            <Box mt={4} position="relative">
-              <Image
-                src={imagePreview}
-                alt="Preview"
-                maxHeight={"200px"}
-                objectFit={"cover"}
-                borderRadius={"md"}
-              />
-              <IconButton
-                aria-label="Remove image"
-                icon={<HiOutlineXCircle />}
-                position="absolute"
-                color="red"
-                top={2}
-                right={2}
-                size="sm"
-                onClick={handleRemoveImage}
-              />
-            </Box>
-          )}
+          <Input
+            {...register("image")}
+            onChange={(e) => onImageChange(e, register("image").onChange)}
+            id="fileUpload"
+            type="file"
+            variant={"unstyled"}
+            border={"none"}
+            hidden
+          />
         </Box>
-
         <Box
           p={4}
           display={"flex"}
@@ -127,25 +116,9 @@ export default function CreatePostModal({ onClose }: CreatePostModalProps) {
           borderTop={"solid 1px"}
           borderColor={"brand.borderAbu"}
         >
-          <Box display={"flex"} alignItems={"center"} gap={2}>
-            <label htmlFor="file-input">
-              <Image
-                src="/icons/gallery-add.svg"
-                alt="gallery"
-                height={"24px"}
-                cursor={"pointer"}
-              />
-            </label>
-            <Input
-              id="file-input"
-              type="file"
-              display="none"
-              accept="image/*"
-              {...register("image")}
-              onChange={handleImageChange}
-            />
-          </Box>
-
+          <label htmlFor="fileUpload">
+            <Image src="/icons/gallery-add.svg" alt="gallery" height={"24px"} />
+          </label>
           <Button
             type="submit"
             backgroundColor={content ? "brand.green" : "brand.green-dark"}

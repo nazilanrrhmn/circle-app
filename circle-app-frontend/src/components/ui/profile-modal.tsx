@@ -18,55 +18,49 @@ import { useState } from "react";
 import { HiOutlineXCircle } from "react-icons/hi";
 import useEditProfile from "../../features/profile/hooks/use-edit-profile";
 
-// Define the shape of the form data
-interface EditProfileFormData {
-  fullname: string;
-  username: string;
-  bio: string;
-  profilePhoto?: FileList;
-  coverPhoto?: FileList;
-}
-
 export default function EditProfileModal({
   thumbnailH,
   fullname,
   profilePhoto,
   coverPhoto,
-  onClose,
 }: {
   thumbnailH: string;
   fullname: string;
   profilePhoto?: string;
   coverPhoto?: string;
-  onClose: () => void;
 }) {
   const { register, handleSubmit, errors, isSubmitting, onSubmit } =
     useEditProfile();
 
-  const [coverImage, setCoverImage] = useState<string | undefined>(coverPhoto);
+  // State for image previews
   const [profileImage, setProfileImage] = useState<string | undefined>(
     profilePhoto
   );
+  const [coverImage, setCoverImage] = useState<string | undefined>(coverPhoto);
 
-  const onImageChange = (
+  // Function for handling profile image changes
+  const onProfileImageChange = (
     event: React.ChangeEvent<HTMLInputElement>,
-    setImage: React.Dispatch<React.SetStateAction<string | undefined>>,
-    onChange: (event: React.ChangeEvent<HTMLInputElement>) => void
+    onChange: (...event: any[]) => void
   ) => {
     if (event.target.files && event.target.files[0]) {
-      setImage(URL.createObjectURL(event.target.files[0]));
+      setProfileImage(URL.createObjectURL(event.target.files[0])); // Set new preview if new image is uploaded
       onChange(event);
+    } else {
+      onChange(event); // Keep the old image if no new file uploaded
     }
   };
 
-  const handleFormSubmit = async (data: EditProfileFormData) => {
-    try {
-      const success = await onSubmit(data);
-      if (success) {
-        onClose(); // Close the modal on successful submission
-      }
-    } catch (error) {
-      console.error("Profile update failed:", error);
+  // Function for handling cover image changes
+  const onCoverImageChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+    onChange: (...event: any[]) => void
+  ) => {
+    if (event.target.files && event.target.files[0]) {
+      setCoverImage(URL.createObjectURL(event.target.files[0])); // Set new preview if new image is uploaded
+      onChange(event);
+    } else {
+      onChange(event); // Keep the old image if no new file uploaded
     }
   };
 
@@ -76,7 +70,7 @@ export default function EditProfileModal({
       backgroundColor={"brand.backgroundCircle"}
       rounded={15}
     >
-      <form onSubmit={handleSubmit(handleFormSubmit)}>
+      <form onSubmit={handleSubmit(onSubmit)}>
         <ModalHeader pl={4} pt={2} pb={0} fontSize={"20px"} fontWeight={700}>
           Edit profile
         </ModalHeader>
@@ -85,53 +79,55 @@ export default function EditProfileModal({
         </ModalCloseButton>
 
         <ModalBody p={4}>
-          <Box position={"relative"} marginBottom={12} cursor="pointer">
-            {/* Input file for cover photo */}
-            <Input
-              {...register("coverPhoto")}
-              onChange={(e) =>
-                onImageChange(e, setCoverImage, register("coverPhoto").onChange)
-              }
-              id="uploadCoverPhoto"
-              type="file"
-              variant={"unstyled"}
-              border={"none"}
-              position="absolute"
-              top="0"
-              left="0"
-              width="100%"
-              height="100%"
-              opacity="0"
-              cursor="pointer"
-            />
+          {/* Cover Image Section */}
+          <Box position={"relative"} marginBottom={12}>
             <Image
-              src={coverImage || coverPhoto}
-              alt="cover thumbnail"
+              src={coverImage || coverPhoto} // Use the cover image from state or default
+              alt="cover"
               height={thumbnailH}
               width={"100%"}
               rounded={8}
               objectFit="cover"
             />
-            {/* Profile photo input */}
+            <Input
+              {...register("coverPhoto")}
+              onChange={(e) =>
+                onCoverImageChange(e, register("coverPhoto").onChange)
+              }
+              id="uploadCover"
+              type="file"
+              variant={"unstyled"}
+              border={"none"}
+              hidden
+            />
+            <label htmlFor="uploadCover">
+              <Image
+                src="/icons/edit-image.svg"
+                alt="edit cover image"
+                cursor={"pointer"}
+                position={"absolute"}
+                bottom={4}
+                right={4}
+                objectFit="cover"
+              />
+            </label>
+
+            {/* Profile Image Section */}
             <Box position={"absolute"} bottom={"-35px"} left={"14px"}>
               <Box position={"relative"}>
                 <Input
                   {...register("profilePhoto")}
                   onChange={(e) =>
-                    onImageChange(
-                      e,
-                      setProfileImage,
-                      register("profilePhoto").onChange
-                    )
+                    onProfileImageChange(e, register("profilePhoto").onChange)
                   }
-                  id="uploadProfilePhoto"
+                  id="uploadPhoto"
                   type="file"
                   variant={"unstyled"}
                   border={"none"}
                   hidden
                 />
                 <Avatar
-                  src={profileImage || profilePhoto}
+                  src={profileImage || profilePhoto} // Use the profile image from state or default
                   name={fullname}
                   border={"solid 4px"}
                   borderColor={"brand.backgroundCircle"}
@@ -139,24 +135,23 @@ export default function EditProfileModal({
                   width={"80px"}
                   rounded={"full"}
                   objectFit="cover"
-                  cursor="pointer"
                 />
-                <label htmlFor="uploadProfilePhoto">
+                <label htmlFor="uploadPhoto">
                   <Image
-                    src="/edit-image.svg"
-                    alt="edit image"
+                    src="/icons/edit-image.svg"
+                    alt="edit profile image"
+                    cursor={"pointer"}
                     position={"absolute"}
                     top={"20px"}
                     left={"20px"}
                     objectFit="cover"
-                    cursor="pointer"
                   />
                 </label>
               </Box>
             </Box>
           </Box>
 
-          {/* Other form fields */}
+          {/* Form fields for editing name, username, and bio */}
           <Flex direction={"column"} gap={3}>
             <Box position={"relative"}>
               <Text
@@ -177,6 +172,7 @@ export default function EditProfileModal({
                 pt={2}
                 border={"solid 1px"}
                 borderColor={"brand.borderAbu"}
+                defaultValue={fullname}
               />
               {errors.fullname && (
                 <Text fontSize={13} color={"red"}>
