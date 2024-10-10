@@ -2,6 +2,8 @@ import { Avatar, Box, Button, Flex, Spinner, Text } from "@chakra-ui/react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
+import { getUserLogged } from "../../features/auth/auth.slice";
+import { useAppDispatch } from "../../hooks/use.store";
 import { apiV1 } from "../../libs/api";
 
 interface Account {
@@ -21,6 +23,7 @@ export default function OthersAccountItem({
   bio,
   isFollow,
 }: Account) {
+  const dispatch = useAppDispatch();
   const [isFollowUser, setIsFollowUser] = useState<boolean>(isFollow);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -43,6 +46,8 @@ export default function OthersAccountItem({
         setIsLoading(false);
         setIsFollowUser(true);
       }
+
+      dispatch(getUserLogged());
       Swal.fire({
         icon: "success",
         title: response.data.message,

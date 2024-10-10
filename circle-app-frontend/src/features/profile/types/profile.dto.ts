@@ -19,9 +19,7 @@ export type EditProfileRequestDTO = Pick<
 export type EditProfileResponseDTO = {
   status: string;
   message: string;
+  data: EditProfileRequestDTO;
 };
 
-export type UserStoreDTO = Omit<UserEntity, "password"> & {
-  followers: { id: number }[]; // assumed structure of followers
-  following: { id: number }[]; // assumed structure of following
-};
+export type UserStoreDTO = Omit<UserEntity, "password">;

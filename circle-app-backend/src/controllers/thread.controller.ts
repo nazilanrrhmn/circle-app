@@ -122,7 +122,7 @@ class ThreadController {
       // Validate the reply data schema (you may want to create a schema for replies)
       const data = await CreateReplySchema.validateAsync(value);
 
-      const reply = await ThreadServices.replyToThread(value); // Call the service to handle the reply
+      const reply = await ThreadServices.createReply(value); // Call the service to handle the reply
       res.json(reply);
     } catch (error) {
       res.status(500).json(error);

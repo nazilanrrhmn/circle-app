@@ -1,7 +1,7 @@
 import { Box, Flex, Spinner, Text } from "@chakra-ui/react";
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState } from "react";
 import { HiOutlineArrowLeft } from "react-icons/hi";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { ThreadEntity } from "../../../entities/thread";
 import { apiV1 } from "../../../libs/api";
 import { ThreadDetailResponseDTO } from "../types/thread-detail.dto";
@@ -10,38 +10,26 @@ import RepliesItem from "./replies-item";
 import FormReply from "./reply-form";
 
 export default function ThreadDetailPage() {
-  const [threads, setThread] = useState<ThreadEntity | null>(null); // Tambahkan null sebagai initial state
-  const [shouldRefresh, setShouldRefresh] = useState(false); // State untuk memicu refresh
-  const { id } = useParams();
+  const navigate = useNavigate();
+  const [threads, setThread] = useState<ThreadEntity>();
+  let { id } = useParams();
   const threadId = Number(id);
 
-  // Fungsi untuk mendapatkan thread dari API
-  const getThreads = useCallback(async () => {
-    try {
-      const response = await apiV1.get<null, { data: ThreadDetailResponseDTO }>(
-        `/threads/${threadId}`
-      );
-      return response.data.data;
-    } catch (error) {
-      console.error("Error fetching thread:", error);
-      return null;
-    }
-  }, [threadId]);
+  async function getThreads() {
+    const response = await apiV1.get<null, { data: ThreadDetailResponseDTO }>(
+      `/threads/${threadId}`
+    );
+    const data = response.data.data;
+    return { data: data };
+  }
 
-  // useEffect untuk memanggil ulang API setiap kali halaman di-load atau ketika reply baru dibuat (shouldRefresh berubah)
   useEffect(() => {
-    getThreads().then((data) => {
-      if (data) {
-        setThread(data);
-      }
+    getThreads().then(({ data }) => {
+      setThread(data);
     });
-  }, [getThreads, shouldRefresh]); // shouldRefresh ditambahkan ke dependencies
+  }, []);
 
-  // Handler yang dipanggil ketika reply berhasil dibuat
-  const handleReplySuccess = () => {
-    setShouldRefresh((prev) => !prev); // Toggle shouldRefresh untuk memicu refresh ulang
-  };
-
+  console.log("thread detail", threads);
   if (!threads) {
     return <Spinner />;
   }
@@ -49,7 +37,11 @@ export default function ThreadDetailPage() {
   return (
     <Box>
       <Flex mt={4} padding={4} gap={3} alignItems={"center"}>
-        <HiOutlineArrowLeft size={26} />
+        <HiOutlineArrowLeft
+          size={26}
+          onClick={() => navigate(-1)}
+          cursor={"pointer"}
+        />
         <Text fontSize={"28px"} fontWeight={700} lineHeight={"28px"}>
           Status
         </Text>
@@ -71,19 +63,17 @@ export default function ThreadDetailPage() {
         threadId={threadId}
         placeholder="Type your reply!"
         buttonTitle="Reply"
-        onSuccess={handleReplySuccess} // Kirimkan handler ke FormReply
       />
       {threads.replies.map((reply) => {
         return (
           <RepliesItem
-            key={reply.id} // Tambahkan key untuk setiap reply
             authorId={reply.authorId}
             id={reply.id}
             profilePhoto={reply.author.profilePhoto}
             fullName={reply.author.fullname}
             userName={reply.author.username}
             postContent={reply.content}
-            createdAt={new Date(reply.createdAt).toLocaleTimeString()}
+            createdAt={new Date(threads.createdAt).toLocaleString()}
             like={reply.like_replies.length}
             isLike={reply.isLike}
             postImage={reply.image}
@@ -93,89 +83,3 @@ export default function ThreadDetailPage() {
     </Box>
   );
 }
-
-// import { Box, Flex, Spinner, Text } from "@chakra-ui/react";
-// import { useEffect, useState, useCallback } from "react";
-// import { HiOutlineArrowLeft } from "react-icons/hi";
-// import { useParams, Link } from "react-router-dom";
-// import { ThreadEntity } from "../../../entities/thread";
-// import { apiV1 } from "../../../libs/api";
-// import { ThreadDetailResponseDTO } from "../types/thread-detail.dto";
-// import ThreadDetail from "./thread-detail";
-// import RepliesItem from "./replies-item";
-// import FormReply from "./reply-form";
-
-// export default function PostPage() {
-//   const [thread, setThread] = useState<ThreadEntity | null>(null);
-//   const { id } = useParams();
-//   const threadId = Number(id);
-
-//   const getThread = useCallback(async () => {
-//     try {
-//       const response = await apiV1.get<null, { data: ThreadDetailResponseDTO }>(
-//         `/threads/${threadId}`
-//       );
-//       return response.data.data;
-//     } catch (error) {
-//       console.error("Error fetching thread:", error);
-//       return null;
-//     }
-//   }, [threadId]);
-
-//   useEffect(() => {
-//     getThread().then((data) => {
-//       if (data) {
-//         setThread(data);
-//       }
-//     });
-//   }, [getThread]);
-
-//   if (!thread) {
-//     return <Spinner />;
-//   }
-
-//   return (
-//     <Box>
-//       <Flex mt={4} padding={4} gap={3} alignItems={"center"}>
-//         <Link to={"/"}>
-//           <HiOutlineArrowLeft size={26} />
-//         </Link>
-//         <Text fontSize={"28px"} fontWeight={700} lineHeight={"28px"}>
-//           Status
-//         </Text>
-//       </Flex>
-//       <ThreadDetail
-//         id={thread.id}
-//         image={thread.author?.profilePhoto || ""}
-//         fullName={thread.author?.fullname || "Anonymous"}
-//         userName={thread.author?.username || "Unknown"}
-//         postContent={thread.content || ""}
-//         postImage={thread.image || ""}
-//         createdAt={new Date(thread.createdAt).toLocaleString()}
-//         like={thread.like?.length ?? 0}
-//         reply={thread.replies?.length ?? 0}
-//         isLike={thread.isLike ?? false} // Pastikan ini diisi dengan boolean
-//         authorId={thread.author?.id ?? 0} // Pastikan ini berisi ID penulis
-//       />
-//       <FormReply
-//         threadId={threadId}
-//         placeholder="Type your reply!"
-//         buttonTitle="Reply"
-//       />
-//       {thread.replies?.map((reply) => (
-//         <RepliesItem
-//           key={reply.id}
-//           id={reply.id}
-//           image={reply.author?.profilePhoto || ""}
-//           fullName={reply.author?.fullname || "Anonymous"}
-//           userName={reply.author?.username || "Unknown"}
-//           postContent={reply.content || ""}
-//           postImage={reply.image || ""}
-//           like={reply.like?.length ?? 0}
-//           createdAt={new Date(reply.createdAt).toLocaleString()}
-//           authorId={reply.author?.id || 0}
-//         />
-//       ))}
-//     </Box>
-//   );
-// }

@@ -81,7 +81,7 @@ export default function LeftBar() {
       </Flex>
       <Modal closeOnOverlayClick={false} isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
-        <CreatePostModal onClose={onClose} /> {/* Menambahkan onClose */}
+        <CreatePostModal onClose={onClose} />
       </Modal>
     </Box>
   );
