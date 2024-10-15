@@ -18,13 +18,20 @@ routerV1.get("/user/me", authentication, authControllers.getUserLogged);
 routerV1.get("/users", authentication, UserController.findAll);
 routerV1.get("/users/:id", authentication, UserController.findOne);
 // routerV1.post("/users", UserController.create);
+// routerV1.patch(
+//   "/users",
+//   authentication,
+//   upload.fields([
+//     { name: "profilePhoto", maxCount: 1 }, // Mengizinkan upload profilePhoto
+//     { name: "coverPhoto", maxCount: 1 }, // Mengizinkan upload coverPhoto
+//   ]),
+//   UserController.update
+// );
+
 routerV1.patch(
   "/users",
   authentication,
-  upload.fields([
-    { name: "profilePhoto", maxCount: 1 }, // Mengizinkan upload profilePhoto
-    { name: "coverPhoto", maxCount: 1 }, // Mengizinkan upload coverPhoto
-  ]),
+  upload.fields([{ name: "profilePhoto" }, { name: "coverPhoto" }]),
   UserController.update
 );
 

@@ -10,45 +10,54 @@ import {
   Spinner,
   Text,
   Textarea,
+  CloseButton,
 } from "@chakra-ui/react";
 import { HiOutlineXCircle } from "react-icons/hi";
 import { usePostThread } from "../../features/home/hooks/use-post-form";
 import { useAppSelector, useAppDispatch } from "../../hooks/use.store";
 import { useState, ChangeEvent } from "react";
-import { closeModal } from "../../features/home/modal-slice"; // Import closeModal action
+import { closeModal } from "../../features/home/modal-slice";
 
 interface CreatePostModalProps {
   onClose: () => void;
 }
 
 export default function CreatePostModal({ onClose }: CreatePostModalProps) {
-  const { register, handleSubmit, errors, isSubmitting, onSubmit, watch } =
-    usePostThread();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting }, // Access formState properly
+    onSubmit,
+    watch,
+  } = usePostThread();
+
   const user = useAppSelector((state) => state.auth.entities);
   const [image, setImage] = useState<string | null>(null);
   const content = watch("content");
-  const dispatch = useAppDispatch(); // Use dispatch for Redux actions
+  const dispatch = useAppDispatch();
 
-  // Function to handle image changes
   const onImageChange = (
     event: ChangeEvent<HTMLInputElement>,
     onChange: (e: ChangeEvent<HTMLInputElement>) => void
   ) => {
     if (event.target.files && event.target.files[0]) {
       setImage(URL.createObjectURL(event.target.files[0]));
-      onChange(event); // Call onChange handler for form register
+      onChange(event);
     }
   };
 
-  // Function to handle form submission
+  const removeImage = () => {
+    setImage(null);
+  };
+
   const handleFormSubmit = async (data: {
     content: string;
     image?: FileList;
   }) => {
     try {
       await onSubmit(data);
-      dispatch(closeModal()); // Dispatch closeModal to update Redux state
-      onClose(); // Close modal after successful submission
+      dispatch(closeModal());
+      onClose();
     } catch (error) {
       console.error("Error submitting post:", error);
     }
@@ -72,8 +81,8 @@ export default function CreatePostModal({ onClose }: CreatePostModalProps) {
             justifyContent={"space-between"}
           >
             <Avatar
-              src={user.profilePhoto}
-              name={user.fullname}
+              src={user?.profilePhoto}
+              name={user?.fullname}
               borderColor={"brand.backgroundBox"}
               height={"40px"}
               width={"40px"}
@@ -82,13 +91,33 @@ export default function CreatePostModal({ onClose }: CreatePostModalProps) {
             />
             <Box flex={"1"}>
               <Textarea
-                {...register("content")}
+                {...register("content", { required: "Content is required" })}
                 variant={"unstyled"}
                 border={"none"}
                 height={"40px"}
                 placeholder="What is happening?!"
               />
-              {image && <Image src={image} rounded={8} mt={4} />}
+              {image && (
+                <Box position="relative" mt={4}>
+                  <Image
+                    src={image}
+                    rounded={8}
+                    height="200px"
+                    width="100%"
+                    objectFit="cover"
+                  />
+                  <CloseButton
+                    position="absolute"
+                    top="5px"
+                    right="5px"
+                    size="sm"
+                    onClick={removeImage}
+                    backgroundColor="red.500"
+                    color="white"
+                    _hover={{ backgroundColor: "red.600" }}
+                  />
+                </Box>
+              )}
             </Box>
           </FormControl>
           {errors.content && (
@@ -133,7 +162,7 @@ export default function CreatePostModal({ onClose }: CreatePostModalProps) {
             lineHeight={"17px"}
             disabled={isSubmitting}
           >
-            {isSubmitting ? <Spinner /> : "Post"}
+            {isSubmitting ? <Spinner size="sm" color="white" /> : "Post"}
           </Button>
         </Box>
       </form>

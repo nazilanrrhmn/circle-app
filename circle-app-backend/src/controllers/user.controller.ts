@@ -31,23 +31,62 @@ class UserController {
     }
   }
 
+  // async update(req: Request, res: Response) {
+  //   // #swagger.tags = ['Users']
+  //   // #swagger.summary = 'Update existing user'
+  //   /*  #swagger.requestBody = {
+  //           required: true,
+  //           content: {
+  //               "multipart/form-data": {
+  //                   schema: {
+  //                       $ref: "#/components/schemas/profileEditSchema"
+  //                   }
+  //               }
+  //           }
+  //       }
+  //   */
+  //   try {
+  //     const id = (req as any).user.id;
+
+  //     const files = req.files as {
+  //       profilePhoto?: Express.Multer.File[];
+  //       coverPhoto?: Express.Multer.File[];
+  //     };
+
+  //     let imageUrl = null;
+  //     let imageUrlCover = null;
+
+  //     // Handle profile photo upload
+  //     if (files.profilePhoto && files.profilePhoto.length > 0) {
+  //       const profileImage = await cloudinaryServices.upload(
+  //         files.profilePhoto[0]
+  //       );
+  //       imageUrl = profileImage.secure_url;
+  //     }
+
+  //     // Handle cover photo upload
+  //     if (files.coverPhoto && files.coverPhoto.length > 0) {
+  //       const coverImage = await cloudinaryServices.upload(files.coverPhoto[0]);
+  //       imageUrlCover = coverImage.secure_url;
+  //     }
+
+  //     const value = {
+  //       ...req.body,
+  //       profilePhoto: imageUrl,
+  //       coverPhoto: imageUrlCover,
+  //       id: id,
+  //     };
+
+  //     const user = await UserServices.updateUser(value);
+  //     res.json(user);
+  //   } catch (error) {
+  //     res.status(500).json(error);
+  //   }
+  // }
+
   async update(req: Request, res: Response) {
-    // #swagger.tags = ['Users']
-    // #swagger.summary = 'Update existing user'
-    /*  #swagger.requestBody = {
-            required: true,
-            content: {
-                "multipart/form-data": {
-                    schema: {
-                        $ref: "#/components/schemas/profileEditSchema"
-                    }  
-                }
-            }
-        } 
-    */
     try {
       const id = (req as any).user.id;
-
       const files = req.files as {
         profilePhoto?: Express.Multer.File[];
         coverPhoto?: Express.Multer.File[];
@@ -57,7 +96,7 @@ class UserController {
       let imageUrlCover = null;
 
       // Handle profile photo upload
-      if (files.profilePhoto && files.profilePhoto.length > 0) {
+      if (files?.profilePhoto && files.profilePhoto.length > 0) {
         const profileImage = await cloudinaryServices.upload(
           files.profilePhoto[0]
         );
@@ -65,11 +104,12 @@ class UserController {
       }
 
       // Handle cover photo upload
-      if (files.coverPhoto && files.coverPhoto.length > 0) {
+      if (files?.coverPhoto && files.coverPhoto.length > 0) {
         const coverImage = await cloudinaryServices.upload(files.coverPhoto[0]);
         imageUrlCover = coverImage.secure_url;
       }
 
+      // Merge with the user details from the body
       const value = {
         ...req.body,
         profilePhoto: imageUrl,
@@ -78,9 +118,9 @@ class UserController {
       };
 
       const user = await UserServices.updateUser(value);
-      res.json(user);
+      return res.json(user);
     } catch (error) {
-      res.status(500).json(error);
+      return res.status(500).json(error);
     }
   }
 }

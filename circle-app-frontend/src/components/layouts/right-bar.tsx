@@ -54,7 +54,24 @@ export default function RightBar() {
           <Text fontSize={"20px"} fontWeight={700} lineHeight={"28px"} mb={4}>
             My Profile
           </Text>
-          <ProfileHeading
+          {user && (
+            <ProfileHeading
+              id={user.id}
+              isFollow={user.isFollow}
+              isMyProfile={true}
+              buttonTitle={"Edit Profile"}
+              profilePhoto={user.profilePhoto}
+              coverPhoto={user.coverPhoto}
+              fullname={user.fullname}
+              username={user.username}
+              bio={user.bio}
+              following={user.followers.length}
+              followers={user.following.length}
+              thumbnailH="100px"
+            />
+          )}
+
+          {/* <ProfileHeading
             id={user.id}
             isFollow={user.isFollow}
             isMyProfile={true}
@@ -67,7 +84,7 @@ export default function RightBar() {
             following={user.followers.length}
             followers={user.following.length}
             thumbnailH="100px"
-          />
+          /> */}
         </Box>
         <Box
           backgroundColor={"brand.backgroundBox"}

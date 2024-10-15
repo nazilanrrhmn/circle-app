@@ -14,7 +14,7 @@ import {
   Text,
   Textarea,
 } from "@chakra-ui/react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { HiOutlineXCircle } from "react-icons/hi";
 import useEditProfile from "../../features/profile/hooks/use-edit-profile";
 
@@ -32,11 +32,22 @@ export default function EditProfileModal({
   const { register, handleSubmit, errors, isSubmitting, onSubmit } =
     useEditProfile();
 
+  console.log(profilePhoto);
+
   // State for image previews
   const [profileImage, setProfileImage] = useState<string | undefined>(
     profilePhoto
   );
   const [coverImage, setCoverImage] = useState<string | undefined>(coverPhoto);
+
+  // Use effect to set cover image once the component mounts or when coverPhoto prop changes
+  useEffect(() => {
+    if (coverPhoto) {
+      setCoverImage(coverPhoto);
+    }
+  }, [coverPhoto]);
+
+  console.log(coverPhoto);
 
   // Function for handling profile image changes
   const onProfileImageChange = (
@@ -82,7 +93,7 @@ export default function EditProfileModal({
           {/* Cover Image Section */}
           <Box position={"relative"} marginBottom={12}>
             <Image
-              src={coverImage || coverPhoto} // Use the cover image from state or default
+              src={coverImage || coverPhoto} // Ensure the cover image from state is used
               alt="cover"
               height={thumbnailH}
               width={"100%"}

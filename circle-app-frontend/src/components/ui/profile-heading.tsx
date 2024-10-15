@@ -152,6 +152,7 @@ export default function ProfileHeading({
         <ModalOverlay />
         <EditProfileModal
           profilePhoto={profilePhoto}
+          coverPhoto={coverPhoto}
           thumbnailH={thumbnailH}
           fullname={fullname}
         />
