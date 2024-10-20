@@ -10,7 +10,7 @@ import {
   Spinner,
   Text,
   Textarea,
-  useDisclosure, // Import useDisclosure
+  // useDisclosure, // Import useDisclosure
 } from "@chakra-ui/react";
 import { HiOutlineXCircle } from "react-icons/hi";
 import { usePostThread } from "../../features/home/hooks/use-post-form";

@@ -13,7 +13,7 @@ import { useParams } from "react-router-dom";
 export default function ResetPasswordForm() {
   const { token } = useParams();
   const tokenData = String(token);
-  const { register, handleSubmit, errors, isSubmitting, onResetPassword } =
+  const { register, handleSubmit, isSubmitting, onResetPassword } =
     useResetPassword(tokenData);
 
   return (
