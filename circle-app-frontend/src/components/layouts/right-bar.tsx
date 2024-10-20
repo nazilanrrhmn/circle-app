@@ -125,13 +125,17 @@ export default function RightBar() {
             </Text>
             <Flex gap={1}>
               <a href="https://github.com/" target="_blank">
-                <Image h={"20px"} src="icons/github.svg" alt="circle logo" />
+                <Image h={"20px"} src="/icons/github.svg" alt="circle logo" />
               </a>
               <a href="https://www.linkedin.com/in//" target="_blank">
-                <Image h={"20px"} src="icons/linkedin.svg" alt="circle logo" />
+                <Image h={"20px"} src="/icons/linkedin.svg" alt="circle logo" />
               </a>
               <a href="https://www.instagram.com//" target="_blank">
-                <Image h={"20px"} src="icons/instagram.svg" alt="circle logo" />
+                <Image
+                  h={"20px"}
+                  src="/icons/instagram.svg"
+                  alt="circle logo"
+                />
               </a>
             </Flex>
           </Flex>
@@ -226,13 +230,17 @@ export function RightBarProfile() {
             </Text>
             <Flex gap={1}>
               <a href="https://github.com/" target="_blank">
-                <Image h={"20px"} src="icons/github.svg" alt="circle logo" />
+                <Image h={"20px"} src="/icons/github.svg" alt="circle logo" />
               </a>
               <a href="https://www.linkedin.com/in//" target="_blank">
-                <Image h={"20px"} src="icons/linkedin.svg" alt="circle logo" />
+                <Image h={"20px"} src="/icons/linkedin.svg" alt="circle logo" />
               </a>
               <a href="https://www.instagram.com//" target="_blank">
-                <Image h={"20px"} src="icons/instagram.svg" alt="circle logo" />
+                <Image
+                  h={"20px"}
+                  src="/icons/instagram.svg"
+                  alt="circle logo"
+                />
               </a>
             </Flex>
           </Flex>
