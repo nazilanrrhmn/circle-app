@@ -2,7 +2,7 @@ import { Avatar, Box, Button, Flex, Spinner, Text } from "@chakra-ui/react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
-import { getUserLogged } from "../../features/auth/auth.slice";
+import { minFollow, plusFollow } from "../../features/auth/auth.slice";
 import { useAppDispatch } from "../../hooks/use.store";
 import { apiV1 } from "../../libs/api";
 
@@ -32,6 +32,7 @@ export default function OthersAccountItem({
     followingId: number
   ) {
     event.preventDefault();
+    setIsLoading(true); // Set Loading state
 
     try {
       let response;
@@ -40,14 +41,16 @@ export default function OthersAccountItem({
         response = await apiV1.delete(`/unfollow/${followingId}`);
         setIsLoading(false);
         setIsFollowUser(false);
+        dispatch(minFollow());
       } else {
         setIsLoading(true);
         response = await apiV1.post("/follow", { followingId });
         setIsLoading(false);
         setIsFollowUser(true);
+        dispatch(plusFollow());
       }
+      // dispatch(minFollow());
 
-      dispatch(getUserLogged());
       Swal.fire({
         icon: "success",
         title: response.data.message,
@@ -59,6 +62,8 @@ export default function OthersAccountItem({
       });
     } catch (error) {
       console.log(error);
+    } finally {
+      setIsLoading(false); // reset state
     }
   }
 

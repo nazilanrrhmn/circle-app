@@ -1,41 +1,35 @@
-import { useForm } from "react-hook-form";
-import axios from "axios";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { apiV1 } from "../../../libs/api";
-import {
-  PostThreadInput,
-  postThreadSchema,
-} from "../../home/schemas/post-thread";
-import { ThreadDetailResponseDTO } from "../types/thread-detail.dto";
+import axios from "axios";
+import { useForm } from "react-hook-form";
 import Swal from "sweetalert2";
+import { apiV1 } from "../../../libs/api";
+import { PostReplyInput, postReplySchema } from "../../home/schemas/post-reply";
+import { ReplyPostResponseDTO } from "../../home/types/thread.dto";
+import { useAppDispatch } from "../../../hooks/use.store";
+import { getDetailThreads } from "../detail-slice";
 
 export function usePostReply({ threadId }: { threadId: number }) {
+  const dispatch = useAppDispatch();
   const {
     register,
     handleSubmit,
-    reset,
+    watch,
     formState: { errors, isSubmitting },
-  } = useForm<PostThreadInput>({
-    resolver: zodResolver(postThreadSchema),
+  } = useForm<PostReplyInput>({
+    resolver: zodResolver(postReplySchema),
   });
 
-  async function onSubmit(formData: FormData): Promise<boolean> {
-    // Change the parameter to FormData
+  async function onSubmit(data: PostReplyInput) {
     try {
-      const response = await apiV1.post<
-        null,
-        { data: ThreadDetailResponseDTO }
-      >(
-        `/threads/${threadId}/reply`,
-        formData, // Use FormData as the payload
-        {
-          headers: {
-            "Content-Type": "multipart/form-data", // Correct Content-Type for FormData
-          },
-        }
-      );
+      const formData = new FormData();
+      formData.append("content", data.content);
+      formData.append("image", data.image[0]);
 
-      // Show success message
+      const response = await apiV1.post<null, { data: ReplyPostResponseDTO }>(
+        `/threads/${threadId}/reply`,
+        formData
+      );
+      // alert(response.data.message);
       Swal.fire({
         icon: "success",
         title: response.data.message,
@@ -43,21 +37,17 @@ export function usePostReply({ threadId }: { threadId: number }) {
         background: "#1D1D1D",
         color: "#fff",
         iconColor: "#04A51E",
-        timer: 1000,
+        timer: 1500,
       });
-
-      reset(); // Reset form on success
-      return true; // Return true if successful
+      dispatch(getDetailThreads(threadId));
     } catch (error) {
-      // Handle different error scenarios
       if (axios.isAxiosError(error) && error.response) {
-        console.error(error.response.data); // Log server response error
-        alert(`Error: ${error.response.data.message}`);
+        console.error(error.response.data); // Log response error dari server
+        alert(`Error: ${error.response.data.message}`); // Tampilkan pesan error
       } else {
-        console.error("Unexpected error", error);
+        console.error("Unexpected error", error); // Log error yang tidak terduga
         alert("An unexpected error occurred");
       }
-      return false; // Return false if error occurred
     }
   }
 
@@ -66,6 +56,7 @@ export function usePostReply({ threadId }: { threadId: number }) {
     handleSubmit,
     errors,
     isSubmitting,
-    onSubmit, // Return onSubmit to be used in the component
+    onSubmit,
+    watch,
   };
 }

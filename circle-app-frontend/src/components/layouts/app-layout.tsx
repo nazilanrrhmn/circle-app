@@ -1,6 +1,6 @@
 import { Box } from "@chakra-ui/react";
-import RightBar from "./right-bar";
 import LeftBar from "./left-bar";
+import RightBar from "./right-bar";
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (

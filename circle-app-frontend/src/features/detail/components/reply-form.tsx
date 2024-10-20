@@ -12,7 +12,7 @@ import {
 
 import { useAppSelector } from "../../../hooks/use.store";
 import { useState } from "react";
-import { usePostReply } from "../../home/hooks/use-reply-form";
+import { usePostReply } from "../hooks/use-post-reply";
 
 export default function FormReply({
   placeholder,
@@ -84,7 +84,7 @@ export default function FormReply({
         </Box>
         <Flex alignItems={"center"} gap={4}>
           <label htmlFor="upload">
-            <Image src="/icons/gallery-add.svg" alt="gallery" height={"24px"} />
+            <Image src="/gallery-add.svg" alt="gallery" height={"24px"} />
           </label>
           <Button
             type="submit"

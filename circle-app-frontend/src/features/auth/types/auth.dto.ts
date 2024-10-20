@@ -19,3 +19,19 @@ export type RegisterRequestDTO = Pick<
 export type RegisterResponseDTO = LoginResponseDTO;
 
 export type UserStoreDTO = Omit<UserEntity, "password">;
+
+export type ForgotPassResponseDTO = {
+  status: string;
+  message: string;
+};
+
+export type ForgotPassRequestDTO = Pick<UserEntity, "email">;
+
+export type ResetPassResponseDTO = {
+  status: string;
+  message: string;
+};
+
+export type ResetPassRequestDTO = {
+  password: string;
+};

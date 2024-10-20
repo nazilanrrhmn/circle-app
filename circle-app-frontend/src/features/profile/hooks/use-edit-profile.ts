@@ -70,7 +70,6 @@ export default function useEditProfile() {
       dispatch(getUserLogged());
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
-        console.error(error.response.data);
         Swal.fire({
           icon: "error",
           title: "Oops..",
@@ -79,7 +78,6 @@ export default function useEditProfile() {
           color: "#fff",
         });
       } else {
-        console.error("Unexpected error", error);
         Swal.fire({
           icon: "error",
           title: "Error",

@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import authServices from "../services/auth.services";
-import { LoginSchema, RegisterSchema } from "../utils/schemas/auth.schema";
 import userServices from "../services/user.services";
+import { LoginSchema, RegisterSchema } from "../utils/schemas/auth.schema";
 
 class AuthController {
   async register(req: Request, res: Response) {
@@ -20,9 +20,7 @@ class AuthController {
     try {
       const value = await RegisterSchema.validateAsync(req.body);
       await authServices.register(value);
-      // console.log("lewat register");
       const user = await authServices.login(value);
-      // console.log("lewat login");
       res.json({
         status: "success",
         message: "User Created",
@@ -66,6 +64,38 @@ class AuthController {
       res.json(user);
     } catch (error) {
       res.status(500).json(error);
+    }
+  }
+
+  async forgotPassword(req: Request, res: Response) {
+    // #swagger.tags = ['Auth']
+    try {
+      const email = req.body.email;
+      console.log(email);
+
+      const forget = await authServices.forgotPassword(email);
+      res.json(forget);
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  }
+
+  async resetPassword(req: Request, res: Response) {
+    try {
+      const token = req.params.token;
+      const password = req.body.password;
+
+      await authServices.resetPassword(token, password);
+
+      res.json({
+        message: "Password changed successfully",
+      });
+    } catch (error) {
+      console.log(error);
+      const err = error as Error;
+      res.status(500).json({
+        message: err.message,
+      });
     }
   }
 }

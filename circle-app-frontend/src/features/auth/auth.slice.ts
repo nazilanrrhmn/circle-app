@@ -10,6 +10,8 @@ export const getUserLogged = createAsyncThunk(
   }
 );
 
+// const initialState: UserStoreDTO = {} as UserStoreDTO;
+
 interface UserState {
   entities: UserStoreDTO;
   loading: "idle" | "pending" | "succeeded" | "failed";
@@ -30,13 +32,22 @@ const authSlice = createSlice({
     updateProfile: (
       state,
       action: PayloadAction<
-        Pick<UserStoreDTO, "profilePhoto" | "fullname" | "username" | "bio">
+        Pick<
+          UserStoreDTO,
+          "coverPhoto" | "profilePhoto" | "fullname" | "username" | "bio"
+        >
       >
     ) => {
       state.entities = {
         ...state.entities,
         ...action.payload,
       };
+    },
+    plusFollow: (state) => {
+      state.entities._count.followers = state.entities._count.followers + 1;
+    },
+    minFollow: (state) => {
+      state.entities._count.followers = state.entities._count.followers - 1;
     },
     removeUser() {
       return initialState;
@@ -56,5 +67,6 @@ const authSlice = createSlice({
   },
 });
 
-export const { setUser, removeUser, updateProfile } = authSlice.actions;
+export const { setUser, removeUser, updateProfile, plusFollow, minFollow } =
+  authSlice.actions;
 export default authSlice.reducer;

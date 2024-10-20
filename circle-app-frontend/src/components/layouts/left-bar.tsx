@@ -52,7 +52,7 @@ export default function LeftBar() {
           />
           <ItemMenu
             route="/follows"
-            menuIcon="/icons/heart.svg"
+            menuIcon="/icons/follows.svg"
             menuTitle="Follows"
           />
           <ItemMenu

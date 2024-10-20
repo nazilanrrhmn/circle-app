@@ -1,6 +1,7 @@
 import { Avatar, Flex, Image, Text } from "@chakra-ui/react";
 import { Link, useNavigate } from "react-router-dom";
 import { Thread } from "../../features/home/types/thread.dto";
+import formatDate from "../../libs/format-date";
 
 export default function PostContent({
   profilePhoto,
@@ -8,10 +9,10 @@ export default function PostContent({
   userName,
   postContent,
   postImage,
-  createdAt,
   children,
   authorId,
   id,
+  createdAt,
 }: Omit<Thread, "like" | "reply"> & {
   children: React.ReactNode;
   authorId: number;
@@ -63,7 +64,7 @@ export default function PostContent({
               lineHeight={"16px"}
               color={"brand.fontSecondary"}
             >
-              {createdAt}
+              {formatDate(createdAt)}
             </Text>
           </Flex>
         </Link>

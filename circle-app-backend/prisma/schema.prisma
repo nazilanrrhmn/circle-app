@@ -12,7 +12,7 @@ generator client {
 datasource db {
   provider  = "postgresql"
   url       = env("DATABASE_URL")
-  // directUrl = env("DIRECT_URL")
+  directUrl = env("DIRECT_URL")
 }
         
 
@@ -24,7 +24,7 @@ model User {
   username      String? @unique
   bio           String?
   profilePhoto  String?
-  coverPhoto    String?
+  coverPhoto  String?
 
   role RoleEnum @default(MEMBER)
 

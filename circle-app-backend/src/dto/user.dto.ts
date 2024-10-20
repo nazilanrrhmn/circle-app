@@ -5,7 +5,7 @@ export type CreateUserDTO = {
   fullname: string;
 };
 
-export type UpdateUSerDTO = {
+export type UpdateUserDTO = {
   id: number;
   fullname: string;
   username?: string;

@@ -82,7 +82,7 @@ export default function EditProfileModal({
           {/* Cover Image Section */}
           <Box position={"relative"} marginBottom={12}>
             <Image
-              src={coverImage || coverPhoto} // Use the cover image from state or default
+              src={coverImage || coverPhoto || "/default-cover.png"} // Use the cover image from state or default placeholder
               alt="cover"
               height={thumbnailH}
               width={"100%"}
@@ -127,7 +127,7 @@ export default function EditProfileModal({
                   hidden
                 />
                 <Avatar
-                  src={profileImage || profilePhoto} // Use the profile image from state or default
+                  src={profileImage || profilePhoto || "/default-profile.png"} // Use the profile image from state or default placeholder
                   name={fullname}
                   border={"solid 4px"}
                   borderColor={"brand.backgroundCircle"}

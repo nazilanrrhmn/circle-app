@@ -49,8 +49,8 @@ export default function MyProfilePage() {
           fullname={user.fullname}
           username={user.username}
           bio={user.bio}
-          followers={user.following.length}
-          following={user.followers.length}
+          followers={user._count.following}
+          following={user._count.followers}
           thumbnailH="140px"
         />
       </Box>

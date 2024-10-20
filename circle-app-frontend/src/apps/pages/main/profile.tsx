@@ -1,7 +1,7 @@
 import { Box } from "@chakra-ui/react";
+import MyProfilePage from "../../../features/profile/components/my-profile-page";
 import LeftBar from "../../../components/layouts/left-bar";
 import { RightBarProfile } from "../../../components/layouts/right-bar";
-import MyProfilePage from "../../../features/profile/components/my-profile-page";
 
 export default function MyProfile() {
   return (
