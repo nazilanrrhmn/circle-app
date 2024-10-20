@@ -15,15 +15,16 @@ export default function useEditProfile() {
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors, isSubmitting },
   } = useForm<EditProfileFormInput>({
     resolver: zodResolver(editProfileSchema),
     defaultValues: {
-      profilePhoto: user?.profilePhoto ?? "",
-      coverPhoto: user?.coverPhoto ?? "",
-      fullname: user?.fullname,
-      username: user?.username,
-      bio: user?.bio,
+      profilePhoto: user.profilePhoto,
+      coverPhoto: user.coverPhoto,
+      fullname: user.fullname,
+      username: user.username,
+      bio: user.bio,
     },
   });
 
@@ -34,35 +35,27 @@ export default function useEditProfile() {
       formData.append("username", data.username);
       formData.append("bio", data.bio);
 
-      // Mengelola profile photo jika ada perubahan
+      // Check if new profilePhoto is uploaded, otherwise use the existing one
       if (data.profilePhoto && data.profilePhoto.length > 0) {
-        formData.append("profilePhoto", data.profilePhoto[0]); // Menangani file baru
-      } else if (user?.profilePhoto) {
-        formData.append("existingProfilePhoto", user.profilePhoto); // Jika tidak ada perubahan, kirim yang sudah ada
-      } else {
-        formData.delete("profilePhoto"); // Hapus dari formData jika tidak ada foto
+        formData.append("profilePhoto", data.profilePhoto[0]);
+      } else if (user.profilePhoto) {
+        // Append the existing profile photo URL if no new file was uploaded
+        formData.append("existingProfilePhoto", user.profilePhoto);
       }
 
-      // Mengelola cover photo jika ada perubahan
+      // Check if new coverPhoto is uploaded, otherwise use the existing one
       if (data.coverPhoto && data.coverPhoto.length > 0) {
-        formData.append("coverPhoto", data.coverPhoto[0]); // Menangani file baru
-      } else if (user?.coverPhoto) {
-        formData.append("existingCoverPhoto", user.coverPhoto); // Jika tidak ada perubahan, kirim yang sudah ada
-      } else {
-        formData.delete("coverPhoto"); // Hapus dari formData jika tidak ada cover photo
+        formData.append("coverPhoto", data.coverPhoto[0]);
+      } else if (user.coverPhoto) {
+        // Append the existing cover photo URL if no new file was uploaded
+        formData.append("existingCoverPhoto", user.coverPhoto);
       }
 
-      // Mengirimkan data ke API menggunakan axios
       const response = await apiV1.patch<
         null,
         { data: EditProfileResponseDTO }
-      >("/users", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      >("/users", formData);
 
-      // Menampilkan pesan sukses jika berhasil
       Swal.fire({
         icon: "success",
         title: response.data.message,
@@ -73,10 +66,9 @@ export default function useEditProfile() {
         timer: 1000,
       });
 
-      // Mengambil kembali data user terbaru
+      // Dispatch action to update the logged-in user data
       dispatch(getUserLogged());
     } catch (error) {
-      // Menangani error yang dikembalikan oleh axios
       if (axios.isAxiosError(error) && error.response) {
         Swal.fire({
           icon: "error",
@@ -86,7 +78,6 @@ export default function useEditProfile() {
           color: "#fff",
         });
       } else {
-        // Menangani error umum yang tidak diantisipasi
         Swal.fire({
           icon: "error",
           title: "Error",
@@ -101,6 +92,7 @@ export default function useEditProfile() {
   return {
     register,
     handleSubmit,
+    watch,
     errors,
     isSubmitting,
     onSubmit,

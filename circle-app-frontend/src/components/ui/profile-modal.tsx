@@ -38,25 +38,16 @@ export default function EditProfileModal({
   );
   const [coverImage, setCoverImage] = useState<string | undefined>(coverPhoto);
 
-  console.log("Profile: ", profilePhoto);
-  console.log("Cover: ", coverPhoto);
-
   // Function for handling profile image changes
   const onProfileImageChange = (
     event: React.ChangeEvent<HTMLInputElement>,
     onChange: (...event: any[]) => void
   ) => {
     if (event.target.files && event.target.files[0]) {
-      const file = event.target.files[0];
-      if (file.size > 5000000) {
-        alert("File too large! Please upload a file smaller than 5MB.");
-        return;
-      }
-      // Create preview of the selected profile image
-      setProfileImage(URL.createObjectURL(file));
-      onChange(event); // Pass the file to the form handler
-    } else {
+      setProfileImage(URL.createObjectURL(event.target.files[0])); // Set new preview if new image is uploaded
       onChange(event);
+    } else {
+      onChange(event); // Keep the old image if no new file uploaded
     }
   };
 
@@ -66,16 +57,10 @@ export default function EditProfileModal({
     onChange: (...event: any[]) => void
   ) => {
     if (event.target.files && event.target.files[0]) {
-      const file = event.target.files[0];
-      if (file.size > 5000000) {
-        alert("File too large! Please upload a file smaller than 5MB.");
-        return;
-      }
-      // Create preview of the selected cover image
-      setCoverImage(URL.createObjectURL(file));
-      onChange(event); // Pass the file to the form handler
-    } else {
+      setCoverImage(URL.createObjectURL(event.target.files[0])); // Set new preview if new image is uploaded
       onChange(event);
+    } else {
+      onChange(event); // Keep the old image if no new file uploaded
     }
   };
 
@@ -97,7 +82,7 @@ export default function EditProfileModal({
           {/* Cover Image Section */}
           <Box position={"relative"} marginBottom={12}>
             <Image
-              src={coverImage || coverPhoto} // Show the selected cover image or the default one
+              src={coverImage || coverPhoto || "/default-cover.png"} // Use the cover image from state or default placeholder
               alt="cover"
               height={thumbnailH}
               width={"100%"}
@@ -111,7 +96,8 @@ export default function EditProfileModal({
               }
               id="uploadCover"
               type="file"
-              accept="image/*"
+              variant={"unstyled"}
+              border={"none"}
               hidden
             />
             <label htmlFor="uploadCover">
@@ -136,13 +122,13 @@ export default function EditProfileModal({
                   }
                   id="uploadPhoto"
                   type="file"
-                  accept="image/*"
+                  variant={"unstyled"}
+                  border={"none"}
                   hidden
                 />
                 <Avatar
-                  src={profileImage || profilePhoto} // Show the selected profile image or the default one
+                  src={profileImage || profilePhoto || "/default-profile.png"} // Use the profile image from state or default placeholder
                   name={fullname}
-                  defaultValue={profilePhoto}
                   border={"solid 4px"}
                   borderColor={"brand.backgroundCircle"}
                   height={"80px"}
@@ -186,7 +172,7 @@ export default function EditProfileModal({
                 pt={2}
                 border={"solid 1px"}
                 borderColor={"brand.borderAbu"}
-                defaultValue={fullname} // Show current fullname
+                defaultValue={fullname}
               />
               {errors.fullname && (
                 <Text fontSize={13} color={"red"}>

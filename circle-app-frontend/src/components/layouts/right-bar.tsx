@@ -86,6 +86,11 @@ export default function RightBar() {
           ) : (
             <Flex direction={"column"} gap={4}>
               {others
+                .filter(
+                  (other) =>
+                    other.id !== user.id && // Pastikan pengguna yang sedang login tidak ditampilkan
+                    !other.isFollow // Hanya tampilkan pengguna yang belum difollow
+                )
                 .sort(() => Math.random() - 0.5)
                 .slice(0, 5)
                 .map((other) => {
@@ -145,6 +150,7 @@ export default function RightBar() {
 }
 
 export function RightBarProfile() {
+  const user = useAppSelector((state) => state.auth.entities);
   const [others, setOther] = useState<UserEntity[]>([]);
 
   async function getThreads() {
@@ -182,18 +188,25 @@ export function RightBarProfile() {
             Suggested for you
           </Text>
           <Flex direction={"column"} gap={4}>
-            {others.slice(0, 5).map((other) => {
-              return (
-                <OthersAccountItem
-                  id={other.id}
-                  key={other.id}
-                  image={other.profilePhoto}
-                  fullName={other.fullname}
-                  userName={other.username}
-                  isFollow={other.isFollow}
-                />
-              );
-            })}
+            {others
+              .filter(
+                (other) =>
+                  other.id !== user.id && // Pastikan pengguna yang sedang login tidak ditampilkan
+                  !other.isFollow // Hanya tampilkan pengguna yang belum difollow
+              )
+              .slice(0, 5)
+              .map((other) => {
+                return (
+                  <OthersAccountItem
+                    id={other.id}
+                    key={other.id}
+                    image={other.profilePhoto}
+                    fullName={other.fullname}
+                    userName={other.username}
+                    isFollow={other.isFollow}
+                  />
+                );
+              })}
           </Flex>
         </Box>
         <Box

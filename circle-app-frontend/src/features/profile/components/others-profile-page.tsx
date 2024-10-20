@@ -46,6 +46,7 @@ export default function ProfilePage() {
           buttonTitle={user.isFollow ? "Unfollow" : "Follow"}
           isFollow={user.isFollow}
           profilePhoto={user.profilePhoto}
+          coverPhoto={user.coverPhoto}
           fullname={user.fullname}
           username={user.username}
           followers={user.following.length}
