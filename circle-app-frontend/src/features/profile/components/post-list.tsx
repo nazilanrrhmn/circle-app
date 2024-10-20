@@ -1,7 +1,6 @@
 import { Box } from "@chakra-ui/react";
 import PostItem from "../../../components/ui/post-item";
 import { ThreadEntity } from "../../../entities/thread";
-// import { formatDistanceToNow } from "date-fns"; // Import date-fns function
 
 export default function PostList({ threads }: { threads: ThreadEntity[] }) {
   // const [threads, setThread] = useState<ThreadEntity[]>([]);
@@ -24,6 +23,7 @@ export default function PostList({ threads }: { threads: ThreadEntity[] }) {
       {threads.map((thread) => {
         return (
           <PostItem
+            createdAt={thread.createdAt}
             authorId={thread.authorId}
             isLike={thread.isLike}
             key={thread.id}
@@ -33,7 +33,6 @@ export default function PostList({ threads }: { threads: ThreadEntity[] }) {
             userName={thread.author.username}
             postContent={thread.content}
             postImage={thread.image}
-            createdAt={new Date(thread.createdAt).toLocaleTimeString()}
             like={thread.like.length}
             reply={thread.replies.length}
           />

@@ -17,7 +17,7 @@ import ProfileHeading from "../ui/profile-heading";
 export default function RightBar() {
   const user = useAppSelector((state) => state.auth.entities);
   const [others, setOther] = useState<UserEntity[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isLoading, setIsLoading] = useState<Boolean>(true);
 
   async function getThreads() {
     const response = await apiV1.get("/users");
@@ -54,24 +54,7 @@ export default function RightBar() {
           <Text fontSize={"20px"} fontWeight={700} lineHeight={"28px"} mb={4}>
             My Profile
           </Text>
-          {user && (
-            <ProfileHeading
-              id={user.id}
-              isFollow={user.isFollow}
-              isMyProfile={true}
-              buttonTitle={"Edit Profile"}
-              profilePhoto={user.profilePhoto}
-              coverPhoto={user.coverPhoto}
-              fullname={user.fullname}
-              username={user.username}
-              bio={user.bio}
-              following={user.followers.length}
-              followers={user.following.length}
-              thumbnailH="100px"
-            />
-          )}
-
-          {/* <ProfileHeading
+          <ProfileHeading
             id={user.id}
             isFollow={user.isFollow}
             isMyProfile={true}
@@ -81,10 +64,10 @@ export default function RightBar() {
             fullname={user.fullname}
             username={user.username}
             bio={user.bio}
-            following={user.followers.length}
-            followers={user.following.length}
+            followers={user._count.following}
+            following={user._count.followers}
             thumbnailH="100px"
-          /> */}
+          />
         </Box>
         <Box
           backgroundColor={"brand.backgroundBox"}
@@ -102,18 +85,21 @@ export default function RightBar() {
             </Stack>
           ) : (
             <Flex direction={"column"} gap={4}>
-              {others.slice(0, 5).map((other) => {
-                return (
-                  <OthersAccountItem
-                    id={other.id}
-                    key={other.id}
-                    image={other.profilePhoto}
-                    fullName={other.fullname}
-                    userName={other.username}
-                    isFollow={other.isFollow}
-                  />
-                );
-              })}
+              {others
+                .sort(() => Math.random() - 0.5)
+                .slice(0, 5)
+                .map((other) => {
+                  return (
+                    <OthersAccountItem
+                      id={other.id}
+                      key={other.id}
+                      image={other.profilePhoto}
+                      fullName={other.fullname}
+                      userName={other.username}
+                      isFollow={other.isFollow}
+                    />
+                  );
+                })}
             </Flex>
           )}
         </Box>
@@ -133,18 +119,14 @@ export default function RightBar() {
               •
             </Text>
             <Flex gap={1}>
-              <a href="https://github.com/nazilanrrhmn" target="_blank">
-                <Image h={"20px"} src="/icons/github.svg" alt="circle logo" />
+              <a href="https://github.com/" target="_blank">
+                <Image h={"20px"} src="icons/github.svg" alt="circle logo" />
               </a>
-              <a href="#" target="_blank">
-                <Image h={"20px"} src="/icons/linkedin.svg" alt="circle logo" />
+              <a href="https://www.linkedin.com/in//" target="_blank">
+                <Image h={"20px"} src="icons/linkedin.svg" alt="circle logo" />
               </a>
-              <a href="https://www.instagram.com/nazilnrr/" target="_blank">
-                <Image
-                  h={"20px"}
-                  src="/icons/instagram.svg"
-                  alt="circle logo"
-                />
+              <a href="https://www.instagram.com//" target="_blank">
+                <Image h={"20px"} src="icons/instagram.svg" alt="circle logo" />
               </a>
             </Flex>
           </Flex>
@@ -230,18 +212,14 @@ export function RightBarProfile() {
               •
             </Text>
             <Flex gap={1}>
-              <a href="https://github.com/nazilanrrhmn" target="_blank">
-                <Image h={"20px"} src="/icons/github.svg" alt="circle logo" />
+              <a href="https://github.com/" target="_blank">
+                <Image h={"20px"} src="icons/github.svg" alt="circle logo" />
               </a>
-              <a href="#" target="_blank">
-                <Image h={"20px"} src="/icons/linkedin.svg" alt="circle logo" />
+              <a href="https://www.linkedin.com/in//" target="_blank">
+                <Image h={"20px"} src="icons/linkedin.svg" alt="circle logo" />
               </a>
-              <a href="https://www.instagram.com/nazilnrr/" target="_blank">
-                <Image
-                  h={"20px"}
-                  src="/icons/instagram.svg"
-                  alt="circle logo"
-                />
+              <a href="https://www.instagram.com//" target="_blank">
+                <Image h={"20px"} src="icons/instagram.svg" alt="circle logo" />
               </a>
             </Flex>
           </Flex>

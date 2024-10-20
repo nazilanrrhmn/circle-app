@@ -13,6 +13,8 @@ export const routerV1 = express.Router();
 routerV1.post("/auth/login", authControllers.login);
 routerV1.post("/auth/register", authControllers.register);
 routerV1.get("/user/me", authentication, authControllers.getUserLogged);
+routerV1.post("/forgot-password", authControllers.forgotPassword);
+routerV1.post("/reset-password/:token", authControllers.resetPassword);
 
 // USER
 routerV1.get("/users", authentication, UserController.findAll);
@@ -30,9 +32,12 @@ routerV1.get("/users/:id", authentication, UserController.findOne);
 
 routerV1.patch(
   "/users",
-  authentication,
-  upload.fields([{ name: "profilePhoto" }, { name: "coverPhoto" }]),
-  UserController.update
+  authentication, // Middleware untuk otentikasi
+  upload.fields([
+    { name: "profilePhoto", maxCount: 1 }, // Batasi jumlah file yang diunggah
+    { name: "coverPhoto", maxCount: 1 },
+  ]),
+  UserController.update // Panggil controller setelah file diproses
 );
 
 // FOLLOW

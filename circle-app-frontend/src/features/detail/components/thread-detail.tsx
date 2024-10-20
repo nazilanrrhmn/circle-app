@@ -2,6 +2,7 @@ import { Avatar, Box, Flex, Image, Text } from "@chakra-ui/react";
 import { Link, useNavigate } from "react-router-dom";
 import { Thread } from "../../home/types/thread.dto";
 import { PostAction } from "../../../components/ui/post-action";
+import formatDate from "../../../libs/format-date";
 
 export default function ThreadDetail({
   profilePhoto,
@@ -9,12 +10,12 @@ export default function ThreadDetail({
   userName,
   postImage,
   postContent,
-  createdAt,
   like,
   reply,
   id,
   isLike,
   authorId,
+  createdAt,
 }: Thread & { isLike: boolean; authorId: number }) {
   const navigate = useNavigate();
   const handleClick = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
@@ -71,7 +72,7 @@ export default function ThreadDetail({
           lineHeight={"20px"}
           color={"brand.fontSecondary"}
         >
-          {createdAt}
+          11:32 PM
         </Text>
         <Text
           fontSize={"14px"}
@@ -87,7 +88,7 @@ export default function ThreadDetail({
           lineHeight={"20px"}
           color={"brand.fontSecondary"}
         >
-          Jul 26, 2023
+          {formatDate(createdAt)}
         </Text>
       </Flex>
       <Flex gap={4} marginY={1} alignItems={"center"}>

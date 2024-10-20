@@ -1,26 +1,12 @@
 import { Navigate, Outlet } from "react-router-dom";
 import { useAppSelector } from "../../hooks/use.store";
 
-export default function AuthRoutes() {
-  const auth = useAppSelector((state) => state.auth);
+export default function AuthROutes() {
+  const auth = useAppSelector((state) => state.auth.entities);
 
-  // Cek apakah id ada di entities
-  if (!auth.entities || !auth.entities.id) {
-    return <Outlet />; // Jika belum login, izinkan akses ke rute
+  if (!auth.id) {
+    return <Outlet />;
   }
 
-  return <Navigate to="/" />; // Jika sudah login, redirect ke home
+  return <Navigate to={"/"} />;
 }
-
-// import { Navigate, Outlet } from "react-router-dom";
-// import { useAppSelector } from "../../hooks/use.store";
-
-// export default function AuthROutes() {
-//   const auth = useAppSelector((state) => state.auth.entities);
-
-//   if (!auth.id) {
-//     return <Outlet />;
-//   }
-
-//   return <Navigate to={"/"} />;
-// }

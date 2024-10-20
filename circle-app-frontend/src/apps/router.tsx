@@ -39,7 +39,7 @@ export default function RouterApp() {
           element: <ForgotPassword />,
         },
         {
-          path: "/reset-password",
+          path: "/reset-password/:token",
           element: <ResetPassword />,
         },
       ],
@@ -82,3 +82,22 @@ export default function RouterApp() {
 
   return <RouterProvider router={router} />;
 }
+
+// return (
+//   <BrowserRouter>
+//     <Routes>
+//       {/* auth */}
+//       <Route path="/login" element={<Login />} />
+//       <Route path="/register" element={<Register />} />
+//       <Route path="/forgot-password" element={<ForgotPassword />} />
+//       <Route path="/reset-password" element={<ResetPassword />} />
+//       {/* pages */}
+//       <Route path="/" element={<Home />} />
+//       <Route path="/search" element={<Search />} />
+//       <Route path="/follows" element={<Follows />} />
+//       <Route path="/profile" element={<Profile />} />
+//       <Route path="/detail-post" element={<DetailPost />} />
+//       <Route path="/detail-image" element={<DetailImage />} />
+//     </Routes>
+//   </BrowserRouter>
+// );

@@ -44,20 +44,20 @@ export default function LeftBar() {
           <Image h={50} src="/logo.svg" alt="circle logo" />
         </Box>
         <Flex flexDirection={"column"} gap={2}>
-          <ItemMenu route="/" menuIcon="/icons/home.svg" menuTitle="Home" />
+          <ItemMenu route="/" menuIcon="icons/home.svg" menuTitle="Home" />
           <ItemMenu
             route="/search"
-            menuIcon="/icons/user-search.svg"
+            menuIcon="icons/user-search.svg"
             menuTitle="Search"
           />
           <ItemMenu
             route="/follows"
-            menuIcon="/icons/heart.svg"
+            menuIcon="icons/follows.svg"
             menuTitle="Follows"
           />
           <ItemMenu
-            route="/profile"
-            menuIcon="/icons/profile-circle.svg"
+            route="/my-profile"
+            menuIcon="icons/profile-circle.svg"
             menuTitle="Profile"
           />
           <Button
@@ -73,7 +73,7 @@ export default function LeftBar() {
           <button onClick={onClick}>
             <ItemMenu
               route="/login"
-              menuIcon="/icons/logout.svg"
+              menuIcon="icons/logout.svg"
               menuTitle="Logout"
             />
           </button>

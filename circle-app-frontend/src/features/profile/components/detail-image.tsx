@@ -86,13 +86,13 @@ export default function DetailImagePage() {
           borderColor={"brand.borderAbu"}
         >
           <PostDetail
+            createdAt={threads.createdAt}
             isLike={threads.isLike}
             like={threads.like.length}
             reply={threads.replies.length}
             id={threads.id}
             authorId={threads.authorId}
             profilePhoto={threads.author.profilePhoto}
-            createdAt={new Date(threads.createdAt).toLocaleString()}
             fullName={threads.author.fullname}
             userName={threads.author.username}
             postContent={threads.content}
@@ -105,6 +105,7 @@ export default function DetailImagePage() {
           {threads.replies.map((reply) => {
             return (
               <RepliesItem
+                createdAt={reply.createdAt}
                 isLike={reply.isLike}
                 authorId={reply.authorId}
                 id={reply.id}
@@ -112,7 +113,6 @@ export default function DetailImagePage() {
                 fullName={reply.author.fullname}
                 userName={reply.author.username}
                 postContent={reply.content}
-                createdAt={new Date(reply.createdAt).toLocaleString()}
                 like={10}
                 postImage={reply.image}
               />

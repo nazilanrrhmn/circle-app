@@ -1,36 +1,33 @@
 import { Box, Flex, Spinner, Text } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { HiOutlineArrowLeft } from "react-icons/hi";
 import { useNavigate, useParams } from "react-router-dom";
-import { ThreadEntity } from "../../../entities/thread";
-import { apiV1 } from "../../../libs/api";
-import { ThreadDetailResponseDTO } from "../types/thread-detail.dto";
-import ThreadDetail from "./thread-detail";
+import { useAppDispatch, useAppSelector } from "../../../hooks/use.store";
+import { getDetailThreads } from "../detail-slice";
 import RepliesItem from "./replies-item";
 import FormReply from "./reply-form";
+import ThreadDetail from "./thread-detail";
 
 export default function ThreadDetailPage() {
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const [threads, setThread] = useState<ThreadEntity>();
+  // const [threads, setThread] = useState<ThreadEntity>();
   let { id } = useParams();
   const threadId = Number(id);
+  // async function getThreads() {
+  //   const response = await apiV1.get<null, { data: ThreadDetailResponseDTO }>(`/threads/${threadId}`);
+  //   const data = response.data.data;
+  //   return { data: data };
+  // }
 
-  async function getThreads() {
-    const response = await apiV1.get<null, { data: ThreadDetailResponseDTO }>(
-      `/threads/${threadId}`
-    );
-    const data = response.data.data;
-    return { data: data };
-  }
+  const threads = useAppSelector((state) => state.detailThread.entities);
+  const loading = useAppSelector((state) => state.detailThread.loading);
 
   useEffect(() => {
-    getThreads().then(({ data }) => {
-      setThread(data);
-    });
+    dispatch(getDetailThreads(threadId));
   }, []);
 
-  console.log("thread detail", threads);
-  if (!threads) {
+  if (loading == "pending") {
     return <Spinner />;
   }
 
@@ -46,40 +43,47 @@ export default function ThreadDetailPage() {
           Status
         </Text>
       </Flex>
-      <ThreadDetail
-        authorId={threads.authorId}
-        id={threads.id}
-        profilePhoto={threads?.author.profilePhoto}
-        fullName={threads.author.fullname}
-        userName={threads?.author.username}
-        postContent={threads.content}
-        postImage={threads?.image}
-        createdAt={new Date(threads.createdAt).toLocaleString()}
-        isLike={threads.isLike}
-        like={threads.like.length}
-        reply={threads.replies.length}
-      />
-      <FormReply
-        threadId={threadId}
-        placeholder="Type your reply!"
-        buttonTitle="Reply"
-      />
-      {threads.replies.map((reply) => {
-        return (
-          <RepliesItem
-            authorId={reply.authorId}
-            id={reply.id}
-            profilePhoto={reply.author.profilePhoto}
-            fullName={reply.author.fullname}
-            userName={reply.author.username}
-            postContent={reply.content}
-            createdAt={new Date(threads.createdAt).toLocaleString()}
-            like={reply.like_replies.length}
-            isLike={reply.isLike}
-            postImage={reply.image}
+      {loading == "succeeded" ? (
+        <>
+          <ThreadDetail
+            createdAt={threads.createdAt}
+            authorId={threads.authorId}
+            id={threads.id}
+            profilePhoto={threads?.author.profilePhoto}
+            fullName={threads.author.fullname}
+            userName={threads?.author.username}
+            postContent={threads.content}
+            postImage={threads?.image}
+            isLike={threads.isLike}
+            like={threads.like.length}
+            reply={threads.replies.length}
           />
-        );
-      })}
+          <FormReply
+            threadId={threadId}
+            placeholder="Type your reply!"
+            buttonTitle="Reply"
+          />
+          {threads.replies.map((reply) => {
+            return (
+              <RepliesItem
+                createdAt={threads.createdAt}
+                key={reply.id}
+                authorId={reply.authorId}
+                id={reply.id}
+                profilePhoto={reply.author.profilePhoto}
+                fullName={reply.author.fullname}
+                userName={reply.author.username}
+                postContent={reply.content}
+                like={reply.like_replies.length}
+                isLike={reply.isLike}
+                postImage={reply.image}
+              />
+            );
+          })}{" "}
+        </>
+      ) : (
+        <Spinner />
+      )}
     </Box>
   );
 }

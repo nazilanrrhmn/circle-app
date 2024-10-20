@@ -14,7 +14,7 @@ import {
   Text,
   Textarea,
 } from "@chakra-ui/react";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { HiOutlineXCircle } from "react-icons/hi";
 import useEditProfile from "../../features/profile/hooks/use-edit-profile";
 
@@ -32,22 +32,14 @@ export default function EditProfileModal({
   const { register, handleSubmit, errors, isSubmitting, onSubmit } =
     useEditProfile();
 
-  console.log(profilePhoto);
-
   // State for image previews
   const [profileImage, setProfileImage] = useState<string | undefined>(
     profilePhoto
   );
   const [coverImage, setCoverImage] = useState<string | undefined>(coverPhoto);
 
-  // Use effect to set cover image once the component mounts or when coverPhoto prop changes
-  useEffect(() => {
-    if (coverPhoto) {
-      setCoverImage(coverPhoto);
-    }
-  }, [coverPhoto]);
-
-  console.log(coverPhoto);
+  console.log("Profile: ", profilePhoto);
+  console.log("Cover: ", coverPhoto);
 
   // Function for handling profile image changes
   const onProfileImageChange = (
@@ -55,10 +47,16 @@ export default function EditProfileModal({
     onChange: (...event: any[]) => void
   ) => {
     if (event.target.files && event.target.files[0]) {
-      setProfileImage(URL.createObjectURL(event.target.files[0])); // Set new preview if new image is uploaded
-      onChange(event);
+      const file = event.target.files[0];
+      if (file.size > 5000000) {
+        alert("File too large! Please upload a file smaller than 5MB.");
+        return;
+      }
+      // Create preview of the selected profile image
+      setProfileImage(URL.createObjectURL(file));
+      onChange(event); // Pass the file to the form handler
     } else {
-      onChange(event); // Keep the old image if no new file uploaded
+      onChange(event);
     }
   };
 
@@ -68,10 +66,16 @@ export default function EditProfileModal({
     onChange: (...event: any[]) => void
   ) => {
     if (event.target.files && event.target.files[0]) {
-      setCoverImage(URL.createObjectURL(event.target.files[0])); // Set new preview if new image is uploaded
-      onChange(event);
+      const file = event.target.files[0];
+      if (file.size > 5000000) {
+        alert("File too large! Please upload a file smaller than 5MB.");
+        return;
+      }
+      // Create preview of the selected cover image
+      setCoverImage(URL.createObjectURL(file));
+      onChange(event); // Pass the file to the form handler
     } else {
-      onChange(event); // Keep the old image if no new file uploaded
+      onChange(event);
     }
   };
 
@@ -93,7 +97,7 @@ export default function EditProfileModal({
           {/* Cover Image Section */}
           <Box position={"relative"} marginBottom={12}>
             <Image
-              src={coverImage || coverPhoto} // Ensure the cover image from state is used
+              src={coverImage || coverPhoto} // Show the selected cover image or the default one
               alt="cover"
               height={thumbnailH}
               width={"100%"}
@@ -107,8 +111,7 @@ export default function EditProfileModal({
               }
               id="uploadCover"
               type="file"
-              variant={"unstyled"}
-              border={"none"}
+              accept="image/*"
               hidden
             />
             <label htmlFor="uploadCover">
@@ -133,13 +136,13 @@ export default function EditProfileModal({
                   }
                   id="uploadPhoto"
                   type="file"
-                  variant={"unstyled"}
-                  border={"none"}
+                  accept="image/*"
                   hidden
                 />
                 <Avatar
-                  src={profileImage || profilePhoto} // Use the profile image from state or default
+                  src={profileImage || profilePhoto} // Show the selected profile image or the default one
                   name={fullname}
+                  defaultValue={profilePhoto}
                   border={"solid 4px"}
                   borderColor={"brand.backgroundCircle"}
                   height={"80px"}
@@ -183,7 +186,7 @@ export default function EditProfileModal({
                 pt={2}
                 border={"solid 1px"}
                 borderColor={"brand.borderAbu"}
-                defaultValue={fullname}
+                defaultValue={fullname} // Show current fullname
               />
               {errors.fullname && (
                 <Text fontSize={13} color={"red"}>

@@ -1,9 +1,9 @@
 import { Avatar, Box, Button, Flex, Spinner, Text } from "@chakra-ui/react";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
-import { getUserLogged } from "../../features/auth/auth.slice";
-import { useAppDispatch, useAppSelector } from "../../hooks/use.store";
+import { minFollow, plusFollow } from "../../features/auth/auth.slice";
+import { useAppDispatch } from "../../hooks/use.store";
 import { apiV1 } from "../../libs/api";
 
 interface Account {
@@ -24,36 +24,33 @@ export default function OthersAccountItem({
   isFollow,
 }: Account) {
   const dispatch = useAppDispatch();
-  const loggedUser = useAppSelector((state) => state.auth.entities); // Ambil pengguna yang sedang login dari Redux store
   const [isFollowUser, setIsFollowUser] = useState<boolean>(isFollow);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-
-  // Filter jika akun adalah pengguna yang sedang login atau sudah diikuti
-  useEffect(() => {
-    if (loggedUser?.id === id || isFollow) {
-      return; // Jangan tampilkan akun pengguna yang sedang login atau yang sudah diikuti
-    }
-  }, [loggedUser, id, isFollow]);
 
   async function onFollow(
     event: React.MouseEvent<HTMLButtonElement>,
     followingId: number
   ) {
     event.preventDefault();
+    setIsLoading(true); // Set Loading state
 
     try {
       let response;
-      setIsLoading(true);
       if (isFollowUser) {
+        setIsLoading(true);
         response = await apiV1.delete(`/unfollow/${followingId}`);
+        setIsLoading(false);
         setIsFollowUser(false);
+        dispatch(minFollow());
       } else {
+        setIsLoading(true);
         response = await apiV1.post("/follow", { followingId });
+        setIsLoading(false);
         setIsFollowUser(true);
+        dispatch(plusFollow());
       }
-      setIsLoading(false);
+      // dispatch(minFollow());
 
-      dispatch(getUserLogged()); // Update informasi pengguna yang sedang login setelah follow/unfollow
       Swal.fire({
         icon: "success",
         title: response.data.message,
@@ -65,13 +62,9 @@ export default function OthersAccountItem({
       });
     } catch (error) {
       console.log(error);
-      setIsLoading(false);
+    } finally {
+      setIsLoading(false); // reset state
     }
-  }
-
-  // Jika akun ini adalah pengguna yang sedang login atau sudah diikuti, return null (tidak render)
-  if (loggedUser?.id === id || isFollowUser) {
-    return null;
   }
 
   return (

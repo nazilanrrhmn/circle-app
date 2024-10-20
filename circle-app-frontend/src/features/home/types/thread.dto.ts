@@ -7,9 +7,9 @@ export type Thread = {
   userName?: string;
   postContent: string;
   postImage?: string;
-  createdAt: string;
   like: number;
   reply: number;
+  createdAt: Date;
 };
 
 export type ThreadResponseDTO = {

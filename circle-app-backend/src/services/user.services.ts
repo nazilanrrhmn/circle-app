@@ -1,5 +1,6 @@
 import { PrismaClient, User } from "@prisma/client";
 import { UpdateUserDTO } from "../dto/user.dto";
+import { updateUserDTO } from "../dto/auth.dto";
 import { error } from "console";
 import { customError } from "../types/custom.error";
 import { SuccessResponse } from "../types/success.respons";
@@ -44,8 +45,15 @@ class UserServices {
     const user = await prisma.user.findUnique({
       where: { id: userId },
       include: {
+        _count: {
+          select: {
+            following: true,
+            followers: true,
+          },
+        },
         followers: true,
         following: true,
+
         threads: {
           include: {
             author: true,
@@ -66,6 +74,18 @@ class UserServices {
 
     return user;
   }
+
+  async getUserByMailName(mailname: string) {
+    return prisma.user.findFirst({
+      where: {
+        OR: [{ email: mailname }, { username: mailname }],
+      },
+    });
+  }
+
+  // async createUser(data: CreateUserDTO): Promise<User | null> {
+  //   return await prisma.user.create({ data });
+  // }
 
   // async updateUser(
   //   data: UpdateUserDTO
@@ -116,7 +136,7 @@ class UserServices {
 
   //   return {
   //     status: "success",
-  //     message: "Edit Successful",
+  //     message: "Profile successfully edited",
   //     data: {
   //       profilePhoto: update.profilePhoto,
   //       coverPhoto: update.coverPhoto,
@@ -127,6 +147,7 @@ class UserServices {
   //   };
   // }
 
+  // New
   async updateUser(
     data: UpdateUserDTO
   ): Promise<
@@ -135,10 +156,14 @@ class UserServices {
       "coverPhoto" | "profilePhoto" | "bio" | "fullname" | "username"
     > | null>
   > {
+    // Cari user berdasarkan ID
     const user = await prisma.user.findUnique({
-      where: { id: data.id },
+      where: {
+        id: data.id,
+      },
     });
 
+    // Jika user tidak ditemukan, lempar error
     if (!user) {
       throw {
         status: 404,
@@ -147,23 +172,40 @@ class UserServices {
       } as customError;
     }
 
-    // Update only the fields that are provided
+    // Buat object untuk menyimpan perubahan yang valid
     const updateData: Partial<User> = {};
 
-    if (data.fullname) updateData.fullname = data.fullname;
-    if (data.username) updateData.username = data.username;
-    if (data.bio) updateData.bio = data.bio;
-    if (data.profilePhoto) updateData.profilePhoto = data.profilePhoto;
-    if (data.coverPhoto) updateData.coverPhoto = data.coverPhoto;
+    // Periksa dan tambahkan field yang perlu diperbarui
+    if (data.fullname) {
+      updateData.fullname = data.fullname;
+    }
 
+    if (data.username) {
+      updateData.username = data.username;
+    }
+
+    if (data.bio) {
+      updateData.bio = data.bio;
+    }
+
+    if (data.profilePhoto) {
+      updateData.profilePhoto = data.profilePhoto;
+    }
+
+    if (data.coverPhoto) {
+      updateData.coverPhoto = data.coverPhoto;
+    }
+
+    // Lakukan pembaruan data pada user
     const updatedUser = await prisma.user.update({
       data: updateData,
       where: { id: data.id },
     });
 
+    // Kembalikan response sukses dengan data yang telah diperbarui
     return {
       status: "success",
-      message: "Edit Successful",
+      message: "Profile successfully edited",
       data: {
         profilePhoto: updatedUser.profilePhoto,
         coverPhoto: updatedUser.coverPhoto,
@@ -172,6 +214,14 @@ class UserServices {
         bio: updatedUser.bio,
       },
     };
+  }
+
+  // auth
+  async updateUsers(id: number, data: Partial<updateUserDTO>): Promise<void> {
+    await prisma.user.update({
+      where: { id },
+      data,
+    });
   }
 }
 
